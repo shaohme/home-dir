@@ -1,0 +1,6 @@
+#!/bin/sh
+# urxvtc -e emacs --eval "(browse-url-mail \"$@\")"
+mailto=$(printf '%s\n' "$1" | sed -e 's/[\"]//g')
+elisp_expr=$(printf '(mailto-compose-mail "%s")' "$mailto")
+# echo $elisp_expr
+emacsclient -c -e "$elisp_expr"

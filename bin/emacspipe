@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+  TMP="$(mktemp --suffix .emacspipe /tmp/stdin-XXX)"
+  cat >$TMP
+  emacsclient -c $TMP
+  rm $TMP
+else
+  emacsclient -c "$@"
+fi

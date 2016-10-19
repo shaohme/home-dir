@@ -1,0 +1,3 @@
+exec compton -CGb
+exec urxvtd -q -o -f
+

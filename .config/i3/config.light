@@ -1,0 +1,21 @@
+
+bindsym $mod+d exec dmenu_run -nb \#FDF6E3 -nf black -fn "xft:Monospace 12"
+
+client.focused          #586e75 #859900 #002b36 #d33682 #d33682
+client.focused_inactive #586e75 #859900 #586e75 #073642 #586e75
+client.unfocused        #859900 #fdf6e3 #839496 #073642 #586e75
+client.urgent           #859900 #dc322f #002b36 #002b36 #586e75
+
+bar {
+    status_command i3status
+    colors {
+       background #fdf6e3
+       statusline #839496
+       separator  #586e75
+       focused_workspace  #d33682 #d33682 #fdf6e3
+       active_workspace   #586e75 #586e75 #002b36
+       inactive_workspace #fdf6e3 #fdf6e3 #839496
+       urgent_workspace   #dc322f #dc322f #fdf6e3
+    }
+}
+

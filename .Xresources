@@ -1,0 +1,76 @@
+Xcursor.theme: Vanilla-DMZ
+Xcursor.size: 48
+! Xft.antialias: 1
+! Xft.autohint: true
+! Xft.hinting: 1
+! Xft.hintstyle: hintslight
+! Xft.rgba: rgb
+! Xft.lcdfilter: lcddefault
+
+*font: -*-*-*-*-*-*-28-*-*-*-*-*-*-*
+
+! URxvt*font: -*-terminus-bold-*-*-*-28-*-*-*-*-*-*-*
+! XTerm*font: -*-terminus-bold-*-*-*-28-*-*-*-*-*-*-*
+
+!! Defining italic and bold fonts because they look like crap
+!! in X with terminus font
+! *boldFont: -*-terminus-bold-*-*-*-28-*-*-*-*-*-*-*
+! *italicFont: -*-terminus-bold-*-*-*-28-*-*-*-*-*-*-*
+! *bolditalicFont: -*-terminus-bold-*-*-*-28-*-*-*-*-*-*-*
+URxvt*font:     xft:Monospace:size=12:antialias=true,xft:Symbola:pixelsize=19:antialias=true
+URxvt*boldFont: xft:Monospace-bold:bold:size=12:antialias=true,xft:Symbola:pixelsize=19:antialias=true
+! URxvt*font:     xft:Terminus:bold:size=26,xft:Symbola:pixelsize=19
+! URxvt*boldFont: xft:Terminus:bold:size=24,xft:Symbola:pixelsize=19
+
+
+URxvt.saveLines: 8192
+URxvt.scrollBar: false
+URxvt.scrollstyle: plainp
+URxvt.rightScrollBar: false
+URxvt.scrollTtyOutput: false
+URxvt.scrollWithBuffer: true
+URxvt.scrollTtyKeypress: true
+URxvt.visualBell: false
+URxvt.perl-ext-common: default,matcher,clipboard,resize-font
+URxvt*dynamicColors: on
+URxvt.url-launcher: firefox
+URxvt.matcher.button: 3
+URxvt.iso14755_52: false
+URxvt.iso14755: false
+URxvt.clipboard.autocopy: true
+URxvt.keysym.C-M-c: perl:clipboard:copy
+URxvt.keysym.C-M-v: perl:clipboard:paste
+
+URxvt.resize-font.smaller: C-minus
+URxvt.resize-font.bigger: C-plus
+URxvt.resize-font.reset: C-equal
+URxvt.resize-font.show: C-question
+
+*colorUL:                #859900
+*colorBD:                #268bd2
+*color1:                 #dc322f
+*color9:                 #cb4b16
+*color2:                 #859900
+*color3:                 #b58900
+*color4:                 #268bd2
+*color5:                 #d33682
+*color13:                #6c71c4
+*color6:                 #2aa198
+
+*background:             #fdf6e3
+*foreground:             #657b83
+*fadeColor:              #fdf6e3
+*cursorColor:            #586e75
+*pointerColorBackground: #93a1a1
+*pointerColorForeground: #586e75
+*scrollColor:            #93a1a1
+*borderColor:            #fdf6e3
+*color0:                 #073642
+*color8:                 #657b83
+*color10:                #93a1a1
+*color11:                #839496
+*color12:                #657b83
+*color14:                #586e75
+*color7:                 #839496
+*color15:                #002b36
+

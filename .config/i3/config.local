@@ -1,0 +1,122 @@
+set $mod Mod4
+
+font xft:Monospace 12
+floating_modifier $mod
+workspace_layout tabbed
+
+bindsym $mod+Return exec urxvtc
+bindsym $mod+Shift+q kill
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+ae focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+ae move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+h split h
+bindsym $mod+Shift+v split v
+bindsym $mod+f fullscreen
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+F12 exec "colorsswitch.sh"
+
+mode "resize" {
+        bindsym j resize shrink width 10 px or 10 ppt
+        bindsym k resize grow height 10 px or 10 ppt
+        bindsym l resize shrink height 10 px or 10 ppt
+        bindsym ae resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+new_window normal
+
+bindsym $mod+Shift+m exec emacsclient -c -e '(gnus)'
+bindsym $mod+Shift+s exec suspend.sh
+# bindsym $mod+Shift+f exec urxvtc -e fetch_email.sh
+bindsym $mod+Shift+p exec pavucontrol
+bindsym Ctrl+$mod+l exec screenlock.sh
+bindsym XF86AudioLowerVolume exec /usr/bin/pactl set-sink-volume @DEFAULT_SINK@ '-10%'
+bindsym XF86AudioRaiseVolume exec /usr/bin/pactl set-sink-volume @DEFAULT_SINK@ '+10%'
+bindsym XF86AudioMute exec /usr/bin/pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+
+for_window [class="Gmrun"] floating enable
+for_window [class="gzdoom"] floating enable
+for_window [class="Gzdoom"] floating enable
+for_window [class="Wpa_gui"] floating enable
+for_window [class="Jitsi"] floating enable
+for_window [class="Steam"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="Gcolor2"] floating enable
+for_window [class="Qalculate-gtk"] floating enable
+for_window [class="Pcsx2"] floating enable
+for_window [class="PCSX2"] floating enable
+for_window [class="vlc"] floating enable
+for_window [class="Ekiga"] floating enable
+for_window [class="quakespasm"] floating enable
+for_window [class="MPlayer"] floating enable
+for_window [class="qemu-system-x86_64"] floating enable
+for_window [class="Wine"] floating enable
+for_window [class="rdesktop"] floating enable
+for_window [class="Pcsxr"] floating enable
+for_window [class="PCSXR"] floating enable
+for_window [class="eduke32"] floating enable
+for_window [class="Omwlauncher"] floating enable
+for_window [class="Lazarus"] floating enable
+for_window [class="Jitsi"] floating enable
+for_window [class="Xfce4-notifyd"] floating enable
+for_window [class="zsnes"] floating enable
+for_window [class="shutter"] floating enable
+for_window [class="pinentry"] floating enable
+for_window [class="Pinentry"] floating enable
+for_window [class="guvcview"] floating enable
+for_window [class="Guvcview"] floating enable
+for_window [class="tk"] floating enable
+for_window [class="Tk"] floating enable
+for_window [instance="emacs" title="upload"] floating enable

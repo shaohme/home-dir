@@ -1,0 +1,28 @@
+*colorUL:                #859900
+*colorBD:                #268bd2
+*color1:                 #dc322f
+*color9:                 #cb4b16
+*color2:                 #859900
+*color3:                 #b58900
+*color4:                 #268bd2
+*color5:                 #d33682
+*color13:                #6c71c4
+*color6:                 #2aa198
+
+*background:             #fdf6e3
+*foreground:             #657b83
+*fadeColor:              #fdf6e3
+*cursorColor:            #586e75
+*pointerColorBackground: #93a1a1
+*pointerColorForeground: #586e75
+*scrollColor:            #93a1a1
+*borderColor:            #fdf6e3
+*color0:                 #073642
+*color8:                 #657b83
+*color10:                #93a1a1
+*color11:                #839496
+*color12:                #657b83
+*color14:                #586e75
+*color7:                 #839496
+*color15:                #002b36
+
