@@ -7,14 +7,13 @@
 (add-to-list 'load-path (expand-file-name "dev/emacs-eclim"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
 (package-initialize)
 
 (require 'mwheel)
 (require 'tramp)
 ;; delete when upgrade to >=25.1
-(require 'saveplace)
+;; (require 'saveplace)
 (require 'uniquify)
 (require 'subr-x)
 (require 'recentf)
@@ -27,14 +26,12 @@
 (require 'anzu)
 (require 'semantic)
 (require 'company)
-(require 'company-irony-c-headers)
 (require 'company-rtags)
 (require 'flycheck)
 (require 'flycheck-ledger)
 (require 'yasnippet)
-(require 'jedi)
+(require 'jedi-core)
 (require 'python-environment)
-(require 'undo-tree)
 (require 'rtags)
 (require 'flycheck-rtags)
 (require 'sql)
@@ -56,14 +53,12 @@
 (require 'nndraft)
 (require 'nnfolder)
 (require 'mml)
-;; (require 'eclim)
 (require 'ispell)
 (require 'gud)
 (require 'python)
 (require 'web-mode)
 (require 'tex)
 (require 'company-auctex)
-;; (require 'company-emacs-eclim)
 (require 'nxml-mode)
 (require 'gdb-mi)
 (require 'ede)
@@ -114,23 +109,12 @@
       browse-url-browser-function 'browse-url-firefox
       browse-url-new-window-flag t
       browse-url-firefox-new-window-is-tab t
-      ;; fixes an error loading desktop files ((frameset): Wrong type argument: number-or-marker-p, nil)
-      ;; desktop-restore-forces-onscreen nil
-      ;; remember cursor place for each file
-      ;; use save-place-mode 1 for emacs >=25.1
       inhibit-startup-message t
       eww-download-directory "~/dwl/"
       password-cache t
       password-cache-expiry 86400
       mail-user-agent 'gnus-user-agent
       org-journal-dir "~/org/journal/"
-      ;; ac-ignore-case t
-      ;; ac-quick-help-delay 1
-      ;; ac-max-width 0.3
-      ;; ac-auto-start t
-      ;; ac-use-menu-map t
-      ;; ac-ispell-requires 2
-      ;; ac-ispell-fuzzy-limit 2
       ispell-program-name "hunspell"
       ispell-dictionary "da_DK"
       recentf-max-menu-items 25
@@ -146,9 +130,6 @@
       kept-old-versions 2
       version-control t
       visible-cursor nil
-      ;; ido-enable-flex-matching t
-      ;; ido-auto-merge-work-directories-length -1
-      ;; ido-everywhere t
       initial-major-mode 'text-mode
       initial-scratch-message nil
       x-underline-at-descent-line t
@@ -286,6 +267,20 @@
       nnfolder-directory (concat message-directory "archive/")
       nnfolder-active-file (concat message-directory "archive")
       compilation-read-command t
+      python-indent-guess-indent-offset nil
+      python-indent-offset 4
+      python-environment-directory "~/.virtualenvs"
+      python-shell-interpreter "python3"
+      ;; python-python-command (concat python-shell-interpreter " -i")
+      gud-pdb-command-name (concat python-shell-interpreter " -m pdb")
+      jedi:environment-root "default"
+      jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+      jedi:complete-on-dot t
+      rtags-autostart-diagnostics t
+      rtags-completions-enabled t
+      rtags-rdm-process-use-pipe t
+      rtags-socket-file "~/.rdm"
+      rtags-spellcheck-enabled nil
       )
 
 (define-key 'help-command (kbd "C-f") 'helm-apropos)
@@ -325,6 +320,8 @@
 (global-set-key (kbd "M-<backspace>") 'backward-delete-word)
 (global-set-key (kbd "C-c h o") 'helm-swoop)
 (global-set-key (kbd "C-c s") 'helm-multi-swoop-all)
+(global-set-key (kbd "C-M-i") 'company-complete)
+
 (global-unset-key (kbd "C-x c"))
 
 
@@ -430,6 +427,7 @@ exists.  Start in STARTDIR if defined, else start in the current directory."
 
     (setq dirname (upward-find-file "configure.ac" startdir))
     (setq dirname (if dirname dirname (upward-find-file "Makefile" startdir)))
+
     (setq dirname (if dirname dirname (expand-file-name ".")))
     ; We've now worked out where to start. Now we need to worry about
     ; calling compile in the right directory
@@ -471,23 +469,19 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
                 c-default-style "gnu"
                 tab-width 4
                 indent-tabs-mode t)
-  (undo-tree-mode t)
-  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
-  (setq company-backends (delete 'company-semantic company-backends)
-        rtags-completions-enabled t
-        rtags-autostart-diagnostics t
-        rtags-use-helm t)
-  (add-to-list 'company-backends 'company-c-headers)
-  (add-to-list 'company-backends 'company-rtags)
+  (rtags-diagnostics)
   (company-mode t)
+  (add-to-list 'company-backends 'company-rtags)
+  (projectile-mode t)
+  (flycheck-select-checker 'rtags)
   (flycheck-mode t)
   (local-set-key (kbd "C-c ;") 'iedit-mode)
   (local-set-key (kbd "C-c C-j") 'semantic-ia-fast-jump)
   (local-set-key (kbd "C-c C-s") 'semantic-ia-show-summary)
-  (local-set-key (kbd "C-M-i") 'company-complete)
   (local-set-key (kbd "C-x C-m") 'cmake-ide-run-cmake)
   (local-set-key (kbd "C-c .") 'rtags-find-symbol-at-point)
   (local-set-key (kbd "C-c ,") 'rtags-find-references-at-point)
+  ;; (local-set-key (kbd "TAB") 'company-complete-selection)
   (local-set-key (kbd "C-c C-c") (lambda ()
                                    (interactive)
                                    (setq-local compilation-read-command nil)
@@ -495,35 +489,25 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   ;; (rtags-enable-standard-keybindings)
   (hs-minor-mode t))
 
-;;(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+(defun init-cmake-mode()
+  (company-mode t)
+  )
+
+(add-hook 'cmake-mode-hook 'init-cmake-mode)
+
+(eval-after-load 'company
+  '(progn
+     (define-key company-active-map (kbd "TAB") 'company-complete-selection)
+     (define-key company-active-map [tab] 'company-complete-selection)))
+
 (add-hook 'c-mode-hook 'init-c-mode)
 (add-hook 'c++-mode-hook 'init-c-mode)
 
+(defun init-cmake-mode()
+  (company-mode t)
+  )
 
-;;; Irony mode
-;; (defun init-irony-mode()
-;;   (when (memq major-mode irony-supported-major-modes)
-;; 	(define-key irony-mode-map [remap completion-at-point]
-;; 	  'irony-completion-at-point-async)
-;; 	(define-key irony-mode-map [remap complete-symbol]
-;; 	  'irony-completion-at-point-async)
-;; 	(irony-cdb-autosetup-compile-options)
-;; 	(setq company-backends (delete 'company-semantic company-backends))
-;; 	(company-irony-setup-begin-commands)
-;; 	(add-to-list 'company-backends '(company-irony-c-headers company-irony))
-;; 	(irony-mode t))
-;;   (setq rtags-autostart-diagnostics t)
-;;   (rtags-diagnostics)
-;;   (setq rtags-completions-enabled t)
-;;   (push 'company-rtags company-backends)
-;;   (flycheck-select-checker 'rtags)
-;;   (setq-local flycheck-highlighting-mode nil) ;; RTags creates more accurate overlays.
-;;   (setq-local flycheck-check-syntax-automatically nil)
-;;   (define-key c-mode-base-map (kbd "<C-tab>") (function company-complete)))
-
-;; (add-hook 'c++-mode-hook 'init-irony-mode)
-;; (add-hook 'c-mode-hook 'init-irony-mode)
-;; (add-hook 'objc-mode-hook 'init-irony-mode)
+(add-hook 'cmake-mode-hook 'init-cmake-mode)
 
 ;;; SQL mode
 (defun init-sql-mode()
@@ -531,12 +515,6 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   ;; (require 'auto-complete-config)
   ;; (setq-default ac-sources '(ac-source-abbrev ac-source-dictionary
   ;;  ac-source-words-in-same-mode-buffers))
-  (setq	sql-connection-alist '(("snakeeyes"
-                                (sql-product (quote postgres))
-                                (sql-server "/var/run/postgresql")
-                                (sql-user "mkj")
-                                (sql-password "1234")
-                                (sql-database "snakeeyes"))))
   ;; (setq-local ac-ignore-case t)
   ;; (auto-complete-mode t)
   ;; (ac-flyspell-workaround)
@@ -590,7 +568,11 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2)
   (local-set-key (kbd "C-c C-k") 'web-mode-comment-or-uncomment)
-  (flymake-mode t)
+  (add-to-list 'company-backends 'company-web-html)
+  (add-to-list 'company-backends 'company-web-jade)
+  (add-to-list 'company-backends 'company-yasnippet)
+  (company-mode t)
+  ;; (flymake-mode t)
   )
 
 (add-hook 'web-mode-hook 'init-web-mode)
@@ -619,6 +601,7 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   ;; (require 'auto-complete)
   ;; (require 'auto-complete-config)
   (flycheck-mode t)
+  (company-mode t)
   ;; (require 'flymake-cursor)
   ;; (require 'flymake-sass)
   ;; (add-to-list 'ac-sources 'ac-source-css-property)
@@ -632,27 +615,14 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 ;;; Python mode
 (add-to-list 'auto-mode-alist '("\\.py$" . python-mode))
 
-(setq ;; set this before the mode starts
-      python-indent-guess-indent-offset nil
-      python-indent-offset 4)
-
 (defun init-python-mode()
-  (setq python-environment-directory "~/.virtualenvs"
-        python-shell-interpreter "python3"
-        ;; python-python-command (concat python-shell-interpreter " -i")
-        gud-pdb-command-name (concat python-shell-interpreter " -m pdb")
-        jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-        jedi:complete-on-dot t)
   (jedi:setup)
+  (add-to-list 'company-backends 'company-jedi)
+  (company-mode t)
+  (flycheck-mode t)
+  ;; (eldoc-mode t)
   (projectile-mode t))
 
-;; (defun touch-wsgi()
-;;   (when (equal major-mode 'python-mode)
-;; 	(and (string-equal (file-name-extension buffer-file-name) "py"))
-;; 	(shell-command-to-string "touch ~/dev/snakeeyes/wsgi.py" )))
-
-;; (add-hook 'after-save-hook 'touch-wsgi)
 (add-hook 'python-mode-hook 'init-python-mode)
 
 
@@ -679,7 +649,9 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 
 (add-hook 'lisp-mode-hook 'custom-lisp-mode-hook)
 (add-hook 'emacs-lisp-mode-hook 'custom-lisp-mode-hook)
-
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
 ;;; Latex mode
 
@@ -765,40 +737,25 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default bold shadow italic underline bold bold-italic bold])
- '(ansi-color-names-vector
-   (vector "#657b83" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#fdf6e3"))
  '(custom-safe-themes
    (quote
     ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
- '(fci-rule-color "#eee8d5")
- '()
  '(package-selected-packages
    (quote
-    (zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode haskell-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css flycheck-irony ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
+    (cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode haskell-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css flycheck-irony ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
+ '(safe-local-variable-values
    (quote
-    ((20 . "#dc322f")
-     (40 . "#cb4b16")
-     (60 . "#b58900")
-     (80 . "#859900")
-     (100 . "#2aa198")
-     (120 . "#268bd2")
-     (140 . "#d33682")
-     (160 . "#6c71c4")
-     (180 . "#dc322f")
-     (200 . "#cb4b16")
-     (220 . "#b58900")
-     (240 . "#859900")
-     (260 . "#2aa198")
-     (280 . "#268bd2")
-     (300 . "#d33682")
-     (320 . "#6c71c4")
-     (340 . "#dc322f")
-     (360 . "#cb4b16"))))
- '(vc-annotate-very-old-color nil))
+    ((eval setq-local jedi:server-command
+           (list
+            (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver")))
+     (eval setq-local gud-pdb-command-name
+           (concat python-shell-interpreter " -m pdb"))
+     (eval setq-local python-python-command
+           (concat python-shell-interpreter " -i"))
+     (python-shell-interpreter . "python3")
+     (jedi:environment-root . "snakeeyes")
+     (engine . jinja)))))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
