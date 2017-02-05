@@ -1,5 +1,5 @@
 include "/home/mkj/.gtkrc-2.0.local"
-gtk-theme-name = "NumixSolarized"
+# gtk-theme-name = "NumixSolarized"
 
 # gtk-font-name = "DejaVu Sans 11"
 # include "/usr/share/themes/NumixSolarized/gtk-2.0/gtkrc"

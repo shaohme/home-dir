@@ -4,11 +4,12 @@
 (require 'package)
 
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "dev/emacs-eclim"))
 (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
 
 (package-initialize)
+
+(load-theme 'zenburn t)
 
 (require 'mwheel)
 (require 'tramp)
@@ -68,34 +69,34 @@
 ;; ----- Basics -----
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(defvar theme-current nil "Current loaded theme.")
+;; (defvar theme-current nil "Current loaded theme.")
 
-(defun set-theme(theme)
-  (setq theme-current theme)
-  (load-theme theme t))
+;; (defun set-theme(theme)
+;;   (setq theme-current theme)
+;;   (load-theme theme t))
 
-(defun toggle-solarized()
-  (interactive)
-  (if (equal theme-current 'sanityinc-solarized-light)
-	  (set-theme 'sanityinc-solarized-dark)
-	(set-theme 'sanityinc-solarized-light)))
+;; (defun toggle-solarized()
+;;   (interactive)
+;;   (if (equal theme-current 'sanityinc-solarized-light)
+;; 	  (set-theme 'sanityinc-solarized-dark)
+;; 	(set-theme 'sanityinc-solarized-light)))
 
-(defun file-contents (filename)
-  "Return the contents of FILENAME."
-  (with-temp-buffer
-    (insert-file-contents filename)
-    (buffer-string)))
+;; (defun file-contents (filename)
+;;   "Return the contents of FILENAME."
+;;   (with-temp-buffer
+;;     (insert-file-contents filename)
+;;     (buffer-string)))
 
 
-;; (when (display-graphic-p)
-(let ((colorstate (string-trim (with-temp-buffer
-                                 (insert-file-contents "~/.dynamic-colors/colorscheme")
-                                 (buffer-string)))))
-  (if (eq colorstate "solarized-light")
-      (set-theme 'sanityinc-solarized-dark)
-    (set-theme 'sanityinc-solarized-light)))
+;; ;; (when (display-graphic-p)
+;; (let ((colorstate (string-trim (with-temp-buffer
+;;                                  (insert-file-contents "~/.dynamic-colors/colorscheme")
+;;                                  (buffer-string)))))
+;;   (if (eq colorstate "solarized-light")
+;;       (set-theme 'sanityinc-solarized-dark)
+;;     (set-theme 'sanityinc-solarized-light)))
 
-  ;; )
+;;   ;; )
 
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
@@ -278,8 +279,6 @@
       jedi:complete-on-dot t
       rtags-autostart-diagnostics t
       rtags-completions-enabled t
-      rtags-rdm-process-use-pipe t
-      rtags-socket-file "~/.rdm"
       rtags-spellcheck-enabled nil
       )
 
@@ -469,12 +468,12 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
                 c-default-style "gnu"
                 tab-width 4
                 indent-tabs-mode t)
+  (rtags-start-process-unless-running)
   (rtags-diagnostics)
   (company-mode t)
-  (add-to-list 'company-backends 'company-rtags)
   (projectile-mode t)
-  (flycheck-select-checker 'rtags)
   (flycheck-mode t)
+  (flycheck-select-checker 'rtags)
   (local-set-key (kbd "C-c ;") 'iedit-mode)
   (local-set-key (kbd "C-c C-j") 'semantic-ia-fast-jump)
   (local-set-key (kbd "C-c C-s") 'semantic-ia-show-summary)
@@ -730,7 +729,12 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 (add-hook 'nxml-mode-hook 'init-nxml-mode)
 
 
+(defun init-mark-down()
+  (flycheck-mode t)
+  (auto-fill-mode t)
+  )
 
+(add-hook 'markdown-mode-hook 'init-mark-down)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -742,7 +746,7 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
     ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
  '(package-selected-packages
    (quote
-    (cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode haskell-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css flycheck-irony ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
+    (zenburn-theme magit company-emacs-eclim company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode haskell-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css flycheck-irony ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
  '(safe-local-variable-values
    (quote
     ((eval setq-local jedi:server-command
