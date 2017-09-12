@@ -43,7 +43,7 @@
 
 (require 'init-common)
 (require 'init-helm)
-;; (require 'init-mail)
+(require 'init-mail)
 (require 'init-dev-common)
 (require 'init-c-common)
 (require 'init-cmake)
