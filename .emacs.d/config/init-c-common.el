@@ -72,16 +72,23 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
                 tab-width 4
                 indent-tabs-mode nil)
   (setq  ;; RTags creates more accurate overlays.
-
         rtags-autostart-diagnostics t
         rtags-completions-enabled t
         rtags-spellcheck-enabled nil
+        rtags-verbose-results t
         helm-gtags-ignore-case t
         helm-gtags-auto-update t
         helm-gtags-use-input-at-cursor t
         helm-gtags-pulse-at-cursor t
         helm-gtags-prefix-key "\C-cg"
         helm-gtags-suggested-key-mapping t
+        flycheck-gcc-language-standard "c++14"
+        flycheck-clang-language-standard "c++14"
+        flycheck-highlighting-mode nil
+        flycheck-check-syntax-automatically nil
+        rtags-verbose-results t
+        company-backends (delete 'company-semantic company-backends)
+        company-backends (delete 'company-clang company-backends)
         )
   ;; (setq-local rtags-autostart-diagnostics t
   ;;             rtags-completions-enabled t
@@ -107,16 +114,17 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   ;; (push 'company-rtags company-backends)
   (company-mode t)
   ;; (irony-mode t)
-  (flycheck-mode t)
   ;; (company-irony-setup-begin-commands)
   ;; (irony-cdb-autosetup-compile-options)
   ;; (rtags-start-process-unless-running)
 
   (projectile-mode t)
   (flycheck-select-checker 'rtags)
+  (flycheck-mode t)
 
   ;; (setq-local flycheck-highlighting-mode nil)
   ;; (setq-local flycheck-check-syntax-automatically nil)
+  (modern-c++-font-lock-mode t)
 
   (local-set-key (kbd "C-c ;") 'iedit-mode)
   (local-set-key (kbd "C-c C-j") 'semantic-ia-fast-jump)
@@ -131,6 +139,7 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
                                    (setq-local compilation-read-command nil)
                                    (call-interactively 'compile-pkg)))
   ;; (rtags-enable-standard-keybindings)
+  (c-set-offset 'innamespace 0)
   (hs-minor-mode t))
 
 

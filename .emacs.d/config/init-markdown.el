@@ -4,8 +4,10 @@
 ;;; Code:
 
 (defun init-mark-down()
-  (flycheck-mode t)
   (auto-fill-mode t)
+  (flyspell-mode t)
+  (flycheck-mode t)
+  (company-mode t)
   )
 
 (add-hook 'markdown-mode-hook 'init-mark-down)

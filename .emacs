@@ -43,9 +43,10 @@
 
 (require 'init-common)
 (require 'init-helm)
-(require 'init-mail)
+;; (require 'init-mail)
 (require 'init-dev-common)
 (require 'init-c-common)
+(require 'init-cmake)
 (require 'init-java)
 (require 'init-org)
 (require 'init-python)
@@ -63,7 +64,7 @@
 (require 'init-markdown)
 (require 'init-javascript)
 (require 'init-groovy)
-
+(require 'init-typescript)
 
 
 (custom-set-variables
@@ -76,7 +77,7 @@
     ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
  '(package-selected-packages
    (quote
-    (diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd unicode-fonts unicode-progress-reporter unicode-whitespace flycheck-rtags helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme magit company-emacs-eclim company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
+    (js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd unicode-fonts unicode-progress-reporter unicode-whitespace flycheck-rtags helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme magit company-emacs-eclim company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized cmake-mode clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
  '(safe-local-variable-values
    (quote
     ((eval setq-local jedi:server-command

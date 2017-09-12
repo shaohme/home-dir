@@ -48,6 +48,7 @@
   (local-set-key (kbd "C-c C-k") 'web-mode-comment-or-uncomment)
   (add-to-list 'company-backends 'company-web-html)
   (add-to-list 'company-backends 'company-web-jade)
+  (add-to-list 'company-backends 'company-web-slim)
   (add-to-list 'company-backends 'company-yasnippet)
   (company-mode t)
   ;; (flymake-mode t)

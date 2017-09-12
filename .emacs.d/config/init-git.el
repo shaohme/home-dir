@@ -4,7 +4,7 @@
 ;;; Code:
 
 (defun init-git-mode()
-  (flyspell-mode 1)
+  (flyspell-mode t)
   (turn-on-auto-fill))
 
 (add-hook 'git-commit-mode-hook 'init-git-mode)

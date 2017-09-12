@@ -52,6 +52,8 @@
       scroll-step 1
       company-idle-delay 0.2
       company-minimum-prefix-length 2
+      ;; aligns annotation to the right hand side
+      company-tooltip-align-annotations t
       )
 
 (defalias 'yes-or-no-p 'y-or-n-p)

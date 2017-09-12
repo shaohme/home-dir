@@ -6,7 +6,6 @@
 (defun init-shell-script-mode()
   (flycheck-mode t)
   (company-mode t)
-  ;; (auto-complete-mode t)
   )
 
 (add-hook 'sh-set-shell-hook 'init-shell-script-mode)
