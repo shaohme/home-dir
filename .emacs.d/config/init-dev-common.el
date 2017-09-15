@@ -9,8 +9,8 @@
 (setq gdb-many-windows t
       gdb-show-main t)
 
-(show-smartparens-global-mode +1)
-(smartparens-global-mode 1)
+;; (show-smartparens-global-mode +1)
+;; (smartparens-global-mode 1)
 
 ;; when you press RET, the curly braces automatically
 ;; add another newline

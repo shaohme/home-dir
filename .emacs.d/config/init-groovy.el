@@ -12,6 +12,7 @@
   (flycheck-mode t)
   (company-mode t)
   (groovy-electric-mode t)
+  (smartparens-mode nil)
   )
 
 (add-to-list 'groovy-mode-hook 'init-groovy-mode)

@@ -6,14 +6,14 @@
 (require 'eclim)
 (require 'eclimd)
 (require 'company-emacs-eclim)
+(require 'gradle-mode)
 
-(setq
-      eclim-executable "~/share/eclipse/eclim"
-      eclimd-executable "~/share/eclipse/eclimd"
-      company-emacs-eclim-ignore-case t
-      )
 
 (defun init-java-mode()
+(setq eclim-executable "~/eclipse/eclim"
+      eclimd-executable "~/eclipse/eclimd"
+      company-emacs-eclim-ignore-case t
+      )
   ;; (require 'eclimd)
   ;; (setq jdee-server-dir
   ;;       "~/dev/jdee-server/target/jdee-1.1-SNAPSHOT.jar")
