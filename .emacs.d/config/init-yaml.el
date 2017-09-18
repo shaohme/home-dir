@@ -11,7 +11,7 @@
   (flycheck-yamllint-setup)
   )
 
-
+(add-hook 'yaml-mode-hook 'init-yaml-mode)
 
 (provide 'init-yaml)
 ;;; init-yaml.el ends here

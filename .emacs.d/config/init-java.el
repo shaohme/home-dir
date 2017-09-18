@@ -19,9 +19,9 @@
   ;;       "~/dev/jdee-server/target/jdee-1.1-SNAPSHOT.jar")
   ;; (require 'jdee)
   (eclim-mode t)
+  (company-emacs-eclim-setup)
   (company-mode t)
   (gradle-mode t)
-  (company-emacs-eclim-setup)
   (projectile-mode t)
   )
 

@@ -32,7 +32,7 @@
       password-cache t
       password-cache-expiry 86400
       ispell-program-name "hunspell"
-      ispell-dictionary "da_DK"
+      ispell-dictionary "en_US"
       recentf-max-menu-items 25
       flyspell-issue-message-flag nil
       uniquify-buffer-name-style 'forward
