@@ -3,6 +3,9 @@
 ;;; General settings for source controls
 ;;; Code:
 (require 'git-commit)
+(require 'ediff)
+
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 (defun init-git-commit-mode()
   ;; (git-commit-setup)

@@ -1,0 +1,25 @@
+[user]
+	name = Martin Kjær Jørgensen
+	email = mkj@gotu.dk
+[core]
+	editor = "emacsclient -c"
+[color]
+	status = auto
+	branch = auto
+	interactive = auto
+	diff = auto
+
+[credential "https://git-codecommit.us-east-1.amazonaws.com"]
+        helper = !aws-credentials-helper.py
+	helper = !aws --profile saml codecommit credential-helper $@
+ 	UseHttpPath = true
+
+[credential]
+        helper = store
+[diff]
+	external = emacsclient -c
+[merge]
+        tool = ediff
+
+[mergetool "ediff"]
+        cmd = emacsclient -c -a \"\" --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
