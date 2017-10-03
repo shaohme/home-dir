@@ -14,7 +14,7 @@
 (require 'ggtags)
 (require 'helm-gtags)
 (require 'semantic)
-
+(require 'modern-cpp-font-lock)
 
 (defun compile-pkg (&optional command startdir)
   "Compile a package with COMMAND.
@@ -75,18 +75,18 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
         rtags-autostart-diagnostics t
         rtags-completions-enabled t
         rtags-spellcheck-enabled nil
-        rtags-verbose-results t
-        helm-gtags-ignore-case t
-        helm-gtags-auto-update t
-        helm-gtags-use-input-at-cursor t
-        helm-gtags-pulse-at-cursor t
-        helm-gtags-prefix-key "\C-cg"
-        helm-gtags-suggested-key-mapping t
+        ;; rtags-verbose-results t
+        ;; helm-gtags-ignore-case t
+        ;; helm-gtags-auto-update t
+        ;; helm-gtags-use-input-at-cursor t
+        ;; helm-gtags-pulse-at-cursor t
+        ;; helm-gtags-prefix-key "\C-cg"
+        ;; helm-gtags-suggested-key-mapping t
         flycheck-gcc-language-standard "c++14"
         flycheck-clang-language-standard "c++14"
-        flycheck-highlighting-mode nil
-        flycheck-check-syntax-automatically nil
-        rtags-verbose-results t
+        ;; flycheck-highlighting-mode nil
+        ;; flycheck-check-syntax-automatically nil
+        ;; rtags-verbose-results t
         company-backends (delete 'company-semantic company-backends)
         company-backends (delete 'company-clang company-backends)
         )
@@ -105,13 +105,14 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 
   ;; (add-to-list 'company-backends 'company-irony)
   ;; (add-to-list 'company-backends 'company-irony-c-headers);
-  (ggtags-mode t)
-  (helm-gtags-mode t)
-  (rtags-diagnostics)
+  ;; (ggtags-mode t)
+  ;; (helm-gtags-mode t)
+  ;; (rtags-diagnostics)
   ;; (global-semanticdb-minor-mode t)
   ;; (global-semantic-idle-scheduler-mode t)
   ;; (semantic-mode t)
-  ;; (push 'company-rtags company-backends)
+  (push 'company-rtags company-backends)
+
   (company-mode t)
   ;; (irony-mode t)
   ;; (company-irony-setup-begin-commands)

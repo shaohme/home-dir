@@ -9,12 +9,10 @@
 (require 'browse-url)
 (require 'eww)
 (require 'volatile-highlights)
-(require 'unicode-fonts)
-(require 'unicode-progress-reporter)
-(require 'unicode-whitespace)
 (require 'xkcd)
+(require 'color-theme-sanityinc-solarized)
 
-(load-theme 'zenburn t)
+(load-theme 'sanityinc-solarized-dark t)
 
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
@@ -112,10 +110,6 @@ With argument ARG, do this that many times."
   '(progn
      (define-key company-active-map (kbd "TAB") 'company-complete-selection)
      (define-key company-active-map [tab] 'company-complete-selection)))
-
-(unicode-fonts-setup)
-(unicode-progress-reporter-setup)
-(unicode-whitespace-setup 'subdued-faces)
 
 (provide 'init-common)
 ;;; init-common.el ends here
