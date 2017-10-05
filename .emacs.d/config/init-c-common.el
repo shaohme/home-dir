@@ -5,9 +5,10 @@
 
 (require 'cl-lib)
 (require 'company)
-;; (require 'irony)
-;; (require 'company-irony)
-;; (require 'company-irony-c-headers)
+(require 'irony)
+(require 'company-irony)
+(require 'company-irony-c-headers)
+(require 'flycheck-irony)
 (require 'rtags)
 (require 'company-rtags)
 (require 'flycheck-rtags)
@@ -15,6 +16,8 @@
 (require 'helm-gtags)
 (require 'semantic)
 (require 'modern-cpp-font-lock)
+(require 'diff-hl)
+(require 'smartparens)
 
 (defun compile-pkg (&optional command startdir)
   "Compile a package with COMMAND.
@@ -67,15 +70,15 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 
 (defun init-c-mode()
   (make-local-variable 'company-backends)
-  (setq-default c-default-style "gnu"
-                c-basic-offset 4
-                tab-width 4
-                indent-tabs-mode nil)
+  ;; (setq-default c-default-style "gnu"
+  ;;               c-basic-offset 4
+  ;;               tab-width 4
+  ;;               indent-tabs-mode nil)
   (setq  ;; RTags creates more accurate overlays.
-        rtags-autostart-diagnostics t
+        ;; rtags-autostart-diagnostics t
         rtags-completions-enabled t
         rtags-spellcheck-enabled nil
-        ;; rtags-verbose-results t
+        ;; rtags-rdm-process-use-pipe t
         ;; helm-gtags-ignore-case t
         ;; helm-gtags-auto-update t
         ;; helm-gtags-use-input-at-cursor t
@@ -84,8 +87,8 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
         ;; helm-gtags-suggested-key-mapping t
         flycheck-gcc-language-standard "c++14"
         flycheck-clang-language-standard "c++14"
-        ;; flycheck-highlighting-mode nil
-        ;; flycheck-check-syntax-automatically nil
+        ;; flycheck-highlighting-mode t
+        ;; flycheck-check-syntax-automatically t
         ;; rtags-verbose-results t
         company-backends (delete 'company-semantic company-backends)
         company-backends (delete 'company-clang company-backends)
@@ -103,26 +106,28 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   ;; company-backends))
   ;;  (setq-local company-backends (company-irony company-rtags))
 
-  ;; (add-to-list 'company-backends 'company-irony)
-  ;; (add-to-list 'company-backends 'company-irony-c-headers);
+  (add-to-list 'company-backends 'company-irony-c-headers);
+  (add-to-list 'company-backends 'company-irony);
   ;; (ggtags-mode t)
   ;; (helm-gtags-mode t)
-  ;; (rtags-diagnostics)
+  (rtags-diagnostics)
   ;; (global-semanticdb-minor-mode t)
   ;; (global-semantic-idle-scheduler-mode t)
   ;; (semantic-mode t)
-  (push 'company-rtags company-backends)
+  ;; (push 'company-rtags company-backends)
 
   (company-mode t)
-  ;; (irony-mode t)
+  (irony-mode t)
   ;; (company-irony-setup-begin-commands)
-  ;; (irony-cdb-autosetup-compile-options)
+  (irony-cdb-autosetup-compile-options)
   ;; (rtags-start-process-unless-running)
 
   (projectile-mode t)
-  (flycheck-select-checker 'rtags)
   (flycheck-mode t)
+  ;; (flycheck-select-checker 'rtags)
+  (flycheck-irony-setup)
 
+  (smartparens-mode t)
   ;; (setq-local flycheck-highlighting-mode nil)
   ;; (setq-local flycheck-check-syntax-automatically nil)
   (modern-c++-font-lock-mode t)

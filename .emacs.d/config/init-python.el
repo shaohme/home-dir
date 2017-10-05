@@ -9,6 +9,8 @@
 (require 'company)
 (require 'projectile)
 (require 'flycheck)
+(require 'elpy)
+(require 'flymake)
 
 (setq
  ;; company-emacs-eclim-ignore-case t
@@ -35,8 +37,17 @@
   (add-to-list 'company-backends 'company-jedi)
   (company-mode t)
   ;; (company-quickhelp-mode t)
-  (flycheck-mode t)
-  ;; (eldoc-mode t)
+  ;; (flycheck-mode t)
+ (setq elpy-rpc-backend "jedi"
+       elpy-rpc-python-command "python3"
+       flymake-error-bitmap (quote (exclamation-mark flycheck-error))
+       flymake-warning-bitmap (quote (question-mark flycheck-warning))
+       flycheck-python-flake8-executable nil
+       flycheck-python-pycompile-executable "python3"
+       flycheck-python-pylint-executable nil
+       )
+  (elpy-mode t)
+  (eldoc-mode t)
   (projectile-mode t))
 
 (add-hook 'python-mode-hook 'init-python-mode)
