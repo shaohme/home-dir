@@ -9,6 +9,7 @@
 (require 'company)
 (require 'projectile)
 (require 'flycheck)
+(require 'flycheck-pycheckers)
 (require 'elpy)
 (require 'flymake)
 
@@ -40,6 +41,7 @@
   (company-mode t)
   ;; (company-quickhelp-mode t)
   (flycheck-mode t)
+  (flycheck-pycheckers-setup)
   ;; (elpy-mode t)
   (eldoc-mode t)
   (projectile-mode t))
