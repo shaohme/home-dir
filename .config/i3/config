@@ -1,8 +1,9 @@
 set $mod Mod4
 
-font xft:Monospace 12
+font xft:Monospace 14
 floating_modifier $mod
 workspace_layout tabbed
+focus_follows_mouse no
 
 bindsym $mod+Return exec urxvtc
 bindsym $mod+Shift+q kill
@@ -56,8 +57,8 @@ bindsym $mod+Shift+9 move container to workspace 9
 bindsym $mod+Shift+0 move container to workspace 10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+F12 exec "colorsswitch.sh"
+bindsym $mod+Shift+e exec "i3-nagbar -f '-*-terminus-bold-*-*-*-32-*-*-*-*-*-*-*' -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+# bindsym $mod+F12 exec "colorsswitch.sh"
 
 mode "resize" {
         bindsym j resize shrink width 10 px or 10 ppt
@@ -97,7 +98,7 @@ for_window [class="Gcolor2"] floating enable
 for_window [class="Qalculate-gtk"] floating enable
 for_window [class="Pcsx2"] floating enable
 for_window [class="PCSX2"] floating enable
-for_window [class="vlc"] floating enable
+# for_window [class="vlc"] floating enable
 for_window [class="Ekiga"] floating enable
 for_window [class="quakespasm"] floating enable
 for_window [class="MPlayer"] floating enable
@@ -121,12 +122,22 @@ for_window [class="tk"] floating enable
 for_window [class="Tk"] floating enable
 for_window [instance="emacs" title="upload"] floating enable
 
-bindsym $mod+d exec dmenu_run -nb \#FDF6E3 -nf black -fn "xft:Monospace 12"
+
+bindsym $mod+d exec rofi -show run
+# bindsym $mod+d exec dmenu_run -i -p "> " -nb \#a64949 -nf \#FDF6E3 -sb \#a68a2e -fn "xft:Monospace:size=19"
+# bindsym $mod+d exec dmenu_run -i -p "> " -nb \#3F3F3F -nf \#FDF6E3 -fn "xft:Monospace:size=20"
+
+
+# client.focused              #688060 #688060 #303030 #ffcfaf
+# client.focused_inactive     #3f3f3f #3F3F3F #7f9f7f #3f3f3f
+# client.unfocused            #3f3f3f #3F3F3F #DCDCCC #3f3f3f
+# client.urgent               #dca3a3 #dca3a3 #DCDCCC #3f3f3f
 
 client.focused          #586e75 #859900 #002b36 #d33682 #d33682
 client.focused_inactive #586e75 #859900 #586e75 #073642 #586e75
 client.unfocused        #859900 #fdf6e3 #839496 #073642 #586e75
 client.urgent           #859900 #dc322f #002b36 #002b36 #586e75
+
 
 bar {
     status_command i3status
@@ -143,4 +154,4 @@ bar {
 
 exec compton -CGb
 exec urxvtd -q -o -f
-
+exec xmodmap ~/.Xmodmap
