@@ -12,7 +12,7 @@
 (require 'xkcd)
 (require 'color-theme-sanityinc-solarized)
 
-(load-theme 'sanityinc-solarized-dark t)
+(load-theme 'sanityinc-solarized-light t)
 
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
