@@ -70,12 +70,16 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 
 (defun init-c-mode()
   (make-local-variable 'company-backends)
-  (setq-default c-default-style "stroustrup"
-                c-basic-offset 4
-                tab-width 4
-                indent-tabs-mode nil)
+  ;; (setq-default c-default-style "stroustrup"
+  ;;               c-basic-offset 4
+  ;;               tab-width 4
+  ;;               indent-tabs-mode nil)
   (setq  ;; RTags creates more accurate overlays.
-        ;; rtags-autostart-diagnostics t
+   ;; rtags-autostart-diagnostics t
+        c-default-style "stroustrup"
+        c-basic-offset 4
+        tab-width 4
+        indent-tabs-mode nil
         rtags-completions-enabled t
         rtags-spellcheck-enabled nil
         ;; rtags-rdm-process-use-pipe t
