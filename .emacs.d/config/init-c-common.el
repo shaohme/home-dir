@@ -17,7 +17,8 @@
 (require 'semantic)
 (require 'modern-cpp-font-lock)
 (require 'diff-hl)
-(require 'smartparens)
+(require 'cmake-ide)
+(require 'smartparens-config)
 
 (defun compile-pkg (&optional command startdir)
   "Compile a package with COMMAND.
@@ -67,6 +68,14 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 	(setq dirname (expand-file-name ".." dirname))))
     ; return statement
     (if found dirname nil)))
+
+(defun notify-compilation-result(buffer msg)
+  "Notify that the compilation is finished,
+close the *compilation* buffer if the compilation is successful"
+  (if (string-match "^finished" msg)
+      (delete-windows-on buffer)
+    )
+  )
 
 (defun init-c-mode()
   (make-local-variable 'company-backends)
@@ -144,13 +153,17 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
   (local-set-key (kbd "C-c ,") 'rtags-find-references-at-point)
   ;; (local-set-key (kbd "TAB") 'company-complete-selection)
   (local-set-key (kbd "M-TAB") 'company-complete)
-  (local-set-key (kbd "C-c C-c") (lambda ()
-                                   (interactive)
-                                   (setq-local compilation-read-command nil)
-                                   (call-interactively 'compile-pkg)))
+  ;; (local-set-key (kbd "C-c C-c") (lambda ()
+  ;;                                  (interactive)
+  ;;                                  (setq-local compilation-read-command nil)
+  ;;                                  (call-interactively
+  ;;                                  'compile-pkg)))
+  (local-set-key (kbd "C-c C-c") 'cmake-ide-compile)
   ;; (rtags-enable-standard-keybindings)
   (c-set-offset 'innamespace 0)
-  (hs-minor-mode t))
+  (hs-minor-mode t)
+  (cmake-ide-setup)
+  )
 
 
 (add-hook 'c-mode-hook 'init-c-mode)
@@ -160,6 +173,8 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
 (add-hook 'c++-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
+(add-to-list 'compilation-finish-functions
+	     'notify-compilation-result)
 
 (defun init-cmake-mode()
   (company-mode t)
