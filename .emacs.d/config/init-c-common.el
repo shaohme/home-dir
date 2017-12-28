@@ -11,7 +11,7 @@
 (require 'flycheck-irony)
 (require 'rtags)
 (require 'company-rtags)
-(require 'flycheck-rtags)
+;; (require 'flycheck-rtags)
 (require 'ggtags)
 (require 'helm-gtags)
 (require 'semantic)
@@ -98,8 +98,8 @@ close the *compilation* buffer if the compilation is successful"
         ;; helm-gtags-pulse-at-cursor t
         ;; helm-gtags-prefix-key "\C-cg"
         ;; helm-gtags-suggested-key-mapping t
-        flycheck-gcc-language-standard "c++14"
-        flycheck-clang-language-standard "c++14"
+        ;; flycheck-gcc-language-standard "c++14"
+        ;; flycheck-clang-language-standard "c++14"
         ;; flycheck-highlighting-mode t
         ;; flycheck-check-syntax-automatically t
         ;; rtags-verbose-results t
@@ -132,13 +132,15 @@ close the *compilation* buffer if the compilation is successful"
   (company-mode t)
   (irony-mode t)
   ;; (company-irony-setup-begin-commands)
-  (irony-cdb-autosetup-compile-options)
+  ;; (irony-cdb-autosetup-compile-options)
   ;; (rtags-start-process-unless-running)
 
   (projectile-mode t)
   (flycheck-mode t)
   ;; (flycheck-select-checker 'rtags)
+  ;; (flycheck-checkers '(irony))
   (flycheck-irony-setup)
+  (flycheck-select-checker 'irony)
 
   (smartparens-mode t)
   ;; (setq-local flycheck-highlighting-mode nil)
