@@ -10,10 +10,10 @@
 (require 'company-irony-c-headers)
 (require 'flycheck-irony)
 (require 'rtags)
-(require 'company-rtags)
-(require 'flycheck-rtags)
-(require 'ggtags)
-(require 'helm-gtags)
+;; (require 'company-rtags)
+;; (require 'flycheck-rtags)
+;; (require 'ggtags)
+;; (require 'helm-gtags)
 (require 'semantic)
 (require 'modern-cpp-font-lock)
 (require 'diff-hl)
@@ -79,95 +79,59 @@ close the *compilation* buffer if the compilation is successful"
 
 (defun init-c-mode()
   (make-local-variable 'company-backends)
-  ;; (setq-default c-default-style "stroustrup"
-  ;;               c-basic-offset 4
-  ;;               tab-width 4
-  ;;               indent-tabs-mode nil)
-  (setq  ;; RTags creates more accurate overlays.
-   ;; rtags-autostart-diagnostics t
-        c-default-style "stroustrup"
-        c-basic-offset 4
-        tab-width 4
-        indent-tabs-mode nil
-        rtags-completions-enabled t
-        rtags-spellcheck-enabled nil
-        ;; rtags-rdm-process-use-pipe t
-        ;; helm-gtags-ignore-case t
-        ;; helm-gtags-auto-update t
-        ;; helm-gtags-use-input-at-cursor t
-        ;; helm-gtags-pulse-at-cursor t
-        ;; helm-gtags-prefix-key "\C-cg"
-        ;; helm-gtags-suggested-key-mapping t
-        flycheck-gcc-language-standard "c++14"
-        flycheck-clang-language-standard "c++14"
-        ;; flycheck-highlighting-mode t
-        ;; flycheck-check-syntax-automatically t
-        ;; rtags-verbose-results t
-        company-backends (delete 'company-semantic company-backends)
-        company-backends (delete 'company-clang company-backends)
-        )
-  ;; (setq-local rtags-autostart-diagnostics t
-  ;;             rtags-completions-enabled t
-  ;;             rtags-spellcheck-enabled nil
-  ;;             )
-  ;; (setq-local company-backends (delete 'company-semantic company-backends))
-  ;; (setq-local company-backends (delete 'company-clang company-backends))
-  ;; (setq-local company-backends (delete 'company-bbdb company-backends))
-  ;; (setq-local company-backends (delete 'company-eclim company-backends))
-  ;; (setq-local company-backends (delete 'company-nxml company-backends))
-  ;; (setq-local company-backends (delete 'company-css
-  ;; company-backends))
-  ;;  (setq-local company-backends (company-irony company-rtags))
+
+  (setq-local c-default-style "stroustrup")
+  (setq-local c-basic-offset 4)
+  (setq-local tab-width 4)
+  (setq-local fill-column 80)
+  (setq-local indent-tabs-mode nil)
+  (setq-local company-backends (delete 'company-semantic company-backends))
+  (setq-local company-backends (delete 'company-clang company-backends))
+
+  (c-set-offset 'innamespace 0)
+  (c-toggle-auto-hungry-state 1)
 
   (add-to-list 'company-backends 'company-irony-c-headers);
   (add-to-list 'company-backends 'company-irony);
-  ;; (ggtags-mode t)
-  ;; (helm-gtags-mode t)
-  (rtags-diagnostics)
-  ;; (global-semanticdb-minor-mode t)
-  ;; (global-semantic-idle-scheduler-mode t)
-  ;; (semantic-mode t)
-  ;; (push 'company-rtags company-backends)
 
   (company-mode t)
-  (irony-mode t)
-  ;; (company-irony-setup-begin-commands)
-  (irony-cdb-autosetup-compile-options)
-  ;; (rtags-start-process-unless-running)
 
   (projectile-mode t)
-  (flycheck-mode t)
-  ;; (flycheck-select-checker 'rtags)
-  (flycheck-irony-setup)
 
   (smartparens-mode t)
-  ;; (setq-local flycheck-highlighting-mode nil)
-  ;; (setq-local flycheck-check-syntax-automatically nil)
   (modern-c++-font-lock-mode t)
 
-  (local-set-key (kbd "C-c ;") 'iedit-mode)
-  (local-set-key (kbd "C-c C-j") 'semantic-ia-fast-jump)
-  (local-set-key (kbd "C-c C-s") 'semantic-ia-show-summary)
   (local-set-key (kbd "C-x C-m") 'cmake-ide-run-cmake)
   (local-set-key (kbd "C-c .") 'rtags-find-symbol-at-point)
   (local-set-key (kbd "C-c ,") 'rtags-find-references-at-point)
-  ;; (local-set-key (kbd "TAB") 'company-complete-selection)
   (local-set-key (kbd "M-TAB") 'company-complete)
-  ;; (local-set-key (kbd "C-c C-c") (lambda ()
-  ;;                                  (interactive)
-  ;;                                  (setq-local compilation-read-command nil)
-  ;;                                  (call-interactively
-  ;;                                  'compile-pkg)))
   (local-set-key (kbd "C-c C-c") 'cmake-ide-compile)
-  ;; (rtags-enable-standard-keybindings)
-  (c-set-offset 'innamespace 0)
   (hs-minor-mode t)
-  (cmake-ide-setup)
+  (auto-fill-mode t)
   )
 
+;; the order of hooks and initialization of irony seems to have and
+;; influence on how cmake-ide-setup works and initialize. beware
+;; before moving things around
 
 (add-hook 'c-mode-hook 'init-c-mode)
 (add-hook 'c++-mode-hook 'init-c-mode)
+
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(add-hook 'objc-mode-hook 'irony-mode)
+
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+(add-hook 'c-mode-hook 'flycheck-mode)
+(add-hook 'c++-mode-hook 'flycheck-mode)
+
+(add-hook 'c-mode-hook #'cmake-ide-setup)
+(add-hook 'c++-mode-hook #'cmake-ide-setup)
+
 
 (add-hook 'c-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'c++-mode-hook 'turn-on-diff-hl-mode)
@@ -176,18 +140,6 @@ close the *compilation* buffer if the compilation is successful"
 (add-to-list 'compilation-finish-functions
 	     'notify-compilation-result)
 
-(defun init-cmake-mode()
-  (company-mode t)
-  )
-
-(add-hook 'cmake-mode-hook 'init-cmake-mode)
-
-
-;; (defun reinit-after-save()
-;;   (irony-server-kill)
-;;   )
-
-;; (add-hook 'after-save-hook 'reinit-after-save)
 
 (provide 'init-c-common)
 ;;; init-c-common.el ends here
