@@ -10,10 +10,6 @@
 (require 'company-irony-c-headers)
 (require 'flycheck-irony)
 (require 'rtags)
-;; (require 'company-rtags)
-;; (require 'flycheck-rtags)
-;; (require 'ggtags)
-;; (require 'helm-gtags)
 (require 'semantic)
 (require 'modern-cpp-font-lock)
 (require 'diff-hl)
@@ -77,6 +73,9 @@ close the *compilation* buffer if the compilation is successful"
     )
   )
 
+
+
+
 (defun init-c-mode()
   (make-local-variable 'company-backends)
 
@@ -89,17 +88,12 @@ close the *compilation* buffer if the compilation is successful"
   (setq-local company-backends (delete 'company-clang company-backends))
 
   (c-set-offset 'innamespace 0)
-  (c-toggle-auto-hungry-state 1)
-
-  (add-to-list 'company-backends 'company-irony-c-headers);
-  (add-to-list 'company-backends 'company-irony);
 
   (company-mode t)
 
   (projectile-mode t)
 
   (smartparens-mode t)
-  (modern-c++-font-lock-mode t)
 
   (local-set-key (kbd "C-x C-m") 'cmake-ide-run-cmake)
   (local-set-key (kbd "C-c .") 'rtags-find-symbol-at-point)
@@ -108,11 +102,25 @@ close the *compilation* buffer if the compilation is successful"
   (local-set-key (kbd "C-c C-c") 'cmake-ide-compile)
   (hs-minor-mode t)
   (auto-fill-mode t)
+
+  (eval-after-load 'flycheck
+    '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+  (eval-after-load 'company
+    '(add-to-list
+      'company-backends '(company-irony-c-headers company-irony)))
+
   )
 
 ;; the order of hooks and initialization of irony seems to have and
 ;; influence on how cmake-ide-setup works and initialize. beware
 ;; before moving things around
+
+(sp-with-modes '(c-mode c++-mode)
+  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+  (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
+                                            ("* ||\n[i]" "RET"))))
+
 
 (add-hook 'c-mode-hook 'init-c-mode)
 (add-hook 'c++-mode-hook 'init-c-mode)
@@ -123,14 +131,14 @@ close the *compilation* buffer if the compilation is successful"
 
 (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
 
-(eval-after-load 'flycheck
-  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
 
 (add-hook 'c-mode-hook 'flycheck-mode)
 (add-hook 'c++-mode-hook 'flycheck-mode)
 
 (add-hook 'c-mode-hook #'cmake-ide-setup)
 (add-hook 'c++-mode-hook #'cmake-ide-setup)
+
+(add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
 
 
 (add-hook 'c-mode-hook 'turn-on-diff-hl-mode)

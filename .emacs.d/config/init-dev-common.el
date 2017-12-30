@@ -4,7 +4,7 @@
 ;;; Code:
 
 (require 'gdb-mi)
-(require 'smartparens-config)
+(require 'helm-projectile)
 
 (setq gdb-many-windows t
       gdb-show-main t)
@@ -14,12 +14,8 @@
 
 ;; when you press RET, the curly braces automatically
 ;; add another newline
-(sp-with-modes '(c-mode c++-mode)
-  (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-  (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
-                                            ("* ||\n[i]" "RET"))))
 
-
+(add-hook 'projectile-mode-hook #'helm-projectile-on)
 
 (provide 'init-dev-common)
 ;;; init-dev-common.el ends here

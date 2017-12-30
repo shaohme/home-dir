@@ -99,11 +99,26 @@
 	;; 	(flyspell-buffer))
 	(message "Dictionary switched from %s to %s" dic change)))
 
-(defun backward-delete-word (arg)
-  "Delete characters backward until encountering the beginning of a word.
-With argument ARG, do this that many times."
+(defun delete-word (arg)
+  "Delete characters forward until encountering the end of a word.
+With argument, do this that many times."
   (interactive "p")
-  (delete-region (point) (progn (backward-word arg) (point))))
+  (if (use-region-p)
+      (delete-region (region-beginning) (region-end))
+    (delete-region (point) (progn (forward-word arg) (point)))))
+
+
+(defun backward-delete-word (arg)
+  "Delete characters backward until encountering the end of a word.
+With argument, do this that many times."
+  (interactive "p")
+  (delete-word (- arg)))
+
+;; (defun backward-delete-word (arg)
+;;   "Delete characters backward until encountering the beginning of a word.
+;; With argument ARG, do this that many times."
+;;   (interactive "p")
+;;   (delete-region (point) (progn (backward-word arg) (point))))
 
 
 (eval-after-load 'company
