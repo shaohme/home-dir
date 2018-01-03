@@ -289,10 +289,14 @@
 ;; (require 'smime)
 ;; (require 'flycheck)
 
-;; (require 'gnus-art)
-;; (require 'gnus-sum)
-;; (require 'gnus-topic)
-;; (require 'gnus-score)
+(use-package gnus-art
+  :defer t)
+(use-package gnus-sum
+  :defer t)
+(use-package gnus-topic
+  :defer t)
+(use-package gnus-score
+  :defer t)
 (use-package gnus-salt
   :defer t)
 
@@ -360,8 +364,7 @@
         ;; gnus-agent-queue-mail nil
         ;; gnus-agent-synchronize-flags t
         ;; gnus-agent-cache t
-        gnus-ignored-from-addresses "Martin Kjær Jørgensen"
-        gnus-extra-headers (quote (To Cc Newsgroups)))
+        gnus-ignored-from-addresses "Martin Kjær Jørgensen")
   :init
   (add-hook
    'gnus-summary-mode-hook
@@ -371,7 +374,9 @@
 
 (use-package message
   :defer t
+  :after gnus
   :config
+  (use-package gnus)
   (setq user-mail-address "mkj@gotu.dk"
         mail-user-agent 'gnus-user-agent
         message-directory "~/.emacs.d/gnus/Mail/"
@@ -406,6 +411,7 @@
         mm-tmp-directory "~/tmp"
         mm-verify-option 'always
         mm-decrypt-option 'always
+        gnus-extra-headers (quote (To Cc Newsgroups))
         nnmail-crosspost nil
         nnmail-extra-headers gnus-extra-headers
         )
@@ -437,7 +443,7 @@
   )
 
 
-(use-package mml-mode
+(use-package mml
   :defer t
   :init
   (add-hook 'mail-mode-hook 'footnote-mode)
@@ -639,7 +645,7 @@
   :ensure t
   )
 
-(use-package term-mode
+(use-package term
   :defer
   :config
   (setq yas-dont-activate-functions t)
@@ -650,7 +656,7 @@
   :ensure t
   :bind (("C-c C-i" . apache-ident-line)))
 
-(use-package sql-mode
+(use-package sql
   :defer t
   :init
   (add-hook 'sql-mode-hook 'toggle-truncate-lines)
@@ -708,7 +714,7 @@
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   )
 
-(use-package emacs-lisp-mode
+(use-package emacs-lisp
   :defer t
   :init
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -925,6 +931,11 @@
   (add-hook 'yaml-mode-hook #'flycheck-yamllint-setup)
   )
 
+(use-package meson-mode
+  :ensure t
+  :init
+  (add-hook 'meson-mode-hook 'company-mode)
+  )
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -936,7 +947,7 @@
     ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
  '(package-selected-packages
    (quote
-    (flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-emacs-eclim company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
+    (flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
  '(safe-local-variable-values
    (quote
     ((flycheck-gcc-language-standard . "c++14")
