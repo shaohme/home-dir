@@ -602,6 +602,8 @@
 
 
 (use-package python-mode
+  :bind (:map python-mode-map
+              ("C-c C-k" . comment-dwim))
   :defer t
   :ensure t
   :mode ("\\.py$" . python-mode)
@@ -609,7 +611,8 @@
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-json-python-json-executable "python3"
         flycheck-python-pylint-executable "pylint3"
-        python-environment-directory "~/.virtualenvs")
+        python-environment-directory "~/.virtualenvs"
+        jedi:complete-on-dot t)
   (add-to-list 'company-backends 'company-jedi)
   :init
   (add-hook 'python-mode-hook #'jedi:setup)
