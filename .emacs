@@ -157,6 +157,8 @@
 
 (use-package helm
   :ensure t
+  :defines helm-map
+  :commands helm-autoresize-mode
   :bind (("C-c h" . helm-command-prefix)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
@@ -175,13 +177,6 @@
          (:map minibuffer-local-map
                ("M-p" . helm-minibuffer-history)
                ("M-n" . helm-minibuffer-history))
-         (:map helm-map
-               ;; rebihnd tab to do persistent action
-               ("<tab>" . helm-execute-persistent-action)
-               ;; make TAB works in terminal
-               ("C-i" . helm-execute-persistent-action)
-               ;; list actions using C-z
-               ("C-z" . helm-select-action))
 
          ;; (:map help-command
          ;;       ("C-f" . helm-apropos)
@@ -206,7 +201,8 @@
    helm-autoresize-min-height 20
    )
 
-  :init (add-hook 'helm-mode-hook 'helm-autoresize-mode)
+  :init
+  (add-hook 'helm-mode-hook 'helm-autoresize-mode)
   )
 
 (use-package helm-grep
@@ -232,12 +228,15 @@
 
 (use-package helm-files
   :config
-  (setq ;; search for library in `require' and `declare-function' sexp.
+  (setq ;; search for library in `require' and `declare-function'
+   ;; sexp.
+   ;; helm-ff-auto-update-initial-value t
    helm-ff-search-library-in-sexp t
    helm-ff-file-name-history-use-recentf t)
   )
 
 (use-package helm-swoop
+  :ensure t
   :bind ((:map helm-swoop-map ("M-i"
                               . helm-multi-swoop-all-from-helm-swoop))
          (:map isearch-mode-map ("M-i" . helm-swoop-from-isearch)))
@@ -249,6 +248,16 @@
       ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
       helm-swoop-split-direction 'split-window-vertically)
   )
+
+(use-package helm-config )
+;; rebihnd tab to do persistent action
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+;; make TAB works in terminal
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+;; list actions ; using C-z
+(define-key helm-map (kbd "C-z") 'helm-select-action)
+
+
 
 (helm-mode t)
 (helm-autoresize-mode t)
@@ -275,12 +284,9 @@
 
 ;; (require 'mml)
 ;; (require 'bbdb)
-;; (require 'smtpmail)
 ;; (require 'mailto)
 ;; (require 'message)
 ;; (require 'smime)
-;; (require 'nndraft)
-;; (require 'nnfolder)
 ;; (require 'flycheck)
 
 ;; (require 'gnus-art)
@@ -363,57 +369,77 @@
      (define-key gnus-summary-mode-map (kbd ";") 'bbdb-mua-edit-field)))
   )
 
-
-(setq user-mail-address "mkj@gotu.dk"
-      mail-user-agent 'gnus-user-agent
-      message-directory "~/.emacs.d/gnus/Mail/"
-      message-fill-column 78
-      message-forward-as-mime nil
-      message-wash-forwarded-subjects t
-      message-sendmail-envelope-from 'header
-      message-alternative-emails "\\(mkj?\\|shaoh\\)@\\(\\(gotu\\)\\.dk\\)"
-      message-dont-reply-to-names "\\(mkj?\\|shaoh\\)@\\(\\(gotu\\)\\.dk\\)"
-      message-kill-buffer-on-exit t
-      message-mail-alias-type nil
-      message-send-mail-partially-limit nil
-      message-send-mail-function 'message-smtpmail-send-it
-      message-setup-hook (quote (message-check-recipients))
-      message-subscribed-address-functions (quote (gnus-find-subscribed-addresses))
-      message-citation-line-function 'message-insert-formatted-citation-line
-      message-citation-line-format "On %a, %b %d %Y, %f wrote:\n"
-      ;; dont autosave
-      message-auto-save-directory nil
-      smime-CA-directory "/etc/ssl/certs/"
-      smime-CA-file "/etc/ssl/certs/ca-certificates.crt"
-      smime-certificate-directory "~/.certs/"
-      smime-crl-check "-crl_check"
-      smtpmail-debug-info t
-      send-mail-function 'smtpmail-send-it
-      ;; render html mails without dark background
-      ;; seems to work with gnus-w3m
-      mm-text-html-renderer 'gnus-w3m
-      ;; dont ask for confirm when open links
-      mm-w3m-safe-url-regexp nil
-      mm-enable-external t
-      mm-default-directory "~/dwl"
-      mm-tmp-directory "~/tmp"
-      mm-verify-option 'always
-      mm-decrypt-option 'always
-      nnmail-crosspost nil
-      nnmail-extra-headers gnus-extra-headers
-      nndraft-directory (concat message-directory "drafts/")
-      nnfolder-directory (concat message-directory "archive/")
-      nnfolder-active-file (concat message-directory "archive")
-      )
-
-(use-package mml-mode
+(use-package message
   :defer t
+  :config
+  (setq user-mail-address "mkj@gotu.dk"
+        mail-user-agent 'gnus-user-agent
+        message-directory "~/.emacs.d/gnus/Mail/"
+        message-fill-column 78
+        message-forward-as-mime nil
+        message-wash-forwarded-subjects t
+        message-sendmail-envelope-from 'header
+        message-alternative-emails "\\(mkj?\\|shaoh\\)@\\(\\(gotu\\)\\.dk\\)"
+        message-dont-reply-to-names "\\(mkj?\\|shaoh\\)@\\(\\(gotu\\)\\.dk\\)"
+        message-kill-buffer-on-exit t
+        message-mail-alias-type nil
+        message-send-mail-partially-limit nil
+        message-send-mail-function 'message-smtpmail-send-it
+        message-setup-hook (quote (message-check-recipients))
+        message-subscribed-address-functions (quote (gnus-find-subscribed-addresses))
+        message-citation-line-function 'message-insert-formatted-citation-line
+        message-citation-line-format "On %a, %b %d %Y, %f wrote:\n"
+        ;; dont autosave
+        message-auto-save-directory nil
+        smime-CA-directory "/etc/ssl/certs/"
+        smime-CA-file "/etc/ssl/certs/ca-certificates.crt"
+        smime-certificate-directory "~/.certs/"
+        smime-crl-check "-crl_check"
+        send-mail-function 'smtpmail-send-it
+        ;; render html mails without dark background
+        ;; seems to work with gnus-w3m
+        mm-text-html-renderer 'gnus-w3m
+        ;; dont ask for confirm when open links
+        mm-w3m-safe-url-regexp nil
+        mm-enable-external t
+        mm-default-directory "~/dwl"
+        mm-tmp-directory "~/tmp"
+        mm-verify-option 'always
+        mm-decrypt-option 'always
+        nnmail-crosspost nil
+        nnmail-extra-headers gnus-extra-headers
+        )
   :init
   (add-hook 'message-send-hook
             (lambda ()
               (message-add-header "X-PGP-Key: fp=\"730C C366 E9E2 C833
   E62F B412  0D20 8662 8A3D 849A\"; id=\"0x8A3D849A\";
   get=<http://www.gotu.dk/8a3d849a.asc>; get=<hkp://pgp.mit.edu/pks/lookup?search=0x0D2086628A3D849A&op=get>; get=<https://keyserver.pgp.com/vkd/DownloadKey.event?keyid=0x0D2086628A3D849A>;")))
+  )
+
+(use-package nndraft
+  :defer t
+  :config
+  (setq nndraft-directory (concat message-directory "drafts/"))
+  )
+
+(use-package nnfolder
+  :defer t
+  :config
+  (setq nnfolder-directory (concat message-directory "archive/")
+        nnfolder-active-file (concat message-directory "archive"))
+  )
+
+(use-package smtpmail
+  :defer t
+  :config
+  (setq smtpmail-debug-info t)
+  )
+
+
+(use-package mml-mode
+  :defer t
+  :init
   (add-hook 'mail-mode-hook 'footnote-mode)
   (add-hook 'mail-mode-hook 'turn-on-flyspell)
   (add-hook 'mail-mode-hook 'turn-on-auto-fill)
@@ -475,6 +501,19 @@
 (use-package irony
   :defer t
   :ensure t
+  :config
+  (progn
+    (use-package company-irony
+      :ensure t
+      :config
+      (add-to-list 'company-backends 'company-irony))
+
+    (use-package company-irony-c-headers
+      :ensure t
+      :config
+      (add-to-list 'company-backends 'company-irony-c-headers))
+
+    )
   :init
   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
@@ -484,16 +523,6 @@
   :after flycheck
   :init
   (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
-
-(use-package company-irony
-  :defer t
-  :defines company-irony
-  :ensure t)
-
-(use-package company-irony-c-headers
-  :defer t
-  :defines company-irony-c-headers
-  :ensure t)
 
 (use-package smartparens
   :defer t
@@ -509,7 +538,7 @@
 
 
 (use-package cc-mode
-  ;; :defer t
+  :defer t
   :defines c-mode-base-map
   :bind (:map c-mode-base-map
               ("C-x C-m" . cmake-ide-run-cmake)
@@ -517,13 +546,16 @@
               ("C-c ," . rtags-find-references-at-point)
               ("C-c C-c" . cmake-ide-compile))
   :config
+  (make-local-variable 'company-backends)
+  (setq company-backends (delete 'company-semantic company-backends))
+  (setq company-backends (delete 'company-clang company-backends))
+  (setq company-backends (delete 'company-capf company-backends))
+  (setq company-backends (delete 'company-etags company-backends))
   (setq-local c-default-style "stroustrup")
   (setq-local c-basic-offset 4)
   (setq-local tab-width 4)
   (setq-local fill-column 80)
   (setq-local indent-tabs-mode nil)
-  (setq-local company-backends (delete 'company-semantic company-backends))
-  (setq-local company-backends (delete 'company-clang company-backends))
   (c-set-offset 'innamespace 0)
   (add-to-list 'company-backends '(company-irony-c-headers company-irony))
   :init
@@ -539,12 +571,7 @@
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
   (add-hook 'c-mode-common-hook 'auto-fill-mode)
   (add-hook 'c-mode-common-hook #'cmake-ide-setup)
-  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
-  (add-hook 'c-mode-common-hook 'turn-on-diff-hl-mode))
-
-
-
-
+  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode))
 
 
 
@@ -579,10 +606,10 @@
   :ensure t
   :mode ("\\.py$" . python-mode)
   :config
-  (setq  flycheck-python-pycompile-executable "python3"
-         flycheck-json-python-json-executable "python3"
-         flycheck-python-pylint-executable "pylint3"
-         python-environment-directory "~/.virtualenvs")
+  (setq flycheck-python-pycompile-executable "python3"
+        flycheck-json-python-json-executable "python3"
+        flycheck-python-pylint-executable "pylint3"
+        python-environment-directory "~/.virtualenvs")
   (add-to-list 'company-backends 'company-jedi)
   :init
   (add-hook 'python-mode-hook #'jedi:setup)
@@ -596,7 +623,8 @@
 (use-package elpy
   :defer t
   :ensure t
-  :bind (("C-c C-k" . comment-region))
+  :bind (:map elpy-mode-map
+              ("C-c C-k" . comment-region))
   :config
   (setq elpy-rpc-backend "jedi"
         elpy-rpc-python-command "python3"))
@@ -627,7 +655,8 @@
   )
 
 (use-package web-mode
-  :bind (("C-c C-k" . web-mode-comment-or-uncomment))
+  :bind (:map web-mode-map
+              ("C-c C-k" . web-mode-comment-or-uncomment))
   :defer t
   :ensure t
   :mode ("\\.phtml\\'" . web-mode)
@@ -667,7 +696,7 @@
   (add-hook 'sass-mode-hook 'company-mode)
 )
 
-(use-package lisp
+(use-package lisp-mode
   :defer t
   :init
   (add-hook 'lisp-interaction-mode-hook 'company-mode)
@@ -676,7 +705,7 @@
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
   )
 
-(use-package emacs-lisp
+(use-package emacs-lisp-mode
   :defer t
   :init
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -690,8 +719,12 @@
   :ensure t
   :defer t)
 
-(use-package auctex
-  :ensure t
+(use-package pdf-tools
+  :defer t
+  :ensure t)
+
+(use-package tex
+  :ensure auctex
   :defer t
   :config
   (setq TeX-command-force "pdflatex"
@@ -739,6 +772,7 @@
 
 (use-package ledger-mode
   :defer t
+  :ensure t
   :init
   (add-hook 'ledger-mode-hook 'flycheck-mode)
   )
@@ -803,8 +837,8 @@
 (use-package tide
   :defer t
   :mode ("\\.ts\\'" . typescript-mode)
-  :bind (("C-c ." . tide-jump-to-definition)
-         )
+  :bind (:map tide-mode-map
+              ("C-c ." . tide-jump-to-definition))
   :ensure t
   :config
   (setq-local flycheck-disabled-checkers
@@ -902,7 +936,12 @@
     (flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-emacs-eclim company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
  '(safe-local-variable-values
    (quote
-    ((cmake-ide-cmake-opts . "-DCMAKE_BUILD_TYPE=Debug")
+    ((flycheck-gcc-language-standard . "c++14")
+     (flycheck-clang-language-standard . "c++14")
+     (cmake-ide-project-dir . "/home/martin/pikes")
+     (cmake-ide-build-dir . "/home/martin/pikes/build")
+     (irony-cdb-json-add-compile-commands-path . "build/compile_commands.json")
+     (cmake-ide-cmake-opts . "-DCMAKE_BUILD_TYPE=Debug")
      (cmake-ide-project-dir . "/home/mkj/tp/pikes")
      (cmake-ide-build-dir . "/home/mkj/tp/pikes/build")
      (c-default-style . "stroustrup")
