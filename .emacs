@@ -654,7 +654,8 @@
 (use-package apache-mode
   :defer t
   :ensure t
-  :bind (("C-c C-i" . apache-ident-line)))
+  :bind (:map local-key-map
+              ("C-c C-i" . apache-ident-line)))
 
 (use-package sql
   :defer t
@@ -935,6 +936,14 @@
   :ensure t
   :init
   (add-hook 'meson-mode-hook 'company-mode)
+  )
+
+(use-package dockerfile-mode
+  :mode (("Dockerfile\\'" . dockerfile-mode))
+  :mode (("\\.Dockerfile\\'" . dockerfile-mode))
+  :ensure t
+  :init
+  (add-hook 'dockerfile-mode-hook 'company-mode)
   )
 
 (custom-set-variables
