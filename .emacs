@@ -28,7 +28,9 @@
   :defer t
   :ensure t
   :init
-  (load-theme 'sanityinc-solarized-light t))
+  (load-theme 'sanityinc-solarized-light t)
+  (load-theme 'tramp t)
+  )
 
 
 (setq user-full-name "Martin Kjær Jørgensen"
@@ -258,6 +260,11 @@
 (define-key helm-map (kbd "C-z") 'helm-select-action)
 
 
+(use-package helm-tramp
+  :bind ("C-c s" . helm-tramp)
+  :ensure t)
+
+(setq tramp-verbose 10)
 
 (helm-mode t)
 (helm-autoresize-mode t)
@@ -311,6 +318,9 @@
 
 (use-package gnus
   :defer t
+  :after bbdb
+  :bind (:map gnus-summary-mode-map
+              (";" . bbdb-mua-edit-field))
   :config
   (setq gnus-asynchronous t
         gnus-directory "~/.emacs.d/gnus/News/"
@@ -366,10 +376,7 @@
         ;; gnus-agent-cache t
         gnus-ignored-from-addresses "Martin Kjær Jørgensen")
   :init
-  (add-hook
-   'gnus-summary-mode-hook
-   (lambda ()
-     (define-key gnus-summary-mode-map (kbd ";") 'bbdb-mua-edit-field)))
+  (add-hook 'gnus-summary-mode-hook 'emojify-mode)
   )
 
 (use-package message
@@ -442,9 +449,14 @@
   (setq smtpmail-debug-info t)
   )
 
+(use-package emojify
+  :defer t
+  :ensure t)
+
 
 (use-package mml
   :defer t
+  :after emojify
   :init
   (add-hook 'mail-mode-hook 'footnote-mode)
   (add-hook 'mail-mode-hook 'turn-on-flyspell)
@@ -452,6 +464,7 @@
   (add-hook 'message-mode-hook 'footnote-mode)
   (add-hook 'message-mode-hook 'turn-on-flyspell)
   (add-hook 'message-mode-hook 'turn-on-auto-fill)
+  (add-hook 'message-mode-hook 'emojify-mode)
   )
 
 
@@ -924,6 +937,7 @@
 
 
 (use-package yaml-mode
+  :defer t
   :ensure t
   :after company flycheck flycheck-yamllint
   :init
@@ -933,12 +947,14 @@
   )
 
 (use-package meson-mode
+  :defer t
   :ensure t
   :init
   (add-hook 'meson-mode-hook 'company-mode)
   )
 
 (use-package dockerfile-mode
+  :defer t
   :mode (("Dockerfile\\'" . dockerfile-mode))
   :mode (("\\.Dockerfile\\'" . dockerfile-mode))
   :ensure t
@@ -946,10 +962,10 @@
   (add-hook 'dockerfile-mode-hook 'company-mode)
   )
 
-(use-package emojify
+(use-package docker-tramp
+  :defer t
   :ensure t)
 
-(add-hook 'after-init-hook #'global-emojify-mode)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -958,7 +974,29 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
+    ("6ebdb33507c7db94b28d7787f802f38ac8d2b8cd08506797b3af6cdfd80632e0" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
+ '(dired-mode-hook
+   (cons
+    (quote tramp-theme-hook-function)
+    (delete
+     (quote tramp-theme-hook-function)
+     dired-mode-hook)))
+ '(eshell-directory-change-hook
+   (cons
+    (quote tramp-theme-hook-function)
+    (delete
+     (quote tramp-theme-hook-function)
+     eshell-directory-change-hook)))
+ '(find-file-hook
+   (cons
+    (quote tramp-theme-hook-function)
+    (delete
+     (quote tramp-theme-hook-function)
+     find-file-hook)))
+ '(mode-line-buffer-identification
+   (quote
+    (:eval
+     (tramp-theme-mode-line-buffer-identification))) t)
  '(package-selected-packages
    (quote
     (emojify flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
