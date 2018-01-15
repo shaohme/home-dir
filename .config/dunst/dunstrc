@@ -33,9 +33,8 @@
     history_length       = 20
 
     icon_position        = left
-    icon_folders         = /usr/share/icons/Numix/status/32/:/usr/share/icons/Numix/actions/32
 
-startup_notification = false
+    startup_notification = false
     browser = /usr/bin/firefox -new-tab
 
 [frame]
