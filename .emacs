@@ -29,7 +29,10 @@
   :ensure t
   :init
   (load-theme 'sanityinc-solarized-light t)
-  (load-theme 'tramp t)
+  (use-package tramp-theme
+    :ensure t
+    :init
+    (load-theme 'tramp t))
   )
 
 
@@ -963,6 +966,15 @@
   )
 
 (use-package docker-tramp
+  :defer t
+  :ensure t)
+
+(use-package kubernetes
+  :defer t
+  :ensure t
+  :commands (kubernetes-overview))
+
+(use-package kubernetes-tramp
   :defer t
   :ensure t)
 
