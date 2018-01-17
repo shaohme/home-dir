@@ -343,9 +343,11 @@
         gnus-novice-user nil
         gnus-interactive-exit nil
         gnus-gcc-mark-as-read t
-        ;; gnus-summary-line-format "%U%R%d %-5,5L %-20,20n %B%-80,80S\n"
-        gnus-summary-line-format "%U%R%d%z%I%(%[%4L: %-23,23f%]%) %s\n"
+        ;; gnus-summary-line-format "%U%R%d%z%I%(%[%4L: %-23,23f%]%) %s\n"
+        ;; gnus-summary-line-format "%U%R%O %&user-date; %I%(%[%n]%): %s\n"
+        gnus-summary-line-format "%U%R%z %&user-date; %I%(%[%4L: %-20,20n%]%) %S\n"
         gnus-summary-thread-gathering-function 'gnus-gather-threads-by-subject
+        gnus-group-line-format "%M%S%8y: %G\n"
         gnus-user-date-format-alist '((t . "%Y-%m-%d %H:%M:%S"))
         gnus-thread-sort-functions (quote (gnus-thread-sort-by-most-recent-date))
         gnus-sort-gathered-threads-function (quote gnus-thread-sort-by-date)
@@ -404,6 +406,8 @@
         message-subscribed-address-functions (quote (gnus-find-subscribed-addresses))
         message-citation-line-function 'message-insert-formatted-citation-line
         message-citation-line-format "On %a, %b %d %Y, %f wrote:\n"
+        ;; put cursor on top of reply
+        message-cite-reply-position 'above
         ;; dont autosave
         message-auto-save-directory nil
         smime-CA-directory "/etc/ssl/certs/"

@@ -77,11 +77,11 @@ close the *compilation* buffer if the compilation is successful"
   (interactive)
   (let* ((dic ispell-current-dictionary)
     	 (change (if (string= dic "en_US") "da_DK" "en_US")))
-	(ispell-change-dictionary change)
-	;; Dont check whole buffer as it can be of several languages, and large
-	;; (if (bound-and-true-p flyspell-mode)
-	;; 	(flyspell-buffer))
-	(message "Dictionary switched from %s to %s" dic change)))
+    (ispell-change-dictionary change)
+    ;; Dont check whole buffer as it can be of several languages, and large
+    (if (bound-and-true-p flyspell-mode)
+        (flyspell-buffer))
+    (message "Dictionary switched from %s to %s" dic change)))
 
 (defun delete-word (arg)
   "Delete characters forward until encountering the end of a word.
