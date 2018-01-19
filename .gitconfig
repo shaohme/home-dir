@@ -2,7 +2,7 @@
 	name = Martin Kjær Jørgensen
 	email = mkj@gotu.dk
 [core]
-	editor = "emacsclient -c"
+	editor = "emacs"
 [color]
 	status = auto
 	branch = auto
@@ -10,16 +10,17 @@
 	diff = auto
 
 [credential "https://git-codecommit.us-east-1.amazonaws.com"]
-        helper = !aws-credentials-helper.py
+    helper = !aws-credentials-helper.py
 	helper = !aws --profile saml codecommit credential-helper $@
  	UseHttpPath = true
 
 [credential]
-        helper = store
+    helper = store
 [diff]
-	external = emacsclient -c
+	tool = emacs
+[difftool "emacs"]
+    cmd = emacs --eval \"(ediff-files \\\"$LOCAL\\\" \\\"$REMOTE\\\")\"
 [merge]
-        tool = ediff
-
+    tool = ediff
 [mergetool "ediff"]
-        cmd = emacsclient -c -a \"\" --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+    cmd = emacs --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
