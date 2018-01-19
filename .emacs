@@ -115,6 +115,8 @@
 (use-package eww
   :defer t
   :ensure t
+  :init
+  (add-hook 'eww-mode-hook 'auto-fill-mode)
   :config
   (setq eww-download-directory "~/dwl/")
   )
@@ -846,6 +848,9 @@
   (add-hook 'markdown-mode-hook 'company-mode)
   (add-hook 'markdown-mode-hook 'flycheck-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
+  (add-hook 'markdown-mode-hook 'markdown-live-preview-mode)
+  :config
+  (setq markdown-command "multimarkdown")
   )
 
 (use-package company-dabbrev)
