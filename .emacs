@@ -267,7 +267,7 @@
   :bind ("C-c s" . helm-tramp)
   :ensure t)
 
-(setq tramp-verbose 10)
+;; (setq tramp-verbose 10)
 
 (helm-mode t)
 (helm-autoresize-mode t)
