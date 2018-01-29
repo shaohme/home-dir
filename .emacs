@@ -987,6 +987,20 @@
   :defer t
   :ensure t)
 
+(use-package terraform-mode
+  :defer t
+  :ensure t
+  :mode ("\\.tf\\'" . terraform-mode)
+  :mode ("\\.tf.json\\'" . terraform-mode)
+  :config
+  (progn
+    (use-package company-terraform
+      :ensure t
+      :config
+      (add-to-list 'company-backends 'company-terraform))
+    )
+  :init
+  (add-hook 'terraform-mode-hook 'company-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1020,7 +1034,7 @@
      (tramp-theme-mode-line-buffer-identification))) t)
  '(package-selected-packages
    (quote
-    (emojify flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
+    (company-terraform emojify flycheck-checkbashisms flycheck-irony magit modern-cpp-font-lock ledger-mode bbdb use-package levenshtein systemd js2-refactor json-navigator tide flycheck-yamllint company-shell company-tern cl-lib angular-snippets diff-hl ctags-update csv-mode realgud hydra elpy js2-mode xkcd helm-ghc company-ghc irony flycheck-haskell ghc ghc-imported-from haskell-snippets haskell-tab-indent company-quickhelp company-web zenburn-theme company-jedi markdown-mode markdown-preview-mode yaml-mode rainbow-mode cmake-ide cmake-project projectile flycheck-ledger auto-complete company yasnippet flycheck helm jedi-core zygospore xterm-color ws-butler web-mode volatile-highlights undo-tree solarized-theme smartparens skewer-mode sed-mode scss-mode scala-mode sass-mode rtags po-mode pdf-tools password-store org-journal org-doing org-beautify-theme org-ac org nyan-mode notmuch nginx-mode magit-svn magit-gitflow magit-gerrit magit-find-file magit-annex lua-mode log4j-mode json-mode jedi iedit html5-schema ht helm-swoop helm-projectile helm-gtags haxor-mode guru-mode groovy-mode grails-mode gradle-mode go-mode gitignore-mode gitconfig-mode ggtags flymake-sass flymake-ruby flymake-php flymake-less flymake-json flymake-jslint flymake-css ess ecb direx-grep diredful dired-toggle-sudo dired-single dired-atool d-mode csharp-mode company-irony-c-headers company-irony color-theme-sanityinc-solarized clojure-mode cil-mode bash-completion babel autopair auto-indent-mode auto-complete-nxml auto-complete-clang-async auctex apples-mode anzu anything angular-mode android-mode aggressive-indent ada-mode ac-php ac-octave ac-ispell ac-html ac-dcd ac-clang)))
  '(safe-local-variable-values
    (quote
     ((flycheck-gcc-language-standard . "c++14")
