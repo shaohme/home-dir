@@ -848,7 +848,7 @@
   (add-hook 'markdown-mode-hook 'company-mode)
   (add-hook 'markdown-mode-hook 'flycheck-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
-  (add-hook 'markdown-mode-hook 'markdown-live-preview-mode)
+  ;; (add-hook 'markdown-mode-hook 'markdown-live-preview-mode)
   :config
   (setq markdown-command "multimarkdown")
   )
