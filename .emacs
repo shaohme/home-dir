@@ -1002,6 +1002,43 @@
   :init
   (add-hook 'terraform-mode-hook 'company-mode))
 
+(use-package company-racer
+  :defer t
+  :ensure t
+  )
+
+(use-package flycheck-rust
+  :defer t
+  :ensure t)
+
+(use-package racer
+  :defer t
+  :ensure t
+  :after company-racer
+  :config
+  (add-to-list 'company-backends 'company-racer)
+  :init
+  (add-hook 'racer-mode-hook #'eldoc-mode)
+  (add-hook 'racer-mode-hook #'company-mode)
+)
+
+(use-package rust-mode
+  :defer t
+  :ensure t
+  :after racer-mode
+  :after flycheck-rust
+  :config
+  (setq company-tooltip-align-annotations t)
+  :init
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
+  (add-hook 'rust-mode-hook #'racer-mode)
+  (add-hook 'rust-mode-hook #'smartparens-mode)
+  (add-hook 'rust-mode-hook #'flycheck-mode)
+  (add-hook 'rust-mode-hook #'hs-minor-mode)
+  (add-hook 'rust-mode-hook #'auto-fill-mode)
+  )
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
