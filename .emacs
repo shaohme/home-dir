@@ -503,6 +503,18 @@
 (use-package projectile
   :defer t
   :ensure t
+  :config
+  (setq projectile-globally-ignored-directories
+      (append '(
+        ".git"
+        ".svn"
+        "out"
+        "repl"
+        "target"
+        "venv"
+        "build"
+        )
+          projectile-globally-ignored-directories))
   )
 
 (use-package helm-projectile
