@@ -4,6 +4,7 @@
 (require 'package)
 
 (add-to-list 'load-path (expand-file-name "site-lisp" user-emacs-directory))
+(add-to-list 'load-path "~/.cabal/share/x86_64-linux-ghc-8.0.2/HaRe-0.8.4.1/elisp")
 
 (setq package-archives
       '(("GNU ELPA"     . "http://elpa.gnu.org/packages/")
@@ -786,19 +787,32 @@
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   )
 
-
+(require 'hare)
+;; (use-package hare
+;;   :defer t
+;;   )
 
 (use-package company-ghc
+  :defer t
+  :ensure t)
+
+(use-package hindent
   :defer t
   :ensure t)
 
 (use-package haskell-mode
   :defer t
   :ensure t
+  :after hindent
+  :after company
+  :after company-ghc
   :config
   (add-to-list 'company-backends 'company-ghc)
   :init
   (add-hook 'haskell-mode-hook 'company-mode)
+  (add-hook 'haskell-mode-hook 'hindent-mode)
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook '(lambda () (ghc-init) (hare-init)))
   )
 
 (use-package js
