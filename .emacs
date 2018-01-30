@@ -787,10 +787,10 @@
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   )
 
-(require 'hare)
-;; (use-package hare
-;;   :defer t
-;;   )
+;; (require 'hare)
+(use-package hare
+   :defer t
+   )
 
 (use-package company-ghc
   :defer t
@@ -806,6 +806,7 @@
   :after hindent
   :after company
   :after company-ghc
+  :after hare
   :config
   (add-to-list 'company-backends 'company-ghc)
   :init
