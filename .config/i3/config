@@ -77,7 +77,7 @@ bindsym $mod+r mode "resize"
 
 new_window normal
 
-bindsym $mod+Shift+m exec emacsclient -c -e '(gnus)'
+bindsym $mod+Shift+m exec emacs --eval "(gnus)"
 bindsym $mod+Shift+s exec suspend.sh
 # bindsym $mod+Shift+f exec urxvtc -e fetch_email.sh
 bindsym $mod+Shift+p exec pavucontrol
@@ -154,4 +154,3 @@ bar {
 
 exec compton -CGb
 exec urxvtd -q -o -f
-exec xmodmap ~/.Xmodmap
