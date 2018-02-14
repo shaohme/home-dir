@@ -542,6 +542,7 @@
 (use-package irony
   :defer t
   :ensure t
+  :after projectile
   :config
   (progn
     (use-package company-irony
@@ -555,8 +556,7 @@
       (add-to-list 'company-backends 'company-irony-c-headers))
 
     )
-  :init
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+)
 
 (use-package flycheck-irony
   :defer t
@@ -577,10 +577,14 @@
   (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
   (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
 
+(use-package cmake-ide
+  :defer t
+  :ensure t)
 
 (use-package cc-mode
   :defer t
   :defines c-mode-base-map
+  :after cmake-ide
   :bind (:map c-mode-base-map
               ("C-x C-m" . cmake-ide-run-cmake)
               ("C-c ." . rtags-find-symbol-at-point)
@@ -598,7 +602,11 @@
   (setq-local fill-column 80)
   (setq-local indent-tabs-mode nil)
   (c-set-offset 'innamespace 0)
-  (add-to-list 'company-backends '(company-irony-c-headers company-irony))
+  (add-to-list 'company-backends '(company-irony-c-headers
+                                   company-irony))
+  ;; (irony-cdb-json-add-compile-commands-path (projectile-project-root)
+  ;;                                           (concat (file-name-as-directory "build")
+  ;;                                                   "compile_commands.json"))
   :init
   (sp-with-modes '(c-mode c++-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
@@ -611,8 +619,11 @@
   (add-hook 'c-mode-common-hook 'flycheck-mode)
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
   (add-hook 'c-mode-common-hook 'auto-fill-mode)
+  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
   (add-hook 'c-mode-common-hook #'cmake-ide-setup)
-  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode))
+  (add-hook 'c-mode-common-hook 'irony-cdb-autosetup-compile-options)
+
+)
 
 
 
@@ -1103,14 +1114,11 @@
    (quote
     ((flycheck-gcc-language-standard . "c++14")
      (flycheck-clang-language-standard . "c++14")
+     (cmake-ide-cmake-opts . "-DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=dist")
      (cmake-ide-project-dir . "/home/martin/pikes")
      (cmake-ide-build-dir . "/home/martin/pikes/build")
      (irony-cdb-json-add-compile-commands-path . "build/compile_commands.json")
-     (cmake-ide-cmake-opts . "-DCMAKE_BUILD_TYPE=Debug")
-     (cmake-ide-project-dir . "/home/mkj/tp/pikes")
-     (cmake-ide-build-dir . "/home/mkj/tp/pikes/build")
-     (c-default-style . "stroustrup")
-     (engine . jinja)))))
+     (c-default-style . "stroustrup")))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
