@@ -78,8 +78,7 @@
   :commands switch-dictionary backward-delete-word nxml-pretty-format notify-compilation-result
   )
 
-(add-to-list 'compilation-finish-functions
-	     'notify-compilation-result)
+(add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
 (global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-x t") 'beginning-of-buffer)
@@ -678,6 +677,10 @@
 (use-package yasnippet
   :defer t
   :ensure t
+  :config
+  (yas/initialize)
+  (setq yas/root-directory (expand-file-name "snippets" user-emacs-directory))
+  (yas/load-directory yas/root-directory)
   )
 
 (use-package term
@@ -849,6 +852,7 @@
   (add-hook 'sh-set-shell-hook 'company-mode)
   (add-hook 'sh-set-shell-hook 'flycheck-mode)
   (add-hook 'sh-set-shell-hook 'flycheck-checkbashisms-setup)
+  (add-hook 'sh-set-shell-hook 'yas-minor-mode)
   )
 
 
