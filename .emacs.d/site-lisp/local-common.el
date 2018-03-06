@@ -54,12 +54,29 @@ toplevel directory and still can't find it, return nil.  Start at STARTDIR or . 
     ; return statement
     (if found dirname nil)))
 
-(defun notify-compilation-result(buffer msg)
+(defun notify-compilation-result(buffer string)
   "Notify that the compilation is finished,
 close the *compilation* buffer if the compilation is successful"
-  (if (string-match "^finished" msg)
-      (delete-windows-on buffer)
-    )
+  (when (and
+         (buffer-live-p buffer)
+         (string-match "compilation" (buffer-name buffer))
+         (string-match "finished" string)
+         (not
+          (with-current-buffer buffer
+            (goto-char (point-min))
+            (search-forward "warning" nil t))))
+    (run-with-timer 1 nil
+                    (lambda (buf)
+                      (bury-buffer buf)
+                      ;; (switch-to-prev-buffer (get-buffer-window
+                      ;; buf) 'kill))
+                      (delete-windows-on buf))
+                    buffer))
+  ;; old code
+  ;; (if (string-match "^finished" msg)
+  ;;     (delete-windows-on buffer)
+  ;;   )
+
   )
 
 
