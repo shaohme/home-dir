@@ -1,0 +1,12 @@
+[Unit]
+Description=RTags daemon
+
+[Service]
+Type=simple
+ExecStart=%h/bin/rdm -v --log-flush
+ExecStartPost=/bin/sh -c "echo +19 > /proc/$MAINPID/autogroup"
+Nice=19
+CPUSchedulingPolicy=idle
+
+[Install]
+WantedBy=default.target
