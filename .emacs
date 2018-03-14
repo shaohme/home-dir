@@ -661,7 +661,7 @@
   :config
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-json-python-json-executable "python3"
-        flycheck-python-pylint-executable "pylint3"
+        flycheck-python-pylint-executable "pylint"
         python-environment-directory "~/.virtualenvs"
         jedi:complete-on-dot t)
   (add-to-list 'company-backends 'company-jedi)
@@ -669,7 +669,7 @@
   (add-hook 'python-mode-hook #'jedi:setup)
   (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'flycheck-mode)
-  (add-hook 'python-mode-hook 'eldoc-mode)
+  ;; (add-hook 'python-mode-hook 'eldoc-mode)
   (add-hook 'python-mode-hook 'projectile-mode)
   )
 
@@ -1089,7 +1089,8 @@
   :defer t
   :ensure t
   :bind (("C-c ." . godef-jump)
-         ("C-c C-c" . compile))
+         ("C-c C-c" . compile)
+         ("C-c C-r" . recompile))
   :config
   (progn
     (use-package company-go
@@ -1097,6 +1098,7 @@
       :config
       (add-to-list 'company-backends 'company-go))
     )
+  (setq compile-command "go build")
   :init
   (add-hook 'go-mode-hook #'projectile-mode)
   (add-hook 'go-mode-hook #'flycheck-mode)
@@ -1105,6 +1107,10 @@
   (add-hook 'go-mode-hook #'go-eldoc-setup)
   (add-hook 'before-save-hook #'gofmt-before-save)
   )
+
+(use-package realgud
+  :defer t
+  :ensure t)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1144,6 +1150,7 @@
     ((flycheck-gcc-language-standard . "c++14")
      (flycheck-clang-language-standard . "c++14")
      (cmake-ide-cmake-opts . "-DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=dist")
+     (cmake-ide-make-command . "make -j8 install --no-print-directory")
      (cmake-ide-project-dir . "/home/martin/pikes")
      (cmake-ide-build-dir . "/home/martin/pikes/build")
      (irony-cdb-json-add-compile-commands-path . "build/compile_commands.json")
