@@ -38,7 +38,7 @@
 
 
 (setq user-full-name "Martin Kjær Jørgensen"
-      default-frame-alist '((font . "monospace 12"))
+      default-frame-alist '((font . "monospace 14"))
       inhibit-startup-message t
       password-cache t
       password-cache-expiry 86400
