@@ -1115,6 +1115,9 @@
 (use-package lua-mode
   :defer t
   :ensure t
+  :mode (("\\.rockspec" . lua-mode)
+         ("\\.busted" . lua-mode)
+         ("\\.slua" . lua-mode))
   :config
   (progn
     (use-package company-lua
