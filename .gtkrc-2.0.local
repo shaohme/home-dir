@@ -1,3 +1,5 @@
-gtk-theme-name = "Adwaita"
-gtk-icon-theme-name = "Adwaita"
-gtk-cursor-theme-name = "Vanilla-DMZ"
+include "/usr/share/themes/Emacs/gtk-2.0-key/gtkrc"
+gtk-theme-name = "Arc-Darker"
+gtk-icon-theme-name = "Arc"
+gtk-cursor-theme-name = "Adwaita"
+gtk-key-theme-name = "Emacs"

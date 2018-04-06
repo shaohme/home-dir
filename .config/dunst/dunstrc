@@ -6,7 +6,8 @@
     transparency         = 0
     ignore_newline       = no
     show_indicators      = yes
-    separator_color      = frame
+#    separator_color      = frame
+    separator_color      = #f3f4f5
 
     sort                 = yes
     alignment            = left
@@ -39,7 +40,8 @@
 
 [frame]
     width = 1
-    color = "#93a1a1"
+#    color = "#93a1a1"
+    color = "#1793d1"
 
 [shortcuts]
     close     = ctrl+space
