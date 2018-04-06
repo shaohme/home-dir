@@ -127,28 +127,40 @@ bindsym $mod+d exec rofi -show run
 # bindsym $mod+d exec dmenu_run -i -p "> " -nb \#a64949 -nf \#FDF6E3 -sb \#a68a2e -fn "xft:Monospace:size=19"
 # bindsym $mod+d exec dmenu_run -i -p "> " -nb \#3F3F3F -nf \#FDF6E3 -fn "xft:Monospace:size=20"
 
+# define colors used
+set $bg-color 	         #2f343f
+set $inactive-bg-color   #2f343f
+set $text-color          #f3f4f5
+set $inactive-text-color #676E7D
+set $urgent-bg-color     #5294e2
 
-# client.focused              #688060 #688060 #303030 #ffcfaf
-# client.focused_inactive     #3f3f3f #3F3F3F #7f9f7f #3f3f3f
-# client.unfocused            #3f3f3f #3F3F3F #DCDCCC #3f3f3f
-# client.urgent               #dca3a3 #dca3a3 #DCDCCC #3f3f3f
+# windows         Border    Background    Text     Indicator
+client.focused    #676E7D   #676E7D       #ffffff  #676E7D
+client.unfocused  #2f343f   #2f343f       #ffffff  #676E7D
 
-client.focused          #586e75 #859900 #002b36 #d33682 #d33682
-client.focused_inactive #586e75 #859900 #586e75 #073642 #586e75
-client.unfocused        #859900 #fdf6e3 #839496 #073642 #586e75
-client.urgent           #859900 #dc322f #002b36 #002b36 #586e75
+
+# client.focused          #586e75 #859900 #002b36 #d33682 #d33682
+# client.focused_inactive #586e75 #859900 #586e75 #073642 #586e75
+# client.unfocused        #859900 #fdf6e3 #839496 #073642 #586e75
+# client.urgent           #859900 #dc322f #002b36 #002b36 #586e75
 
 
 bar {
     status_command i3status
     colors {
-       background #fdf6e3
-       statusline #839496
-       separator  #586e75
-       focused_workspace  #d33682 #d33682 #fdf6e3
-       active_workspace   #586e75 #586e75 #002b36
-       inactive_workspace #fdf6e3 #fdf6e3 #839496
-       urgent_workspace   #dc322f #dc322f #fdf6e3
+    background $bg-color
+    separator #757575
+    #                  border             background         text
+    focused_workspace  $bg-color          $bg-color          $text-color
+    inactive_workspace $inactive-bg-color $inactive-bg-color $inactive-text-color
+    urgent_workspace $urgent-bg-color $urgent-bg-color $text-color
+    #    background #fdf6e3
+    #    statusline #839496
+    #    separator  #586e75
+    #    focused_workspace  #d33682 #d33682 #fdf6e3
+    #    active_workspace   #586e75 #586e75 #002b36
+    #    inactive_workspace #fdf6e3 #fdf6e3 #839496
+    #    urgent_workspace   #dc322f #dc322f #fdf6e3
     }
 }
 
