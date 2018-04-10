@@ -25,13 +25,6 @@
               save-place 1
               flycheck-emacs-lisp-load-path load-path)
 
-;; (use-package color-theme-sanityinc-solarized
-;;   :defer t
-;;   :ensure t
-;;   :init
-;;   (load-theme 'sanityinc-solarized-light t)
-;;   )
-
 (use-package spacemacs-theme
   :defer t
   :ensure t
@@ -41,11 +34,11 @@
     :ensure t
     :init
     (load-theme 'tramp t))
-
   )
 
+
 (setq user-full-name "Martin Kjær Jørgensen"
-      default-frame-alist '((font . "monospace 14"))
+      default-frame-alist '((font . "monospace 12"))
       inhibit-startup-message t
       password-cache t
       password-cache-expiry 86400
@@ -110,9 +103,7 @@
 (recentf-mode 1)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'text-mode-hook #'goto-address-mode)
 
-(setq-default major-mode 'text-mode)
 
 (use-package volatile-highlights
   :ensure t
@@ -298,8 +289,17 @@
         bbdb-message-all-addresses t)
   (bbdb-initialize 'gnus 'message)
   (bbdb-mua-auto-update-init 'message)
+
   )
 
+
+
+;; (require 'mml)
+;; (require 'bbdb)
+;; (require 'mailto)
+;; (require 'message)
+;; (require 'smime)
+;; (require 'flycheck)
 
 (use-package gnus-art
   :defer t)
@@ -1140,7 +1140,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "6ebdb33507c7db94b28d7787f802f38ac8d2b8cd08506797b3af6cdfd80632e0" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
+    ("6ebdb33507c7db94b28d7787f802f38ac8d2b8cd08506797b3af6cdfd80632e0" "4cf3221feff536e2b3385209e9b9dc4c2e0818a69a1cdb4b522756bcdf4e00a4" default)))
  '(dired-mode-hook
    (cons
     (quote tramp-theme-hook-function)
