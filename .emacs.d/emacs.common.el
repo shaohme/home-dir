@@ -61,6 +61,11 @@
   :commands switch-dictionary backward-delete-word nxml-pretty-format notify-compilation-result
   )
 
+(use-package mailto
+  :load-path "site-lisp"
+  :commands mailto-compose-mail
+  )
+
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
 
 (global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
@@ -86,7 +91,9 @@
 (recentf-mode 1)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'text-mode-hook #'goto-address-mode)
 
+(setq-default major-mode 'text-mode)
 
 (use-package volatile-highlights
   :ensure t
@@ -118,7 +125,6 @@
         browse-url-new-window-flag t
         browse-url-firefox-new-window-is-tab t)
   )
-
 
 (use-package anzu
   :bind (("M-%" . anzu-query-replace)
@@ -257,9 +263,6 @@
 (helm-mode t)
 (helm-autoresize-mode t)
 
-
-
-
 (use-package bbdb
   :defer t
   :ensure t
@@ -272,17 +275,7 @@
         bbdb-message-all-addresses t)
   (bbdb-initialize 'gnus 'message)
   (bbdb-mua-auto-update-init 'message)
-
   )
-
-
-
-;; (require 'mml)
-;; (require 'bbdb)
-;; (require 'mailto)
-;; (require 'message)
-;; (require 'smime)
-;; (require 'flycheck)
 
 (use-package gnus-art
   :defer t)
@@ -477,7 +470,9 @@
   )
 
 (use-package gud
-  :defer t)
+  :defer t
+  :config
+  (setq gud-pdb-command-name (concat python-shell-interpreter " -m pdb")))
 
 ;; (require 'init-dev-common)
 
@@ -605,6 +600,7 @@
   (add-hook 'c-mode-common-hook 'flycheck-mode)
   (add-hook 'c-mode-common-hook 'hs-minor-mode)
   (add-hook 'c-mode-common-hook 'auto-fill-mode)
+  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
   (add-hook 'c-mode-common-hook #'cmake-ide-setup)
   (add-hook 'c-mode-common-hook 'irony-cdb-autosetup-compile-options)
 )
@@ -686,9 +682,7 @@
 
 (use-package apache-mode
   :defer t
-  :ensure t
-  :bind (:map local-key-map
-              ("C-c C-i" . apache-ident-line)))
+  :ensure t)
 
 (use-package sql
   :defer t
@@ -1068,10 +1062,16 @@
   :defer t
   :ensure t)
 
-(use-package company-go)
+(use-package go-snippets
+  :defer t
+  :ensure t)
+
+(use-package go-guru
+  :defer t
+  :ensure t)
 
 (use-package go-mode
-  :after go-eldoc company-go
+  :after go-eldoc go-snippets go-guru
   :defer t
   :ensure t
   :bind (("C-c ." . godef-jump)
@@ -1087,7 +1087,7 @@
   (setq compile-command "go build")
   (setq indent-tabs-mode 1)
   (setq tab-width 4)
-  ;; thoiugh default-tab-width is obsolete go-mode seem to react to it
+  ;; though default-tab-width is obsolete go-mode seem to react to it
   (setq default-tab-width 4)
   :init
   (add-hook 'go-mode-hook #'projectile-mode)
@@ -1095,6 +1095,7 @@
   (add-hook 'go-mode-hook #'auto-fill-mode)
   (add-hook 'go-mode-hook #'company-mode)
   (add-hook 'go-mode-hook #'go-eldoc-setup)
+  (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
   (add-hook 'before-save-hook #'gofmt-before-save)
   )
 
