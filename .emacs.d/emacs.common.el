@@ -1080,8 +1080,9 @@
   :config
   (progn
     (use-package company-go
-      :ensure t
       :config
+      (setq company-begin-commands '(self-insert-command))
+      (setq company-echo-delay 0)
       (add-to-list 'company-backends 'company-go))
     )
   (setq compile-command "go build")
