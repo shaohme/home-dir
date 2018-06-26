@@ -640,12 +640,21 @@
   :ensure t
   :mode ("\\.py$" . python-mode)
   :config
+  (setq-default tab-width 4
+                indent-tabs-mode nil
+				py-indent-tabs-mode nil)
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-json-python-json-executable "python3"
-        flycheck-python-pylint-executable "pylint"
         python-environment-directory "~/.virtualenvs"
+        flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint")
         jedi:complete-on-dot t)
-  (add-to-list 'company-backends 'company-jedi)
+  (progn
+    (use-package company-jedi
+      :ensure t
+      :config
+      (add-to-list 'company-backends 'company-jedi)
+    )
+  )
   :init
   (add-hook 'python-mode-hook #'jedi:setup)
   (add-hook 'python-mode-hook 'company-mode)
@@ -1084,12 +1093,13 @@
       (setq company-begin-commands '(self-insert-command))
       (setq company-echo-delay 0)
       (add-to-list 'company-backends 'company-go))
+	;; (setq-local indent-tabs-mode 1)
+	;; (setq-local compile-command "go build")
+	;; (setq-local tab-width 4)
+	;; ;; though default-tab-width is obsolete go-mode seem to react to it
+	;; (setq-local default-tab-width 4)
+
     )
-  (setq compile-command "go build")
-  (setq indent-tabs-mode 1)
-  (setq tab-width 4)
-  ;; though default-tab-width is obsolete go-mode seem to react to it
-  (setq default-tab-width 4)
   :init
   (add-hook 'go-mode-hook #'projectile-mode)
   (add-hook 'go-mode-hook #'flycheck-mode)
