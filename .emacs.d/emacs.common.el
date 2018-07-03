@@ -1067,45 +1067,44 @@
   (add-hook 'rust-mode-hook #'auto-fill-mode)
   )
 
-(use-package go-eldoc
-  :defer t
-  :ensure t)
+;; (use-package go-eldoc
+;;   :defer t
+;;   :ensure t)
 
-(use-package go-snippets
-  :defer t
-  :ensure t)
+;; (use-package go-snippets
+;;   :defer t
+;;   :ensure t)
 
 (use-package go-guru
-  :defer t
-  :ensure t)
+  :load-path "site-lisp")
 
 (use-package go-mode
-  :after go-eldoc go-snippets go-guru
-  :defer t
-  :ensure t
+  :load-path "site-lisp"
+  ;; :after go-guru company-mode
   :bind (("C-c ." . godef-jump)
          ("C-c C-c" . compile)
          ("C-c C-r" . recompile))
   :config
-  (progn
-    (use-package company-go
-      :config
-      (setq company-begin-commands '(self-insert-command))
-      (setq company-echo-delay 0)
-      (add-to-list 'company-backends 'company-go))
-	;; (setq-local indent-tabs-mode 1)
-	;; (setq-local compile-command "go build")
-	;; (setq-local tab-width 4)
-	;; ;; though default-tab-width is obsolete go-mode seem to react to it
-	;; (setq-local default-tab-width 4)
+  (setq-local tab-width 4)
+  (setq-local company-begin-commands '(self-insert-command))
+  (setq-local company-echo-delay 0)
+  (add-to-list 'company-backends 'company-go)
+  ;; (progn
+  ;;   (use-package company-go
+  ;;     :config
+  ;;     )
+    ;; (setq-local indent-tabs-mode 1)
+    ;; (setq-local compile-command "go build")
+    ;; ;; though default-tab-width is obsolete go-mode seem to react to it
+    ;; (setq-local default-tab-width 4)
 
-    )
+    ;; )
   :init
   (add-hook 'go-mode-hook #'projectile-mode)
   (add-hook 'go-mode-hook #'flycheck-mode)
   (add-hook 'go-mode-hook #'auto-fill-mode)
   (add-hook 'go-mode-hook #'company-mode)
-  (add-hook 'go-mode-hook #'go-eldoc-setup)
+  ;; (add-hook 'go-mode-hook #'go-eldoc-setup)
   (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
   (add-hook 'before-save-hook #'gofmt-before-save)
   )
