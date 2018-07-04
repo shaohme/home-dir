@@ -51,7 +51,6 @@
   )
 
 (use-package recentf
-  :defer t
   :config
   (setq recentf-max-menu-items 25)
   )
@@ -89,6 +88,8 @@
 (column-number-mode 1)
 (show-paren-mode 1)
 (recentf-mode 1)
+(transient-mark-mode 1)
+(size-indication-mode 1)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'text-mode-hook #'goto-address-mode)
@@ -640,9 +641,9 @@
   :ensure t
   :mode ("\\.py$" . python-mode)
   :config
-  (setq-default tab-width 4
-                indent-tabs-mode nil
-				py-indent-tabs-mode nil)
+  (setq-local tab-width 4)
+  (setq-local indent-tabs-mode nil)
+  (setq-local py-indent-tabs-mode nil)
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-json-python-json-executable "python3"
         python-environment-directory "~/.virtualenvs"
@@ -1067,25 +1068,16 @@
   (add-hook 'rust-mode-hook #'auto-fill-mode)
   )
 
-;; (use-package go-eldoc
-;;   :defer t
-;;   :ensure t)
+(use-package go-eldoc)
 
-;; (use-package go-snippets
-;;   :defer t
-;;   :ensure t)
-
-(use-package go-guru
-  :load-path "site-lisp")
+(use-package go-guru)
 
 (use-package go-mode
-  :load-path "site-lisp"
-  ;; :after go-guru company-mode
+  :after go-guru go-eldoc company-mode
   :bind (("C-c ." . godef-jump)
          ("C-c C-c" . compile)
          ("C-c C-r" . recompile))
   :config
-  (setq-local tab-width 4)
   (setq-local company-begin-commands '(self-insert-command))
   (setq-local company-echo-delay 0)
   (add-to-list 'company-backends 'company-go)
@@ -1096,7 +1088,6 @@
     ;; (setq-local indent-tabs-mode 1)
     ;; (setq-local compile-command "go build")
     ;; ;; though default-tab-width is obsolete go-mode seem to react to it
-    ;; (setq-local default-tab-width 4)
 
     ;; )
   :init
@@ -1104,7 +1095,7 @@
   (add-hook 'go-mode-hook #'flycheck-mode)
   (add-hook 'go-mode-hook #'auto-fill-mode)
   (add-hook 'go-mode-hook #'company-mode)
-  ;; (add-hook 'go-mode-hook #'go-eldoc-setup)
+  (add-hook 'go-mode-hook #'go-eldoc-setup)
   (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
   (add-hook 'before-save-hook #'gofmt-before-save)
   )
