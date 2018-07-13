@@ -96,6 +96,11 @@
 
 (setq-default major-mode 'text-mode)
 
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
 (use-package volatile-highlights
   :ensure t
   :commands volatile-highlights-mode
