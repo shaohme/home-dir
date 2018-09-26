@@ -7,19 +7,24 @@
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
+              tab-width 4
               save-place 1
               flycheck-emacs-lisp-load-path load-path)
 
+
 (use-package spacemacs-theme
-  :defer t
+  ;; :defer t
   :ensure t
   :init
   (load-theme 'spacemacs-dark t)
-  (use-package tramp-theme
-    :ensure t
-    :init
-    (load-theme 'tramp t))
   )
+
+(use-package tramp-theme
+  :after spacemacs-theme
+  ;; :defer t
+  :ensure t
+  :init
+  (load-theme 'tramp t))
 
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
@@ -96,10 +101,14 @@
 
 (setq-default major-mode 'text-mode)
 
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+(setq dired-listing-switches "-lah"
+      directory-free-space-args "-Pkh")
+
+(defun init-makefile-mode()
+  (setq indent-tabs-mode t)
+  )
+
+(add-hook 'makefile-mode-hook 'init-makefile-mode)
 
 (use-package volatile-highlights
   :ensure t
@@ -107,6 +116,10 @@
   :config
   (volatile-highlights-mode t)
   )
+
+(use-package rainbow-mode
+  :defer t
+  :ensure)
 
 (use-package eww
   :defer t
@@ -132,19 +145,28 @@
         browse-url-firefox-new-window-is-tab t)
   )
 
-(use-package anzu
-  :bind (("M-%" . anzu-query-replace)
-         ("C-M-%" . anzu-query-replace-regexp))
-  :ensure t
-  :init
-  (global-anzu-mode t)
-  )
+;; (use-package anzu
+  ;; :bind (("M-%" . anzu-query-replace)
+  ;;        ("C-M-%" . anzu-query-replace-regexp))
+  ;; :defer t
+  ;; :ensure t
+  ;; :config
+  ;; (set-face-attribute 'anzu-mode-line nil
+  ;;                     :foreground "yellow" :weight 'bold)
+  ;; :init
+  ;; (global-anzu-mode t)
+  ;; (setq anzu-mode-lighter ""
+  ;;       anzu-deactivate-region t
+  ;;       anzu-search-threshold 1000
+  ;;       anzu-replace-threshold 50
+  ;;       anzu-replace-to-string-separator " => ")
+  ;; (define-key isearch-mode-map [remap isearch-query-replace]  #'anzu-isearch-query-replace)
+  ;; (define-key isearch-mode-map [remap isearch-query-replace-regexp] #'anzu-isearch-query-replace-regexp)
+  ;; )
 
 (use-package company
-  :defer t
   :ensure t
   :commands company-complete
-  ;; :defines company-active-map
   :bind (:map company-active-map
               ([tab] . company-complete-selection))
   :config
@@ -152,6 +174,9 @@
         company-minimum-prefix-length 2
         ;; aligns annotation to the right hand side
         company-tooltip-align-annotations t)
+  :init
+  (add-hook 'after-init-hook 'global-company-mode)
+  ;; (add-hook 'text-mode-hook #'company-mode)
   )
 
 (global-set-key (kbd "M-TAB") 'company-complete)
@@ -186,22 +211,21 @@
          ;;       ("C-l" . helm-locate-library))
          )
   :config
-  (setq
-   ;; mouse-sel-retain-highlight t
-   ;; open helm buffer inside current window, not occupy whole other window
-   helm-split-window-inside-p t
-   ;; scroll 4 lines other window using M-<next>/M-<prior>
-   helm-scroll-amount 4
-   ;; limit the number of displayed canidates
-   helm-candidate-number-limit 500
-   ;; move to end or beginning of source when reaching top or bottom of source.
-   helm-move-to-line-cycle-in-source t
-   ;; fuzzy matching buffer names when non-nil
-   ;; useful in helm-mini that lists buffers
-   ;; helm-buffers-fuzzy-matching t
-   helm-autoresize-max-height 40
-   helm-autoresize-min-height 20
-   )
+  (setq ;; mouse-sel-retain-highlight t
+        ;; open helm buffer inside current window, not occupy whole other window
+        helm-split-window-inside-p t
+        ;; scroll 4 lines other window using M-<next>/M-<prior>
+        helm-scroll-amount 4
+        ;; limit the number of displayed canidates
+        helm-candidate-number-limit 500
+        ;; move to end or beginning of source when reaching top or bottom of source.
+        helm-move-to-line-cycle-in-source t
+        ;; fuzzy matching buffer names when non-nil
+        ;; useful in helm-mini that lists buffers
+        helm-autoresize-max-height 40
+        helm-autoresize-min-height 20)
+  (helm-mode t)
+  (helm-autoresize-mode t)
 
   :init
   (add-hook 'helm-mode-hook 'helm-autoresize-mode)
@@ -243,12 +267,11 @@
                               . helm-multi-swoop-all-from-helm-swoop))
          (:map isearch-mode-map ("M-i" . helm-swoop-from-isearch)))
   :config
-  (setq
-      helm-multi-swoop-edit-save t
-      ;; If this value is t, split window inside the current window
-      helm-swoop-split-with-multiple-windows t
-      ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-      helm-swoop-split-direction 'split-window-vertically)
+  (setq helm-multi-swoop-edit-save t
+        ;; If this value is t, split window inside the current window
+        helm-swoop-split-with-multiple-windows t
+        ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+        helm-swoop-split-direction 'split-window-vertically)
   )
 
 (use-package helm-config )
@@ -266,8 +289,8 @@
 
 ;; (setq tramp-verbose 10)
 
-(helm-mode t)
-(helm-autoresize-mode t)
+;; (helm-mode t)
+;; (helm-autoresize-mode t)
 
 (use-package bbdb
   :defer t
@@ -305,7 +328,7 @@
 
 (use-package gnus
   :defer t
-  :after bbdb
+  :after bbdb emojify
   :bind (:map gnus-summary-mode-map
               (";" . bbdb-mua-edit-field))
   :config
@@ -458,7 +481,10 @@
   (add-hook 'message-mode-hook 'emojify-mode)
   )
 
-
+(use-package popwin
+  :ensure t
+  :config
+  (popwin-mode 1))
 
 
 (use-package flycheck
@@ -477,8 +503,7 @@
 
 (use-package gud
   :defer t
-  :config
-  (setq gud-pdb-command-name (concat python-shell-interpreter " -m pdb")))
+  )
 
 ;; (require 'init-dev-common)
 
@@ -611,7 +636,11 @@
   (add-hook 'c-mode-common-hook 'irony-cdb-autosetup-compile-options)
 )
 
-
+(use-package cmake-font-lock
+  :defer t
+  :ensure t
+  :init
+  (add-hook 'cmake-mode-hook #'cmake-font-lock-activate))
 
 (use-package cmake-mode
   :defer t
@@ -638,8 +667,15 @@
         jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
         jedi:complete-on-dot t))
 
+(use-package company-jedi
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-jedi)
+  )
 
 (use-package python-mode
+  :after company-jedi
   :bind (:map python-mode-map
               ("C-c C-k" . comment-dwim))
   :defer t
@@ -651,21 +687,13 @@
   (setq-local py-indent-tabs-mode nil)
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-json-python-json-executable "python3"
-        python-environment-directory "~/.virtualenvs"
+        python-environment-directory "~/.virtualenvs/default"
         flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint")
         jedi:complete-on-dot t)
-  (progn
-    (use-package company-jedi
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-jedi)
-    )
-  )
   :init
   (add-hook 'python-mode-hook #'jedi:setup)
   (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'flycheck-mode)
-  ;; (add-hook 'python-mode-hook 'eldoc-mode)
   (add-hook 'python-mode-hook 'projectile-mode)
   )
 
@@ -773,7 +801,10 @@
 
 (use-package pdf-tools
   :defer t
-  :ensure t)
+  :ensure t
+  ;; :config
+  ;; (setq pdf-info-epdfinfo-program (expand-file-name "epdfinfo" (expand-file-name "bin" user-emacs-directory)))
+  )
 
 (use-package tex
   :ensure auctex
@@ -794,14 +825,13 @@
   (add-hook 'doc-view-mode-hook 'auto-revert-mode)
   )
 
-;; (require 'hare)
-(use-package hare
-   :defer t
-   )
 
-(use-package company-ghc
-  :defer t
-  :ensure t)
+;; (use-package company-ghc
+;;   :defer t
+;;   :ensure t
+;;   :config
+;;   (add-to-list 'company-backends 'company-ghc)
+;;   )
 
 (use-package hindent
   :defer t
@@ -812,15 +842,16 @@
   :ensure t
   :after hindent
   :after company
-  :after company-ghc
-  :after hare
-  :config
-  (add-to-list 'company-backends 'company-ghc)
+  :after rainbow-mode
+  :after flycheck
+  :mode ("\\.xmobarrc\\'" . haskell-mode)
+  ;; :after company-ghc
   :init
   (add-hook 'haskell-mode-hook 'company-mode)
   (add-hook 'haskell-mode-hook 'hindent-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (add-hook 'haskell-mode-hook '(lambda () (ghc-init) (hare-init)))
+  (add-hook 'haskell-mode-hook 'rainbow-mode)
+  ;; (add-hook 'haskell-mode-hook '(lambda () (ghc-init) (hare-init)))
   )
 
 (use-package js
@@ -1022,18 +1053,18 @@
   :defer t
   :ensure t)
 
+(use-package company-terraform
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-terraform))
+
 (use-package terraform-mode
+  :after company-terraform
   :defer t
   :ensure t
   :mode ("\\.tf\\'" . terraform-mode)
   :mode ("\\.tf.json\\'" . terraform-mode)
-  :config
-  (progn
-    (use-package company-terraform
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-terraform))
-    )
   :init
   (add-hook 'terraform-mode-hook 'company-mode))
 
@@ -1073,34 +1104,56 @@
   (add-hook 'rust-mode-hook #'auto-fill-mode)
   )
 
-(use-package go-eldoc)
+(use-package go-add-tags
+  :ensure t)
 
-(use-package go-guru)
+(use-package go-projectile
+  :ensure t)
+
+(use-package go-dlv
+  :ensure t)
+
+(use-package go-direx
+  :ensure t)
+
+(use-package go-eldoc
+  :ensure t
+  :config
+  (add-hook 'go-mode-hook #'go-eldoc-setup))
+
+(use-package go-guru
+  :ensure t)
+
+(use-package golint
+  :ensure t)
+
+(use-package company-go
+  :after company
+  ;; :config
+  ;; (setq-local company-backends '(company-go))
+  ;; (setq-local company-begin-commands '(self-insert-command))
+  ;; (setq-local company-echo-delay 0)
+  :init
+  (add-hook 'go-mode-hook #'company-mode)
+  (add-to-list 'company-backends 'company-go)
+  )
 
 (use-package go-mode
-  :after go-guru go-eldoc company-mode
-  :bind (("C-c ." . godef-jump)
-         ("C-c C-c" . compile)
-         ("C-c C-r" . recompile))
-  :config
-  (setq-local company-begin-commands '(self-insert-command))
-  (setq-local company-echo-delay 0)
-  (add-to-list 'company-backends 'company-go)
+  :ensure t
+  :after go-guru go-eldoc company-mode go-dlv company-go go-add-tags go-projectile go-direx
+  :bind (:map go-mode-map
+              ("C-c ." . godef-jump)
+              ("C-c C-c" . compile)
+              ("C-c C-r" . recompile))
   ;; (progn
-  ;;   (use-package company-go
-  ;;     :config
-  ;;     )
     ;; (setq-local indent-tabs-mode 1)
     ;; (setq-local compile-command "go build")
-    ;; ;; though default-tab-width is obsolete go-mode seem to react to it
-
+    ;; though default-tab-width is obsolete go-mode seem to react to it
     ;; )
   :init
   (add-hook 'go-mode-hook #'projectile-mode)
   (add-hook 'go-mode-hook #'flycheck-mode)
-  (add-hook 'go-mode-hook #'auto-fill-mode)
-  (add-hook 'go-mode-hook #'company-mode)
-  (add-hook 'go-mode-hook #'go-eldoc-setup)
+  ;; (add-hook 'go-mode-hook #'auto-fill-mode)
   (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
   (add-hook 'before-save-hook #'gofmt-before-save)
   )
@@ -1109,26 +1162,38 @@
   :defer t
   :ensure t)
 
+(use-package company-lua
+  :defer t
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-lua))
+
 (use-package lua-mode
+  :after company-lua
   :defer t
   :ensure t
   :mode (("\\.rockspec" . lua-mode)
          ("\\.busted" . lua-mode)
          ("\\.slua" . lua-mode))
-  :config
-  (progn
-    (use-package company-lua
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-lua))
-    )
-
   :init
   (add-hook 'lua-mode-hook #'projectile-mode)
   (add-hook 'lua-mode-hook #'flycheck-mode)
   (add-hook 'lua-mode-hook #'auto-fill-mode)
   (add-hook 'lua-mode-hook #'company-mode)
   )
+
+(use-package pass
+  :defer t
+  :ensure t)
+
+(use-package helm-pass
+  :defer t
+  :ensure t)
+
+(use-package json-mode
+  :defer t
+  :ensure t
+  :mode ("\\.json\\'" . json-mode))
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
