@@ -11,17 +11,17 @@
               save-place 1
               flycheck-emacs-lisp-load-path load-path)
 
-
 (use-package spacemacs-theme
-  ;; :defer t
+  :defer t
   :ensure t
+  :commands spacemacs-dark
   :init
   (load-theme 'spacemacs-dark t)
   )
 
 (use-package tramp-theme
   :after spacemacs-theme
-  ;; :defer t
+  :defer t
   :ensure t
   :init
   (load-theme 'tramp t))
@@ -145,41 +145,20 @@
         browse-url-firefox-new-window-is-tab t)
   )
 
-;; (use-package anzu
-  ;; :bind (("M-%" . anzu-query-replace)
-  ;;        ("C-M-%" . anzu-query-replace-regexp))
-  ;; :defer t
-  ;; :ensure t
-  ;; :config
-  ;; (set-face-attribute 'anzu-mode-line nil
-  ;;                     :foreground "yellow" :weight 'bold)
-  ;; :init
-  ;; (global-anzu-mode t)
-  ;; (setq anzu-mode-lighter ""
-  ;;       anzu-deactivate-region t
-  ;;       anzu-search-threshold 1000
-  ;;       anzu-replace-threshold 50
-  ;;       anzu-replace-to-string-separator " => ")
-  ;; (define-key isearch-mode-map [remap isearch-query-replace]  #'anzu-isearch-query-replace)
-  ;; (define-key isearch-mode-map [remap isearch-query-replace-regexp] #'anzu-isearch-query-replace-regexp)
-  ;; )
-
 (use-package company
   :ensure t
   :commands company-complete
-  :bind (:map company-active-map
-              ([tab] . company-complete-selection))
+  :bind (("<C-M-i>" . company-complete)
+         :map company-active-map
+         ([tab] . company-complete-selection))
   :config
-  (setq company-idle-delay 0.2
+  (setq company-idle-delay 0.4
         company-minimum-prefix-length 2
         ;; aligns annotation to the right hand side
         company-tooltip-align-annotations t)
   :init
   (add-hook 'after-init-hook 'global-company-mode)
-  ;; (add-hook 'text-mode-hook #'company-mode)
-  )
-
-(global-set-key (kbd "M-TAB") 'company-complete)
+)
 
 
 (use-package helm
@@ -545,23 +524,20 @@
   :defer t
   :ensure t)
 
+(use-package company-irony
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-irony))
+
+(use-package company-irony-c-headers
+  :ensure t
+  :config
+  (add-to-list 'company-backends 'company-irony-c-headers))
+
 (use-package irony
   :defer t
   :ensure t
-  :after projectile
-  :config
-  (progn
-    (use-package company-irony
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-irony))
-
-    (use-package company-irony-c-headers
-      :ensure t
-      :config
-      (add-to-list 'company-backends 'company-irony-c-headers))
-
-    )
+  :after (projectile company-irony company-irony-c-headers)
 )
 
 (use-package flycheck-irony
@@ -587,22 +563,21 @@
   :defer t
   :ensure t)
 
+(use-package modern-cpp-font-lock
+  :ensure t
+  :config
+  (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode))
+
 (use-package cc-mode
   :defer t
   :defines c-mode-base-map
-  :after cmake-ide
+  :after (cmake-ide modern-cpp-font-lock)
   :bind (:map c-mode-base-map
               ("C-x C-m" . cmake-ide-run-cmake)
               ("C-c ." . rtags-find-symbol-at-point)
               ("C-c ," . rtags-find-references-at-point)
               ("C-c C-c" . cmake-ide-compile))
   :config
-  (progn
-    (use-package modern-cpp-font-lock
-      :ensure t
-      :config
-      (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
-      ))
   (make-local-variable 'company-backends)
   (setq company-backends (delete 'company-semantic company-backends))
   (setq company-backends (delete 'company-clang company-backends))
@@ -624,7 +599,6 @@
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
                                               ("* ||\n[i]" "RET"))))
-  (add-hook 'c-mode-common-hook 'company-mode)
   (add-hook 'c-mode-common-hook 'projectile-mode)
   (add-hook 'c-mode-common-hook 'smartparens-mode)
   (add-hook 'c-mode-common-hook 'irony-mode)
@@ -644,9 +618,7 @@
 
 (use-package cmake-mode
   :defer t
-  :ensure t
-  :init
-  (add-hook 'cmake-mode-hook 'company-mode))
+  :ensure t)
 
 (use-package org
   :defer t
@@ -692,7 +664,6 @@
         jedi:complete-on-dot t)
   :init
   (add-hook 'python-mode-hook #'jedi:setup)
-  (add-hook 'python-mode-hook 'company-mode)
   (add-hook 'python-mode-hook 'flycheck-mode)
   (add-hook 'python-mode-hook 'projectile-mode)
   )
@@ -761,11 +732,9 @@
         web-mode-css-indent-offset 2
         web-mode-code-indent-offset 2)
   (add-to-list 'company-backends 'company-web-html)
-  (add-to-list 'company-backends 'company-web-jade)
-  (add-to-list 'company-backends 'company-web-slim)
+  ;; (add-to-list 'company-backends 'company-web-jade)
+  ;; (add-to-list 'company-backends 'company-web-slim)
   (add-to-list 'company-backends 'company-yasnippet)
-  :init
-  (add-hook 'web-mode-hook 'company-mode)
   )
 
 (use-package sass-mode
@@ -773,13 +742,11 @@
   :ensure t
   :init
   (add-hook 'sass-mode-hook 'flycheck-mode)
-  (add-hook 'sass-mode-hook 'company-mode)
 )
 
 (use-package lisp-mode
   :defer t
   :init
-  (add-hook 'lisp-interaction-mode-hook 'company-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-auto-fill)
   (add-hook 'lisp-interaction-mode-hook 'flycheck-mode)
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
@@ -788,7 +755,6 @@
 (use-package emacs-lisp
   :defer t
   :init
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
   (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
   (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
   (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -818,7 +784,6 @@
   (pdf-tools-install)
   :init
   (add-hook 'LaTeX-mode-hook 'TeX-PDF-mode)
-  (add-hook 'LaTeX-mode-hook 'company-mode)
   (add-hook 'LaTeX-mode-hook 'company-auctex-init)
   (add-hook 'LaTeX-mode-hook 'turn-on-auto-fill)
   (add-hook 'pdf-view-mode-hook 'auto-revert-mode)
@@ -847,7 +812,6 @@
   :mode ("\\.xmobarrc\\'" . haskell-mode)
   ;; :after company-ghc
   :init
-  (add-hook 'haskell-mode-hook 'company-mode)
   (add-hook 'haskell-mode-hook 'hindent-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode)
   (add-hook 'haskell-mode-hook 'rainbow-mode)
@@ -862,7 +826,6 @@
   :config
   (setq js-indent-level 2)
   :init
-  (add-hook 'js-mode-hook 'company-mode)
   (add-hook 'js-mode-hook 'flycheck-mode)
   )
 
@@ -884,7 +847,6 @@
   :defer t
   :init
   (add-to-list 'company-backends '(company-shell company-shell-env))
-  (add-hook 'sh-set-shell-hook 'company-mode)
   (add-hook 'sh-set-shell-hook 'flycheck-mode)
   (add-hook 'sh-set-shell-hook 'flycheck-checkbashisms-setup)
   (add-hook 'sh-set-shell-hook 'yas-minor-mode)
@@ -911,7 +873,6 @@
   :ensure t
   :init
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
-  (add-hook 'markdown-mode-hook 'company-mode)
   (add-hook 'markdown-mode-hook 'flycheck-mode)
   (add-hook 'markdown-mode-hook 'flyspell-mode)
   ;; (add-hook 'markdown-mode-hook 'markdown-live-preview-mode)
@@ -929,7 +890,6 @@
   (setq-local company-dabbrev-downcase nil)
   (setq-local company-dabbrev-ignore-case t)
   :init
-  (add-hook 'groovy-mode-hook 'company-mode)
   (add-hook 'groovy-mode-hook 'flycheck-mode)
   (add-hook 'groovy-mode-hook 'groovy-electric-mode)
   )
@@ -946,7 +906,6 @@
               (append flycheck-disabled-checkers '(json-jsonlist)))
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   :init
-  (add-hook 'typescript-mode-hook 'company-mode)
   (add-hook 'typescript-mode-hook 'flycheck-mode)
   (add-hook 'typescript-mode-hook 'projectile-mode)
   (add-hook 'typescript-mode-hook 'tide-hl-identifier-mode)
@@ -982,7 +941,6 @@
               (append flycheck-disabled-checkers '(json-jsonlist)))
   (add-to-list 'company-backends 'company-tern)
   :init
-  (add-hook 'js2-mode-hook 'company-mode)
   (add-hook 'js2-mode-hook 'flycheck-mode)
   (add-hook 'js2-mode-hook 'projectile-mode)
   (add-hook 'js2-mode-hook 'tern-mode)
@@ -1003,7 +961,6 @@
   :defer t
   :ensure t
   :init
-  (add-hook 'git-commit-mode-hook 'company-mode)
   (add-hook 'git-commit-mode-hook 'flyspell-mode)
   (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
   )
@@ -1019,26 +976,19 @@
   :ensure t
   :after company flycheck flycheck-yamllint
   :init
-  (add-hook 'yaml-mode-hook 'company-mode)
   (add-hook 'yaml-mode-hook 'flycheck-mode)
   (add-hook 'yaml-mode-hook #'flycheck-yamllint-setup)
   )
 
 (use-package meson-mode
   :defer t
-  :ensure t
-  :init
-  (add-hook 'meson-mode-hook 'company-mode)
-  )
+  :ensure t)
 
 (use-package dockerfile-mode
   :defer t
   :mode (("Dockerfile\\'" . dockerfile-mode))
   :mode (("\\.Dockerfile\\'" . dockerfile-mode))
-  :ensure t
-  :init
-  (add-hook 'dockerfile-mode-hook 'company-mode)
-  )
+  :ensure t)
 
 (use-package docker-tramp
   :defer t
@@ -1064,9 +1014,7 @@
   :defer t
   :ensure t
   :mode ("\\.tf\\'" . terraform-mode)
-  :mode ("\\.tf.json\\'" . terraform-mode)
-  :init
-  (add-hook 'terraform-mode-hook 'company-mode))
+  :mode ("\\.tf.json\\'" . terraform-mode))
 
 (use-package company-racer
   :defer t
@@ -1085,7 +1033,6 @@
   (add-to-list 'company-backends 'company-racer)
   :init
   (add-hook 'racer-mode-hook #'eldoc-mode)
-  (add-hook 'racer-mode-hook #'company-mode)
 )
 
 (use-package rust-mode
@@ -1105,57 +1052,63 @@
   )
 
 (use-package go-add-tags
+  :defer t
   :ensure t)
 
 (use-package go-projectile
+  :defer t
   :ensure t)
 
 (use-package go-dlv
+  :defer t
   :ensure t)
 
 (use-package go-direx
+  :defer t
   :ensure t)
 
 (use-package go-eldoc
+  :defer t
   :ensure t
-  :config
-  (add-hook 'go-mode-hook #'go-eldoc-setup))
+)
 
 (use-package go-guru
+  :defer t
   :ensure t)
 
 (use-package golint
+  :defer t
   :ensure t)
 
-(use-package company-go
-  :after company
-  ;; :config
-  ;; (setq-local company-backends '(company-go))
-  ;; (setq-local company-begin-commands '(self-insert-command))
-  ;; (setq-local company-echo-delay 0)
-  :init
-  (add-hook 'go-mode-hook #'company-mode)
-  (add-to-list 'company-backends 'company-go)
-  )
 
 (use-package go-mode
+  :defer t
   :ensure t
-  :after go-guru go-eldoc company-mode go-dlv company-go go-add-tags go-projectile go-direx
+  :after (go-guru go-eldoc company-mode go-dlv company-go go-add-tags go-projectile go-direx)
   :bind (:map go-mode-map
               ("C-c ." . godef-jump)
               ("C-c C-c" . compile)
               ("C-c C-r" . recompile))
+  :config
+  (add-to-list 'company-backends #'company-go)
   ;; (progn
-    ;; (setq-local indent-tabs-mode 1)
-    ;; (setq-local compile-command "go build")
-    ;; though default-tab-width is obsolete go-mode seem to react to it
-    ;; )
+  ;;   (use-package company-go
+  ;;     ;; :config
+  ;;     ;; (setq-local company-backends '(company-go))
+  ;;     ;; (setq-local company-begin-commands '(self-insert-command))
+  ;;     ;; (setq-local company-echo-delay 0)
+  ;;     :config
+  ;;     ;; (setq company-backends (delete 'company-capf company-backends))
+  ;;     ;; (setq company-go-gocode-args "-f emacs")
+  ;;     )
+  ;;   )
   :init
-  (add-hook 'go-mode-hook #'projectile-mode)
+  ;; (add-hook 'go-mode-hook #'projectile-mode)
   (add-hook 'go-mode-hook #'flycheck-mode)
   ;; (add-hook 'go-mode-hook #'auto-fill-mode)
   (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
   (add-hook 'before-save-hook #'gofmt-before-save)
+  (add-hook 'go-mode-hook #'go-eldoc-setup)
   )
 
 (use-package realgud
@@ -1179,7 +1132,6 @@
   (add-hook 'lua-mode-hook #'projectile-mode)
   (add-hook 'lua-mode-hook #'flycheck-mode)
   (add-hook 'lua-mode-hook #'auto-fill-mode)
-  (add-hook 'lua-mode-hook #'company-mode)
   )
 
 (use-package pass
