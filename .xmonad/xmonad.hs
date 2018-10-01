@@ -1,3 +1,5 @@
+import Locals
+
 import System.IO
 import System.Exit
 -- import System.Taffybar.Hooks.PagerHints (pagerHints)
@@ -72,7 +74,6 @@ inactive    = cyan
 focusColor  = yellow
 unfocusColor = cyan
 -- myFont = "-*-terminus-bold-*-*-*-32-*-*-*-*-*-*-*"
-
 
 -- gap         = 0
 -- topbar      = 0
@@ -153,8 +154,8 @@ myManageHook = composeAll
     ]
 
 myPromptConfig = def {
-    font = "-*-terminus-*-*-*-*-32-*-*-*-*-*-*-*"
-  , height = 50
+    font = Locals.myFont
+  , height = Locals.myPromptHeight
   -- , promptKeymap = M.union [((modMask, xK_Up), historyUpMatching def)
   --                          ,((modMask, xK_Down), historyDownMatching def)]
   --                          (promptKeymap def)
@@ -163,7 +164,7 @@ myPromptConfig = def {
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [
-    ((controlMask .|. modMask, xK_Return),
+    ((modMask .|. controlMask, xK_Return),
      spawn $ XMonad.terminal conf)
 
   -- Lock the screen using command specified by myScreensaver.
@@ -172,7 +173,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- spawn the launcher using command specified by mylauncher.
   -- use this to launch programs without a key binding.
-  , ((controlMask .|. modMask, xK_p),
+  , ((modMask, xK_p),
      spawn "rofi -show")
 
   , ((controlMask .|. modMask, xK_m),
@@ -354,12 +355,12 @@ main = do
 defaults = def {
     terminal           = "urxvt",
     focusFollowsMouse  = True,
-    borderWidth        = 2,
+    borderWidth        = Locals.myBorderWidth,
     -- mod1Mask = "left alt"
     -- mod3Mask = "right alt"
     -- mod4Mask = "windows key"
     -- mod5Mask = "alt gr"
-    modMask            = mod1Mask,
+    modMask            = mod4Mask,
     normalBorderColor  = base02,
     focusedBorderColor = yellow,
     keys               = myKeys,

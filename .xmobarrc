@@ -1,0 +1,20 @@
+Config {
+         allDesktops = True
+       , font = "-*-terminus-bold-*-*-*-32-*-*-*-*-*-*-*"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = TopW L 100
+       , commands = [
+           Run MultiCpu ["-L","3","-H","50","--normal","green","--high","red","-p","3","-t", "<total>"] 10
+           , Run Memory ["-p","3","-t","<usedratio>"] 10
+           , Run Swap [] 10
+           , Run Date "%_d-%m %_H:%M" "date" 10
+           , Run Wireless "wlp2s0" ["-x", ""] 20
+           , Run Network "enxd89ef3fbe5ec" ["-x", ""] 20
+           , Run BatteryP ["BAT0"] ["-t", "<acstatus> <left>"] 200
+           , Run StdinReader
+           ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %wlp2s0wi% %enxd89ef3fbe5ec% : %battery% : %multicpu%%memory% : %date%"
+       }
