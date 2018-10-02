@@ -2,29 +2,14 @@
 ;;; Commentary:
 ;;; Code:
 
-(require 'use-package)
-
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
               tab-width 4
               save-place 1
-              flycheck-emacs-lisp-load-path load-path)
-
-(use-package spacemacs-theme
-  :defer t
-  :ensure t
-  :commands spacemacs-dark
-  :init
-  (load-theme 'spacemacs-dark t)
-  )
-
-(use-package tramp-theme
-  :after spacemacs-theme
-  :defer t
-  :ensure t
-  :init
-  (load-theme 'tramp t))
+              flycheck-emacs-lisp-load-path load-path
+              major-mode 'text-mode
+              )
 
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
@@ -45,9 +30,29 @@
       initial-scratch-message nil
       x-underline-at-descent-line t
       scroll-step 1
+      dired-listing-switches "-lah"
+      directory-free-space-args "-Pkh"
       )
 
 (defalias 'yes-or-no-p 'y-or-n-p)
+
+(require 'use-package)
+
+(use-package spacemacs-theme
+  :defer t
+  :ensure t
+  :commands spacemacs-dark
+  :init
+  (load-theme 'spacemacs-dark t)
+  )
+
+(use-package tramp-theme
+  :after spacemacs-theme
+  :defer t
+  :ensure t
+  :init
+  (load-theme 'tramp t))
+
 
 (use-package ispell
   :config
@@ -99,10 +104,6 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'text-mode-hook #'goto-address-mode)
 
-(setq-default major-mode 'text-mode)
-
-(setq dired-listing-switches "-lah"
-      directory-free-space-args "-Pkh")
 
 (defun init-makefile-mode()
   (setq indent-tabs-mode t)
@@ -470,15 +471,8 @@
   :defer t
   :defines flycheck-disabled-checkers
   :ensure t
-  )
-
-(use-package python
-  :defer t
   :config
-  (setq python-indent-guess-indent-offset nil
-        python-indent-offset 4
-        python-shell-interpreter "python3")
-  )
+  (setq flycheck-json-python-json-executable "python3"))
 
 (use-package gud
   :defer t
@@ -491,16 +485,17 @@
   :ensure t
   :config
   (setq projectile-globally-ignored-directories
-      (append '(
-        ".git"
-        ".svn"
-        "out"
-        "repl"
-        "target"
-        "venv"
-        "build"
-        )
-          projectile-globally-ignored-directories))
+        (append '(
+                  ".git"
+                  ".svn"
+                  "bin"
+                  "out"
+                  "repl"
+                  "target"
+                  "venv"
+                  "build"
+                  )
+                projectile-globally-ignored-directories))
   )
 
 (use-package helm-projectile
@@ -630,24 +625,23 @@
   :config
   (setq org-journal-dir "~/org/journal/"))
 
-
-(use-package jedi-core
+(use-package python
   :defer t
+  :config
+  (setq python-indent-guess-indent-offset nil
+        python-indent-offset 4
+        python-shell-interpreter "python3")
+  )
+
+(use-package python-environment
+  ;; :defer t
   :ensure t
   :config
-  (setq jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-        jedi:complete-on-dot t))
-
-(use-package company-jedi
-  :defer t
-  :ensure t
-  :config
-  (add-to-list 'company-backends 'company-jedi)
+  (setq python-environment-directory "~/.virtualenvs")
   )
 
 (use-package python-mode
-  :after company-jedi
+  :after python-environment company company-jedi python
   :bind (:map python-mode-map
               ("C-c C-k" . comment-dwim))
   :defer t
@@ -658,27 +652,24 @@
   (setq-local indent-tabs-mode nil)
   (setq-local py-indent-tabs-mode nil)
   (setq flycheck-python-pycompile-executable "python3"
-        flycheck-json-python-json-executable "python3"
-        python-environment-directory "~/.virtualenvs/default"
-        flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint")
-        jedi:complete-on-dot t)
+        flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint"))
+  (add-to-list 'company-backends 'company-jedi)
   :init
-  (add-hook 'python-mode-hook #'jedi:setup)
   (add-hook 'python-mode-hook 'flycheck-mode)
   (add-hook 'python-mode-hook 'projectile-mode)
   )
 
-
-(use-package elpy
+(use-package jedi-core
+  :after python-environment python-mode python
   :defer t
   :ensure t
-  :bind (:map elpy-mode-map
-              ("C-c C-k" . comment-region))
   :config
-  (setq elpy-rpc-backend "jedi"
-        elpy-rpc-python-command "python3"))
-
-
+  (setq jedi:environment-root "default"
+        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        jedi:complete-on-dot t)
+  :init
+  (add-hook 'python-mode-hook #'jedi:setup)
+  )
 
 (use-package yasnippet
   :defer t
