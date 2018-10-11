@@ -156,7 +156,8 @@
   (setq company-idle-delay 0.4
         company-minimum-prefix-length 2
         ;; aligns annotation to the right hand side
-        company-tooltip-align-annotations t)
+        company-tooltip-align-annotations t
+        company-selection-wrap-around t)
   :init
   (add-hook 'after-init-hook 'global-company-mode)
 )
@@ -626,7 +627,6 @@
   (setq org-journal-dir "~/org/journal/"))
 
 (use-package python
-  :defer t
   :config
   (setq python-indent-guess-indent-offset nil
         python-indent-offset 4
@@ -640,9 +640,33 @@
   (setq python-environment-directory "~/.virtualenvs")
   )
 
+(use-package company-jedi
+  :defer t
+  :ensure t
+  :config
+  (setq jedi:complete-on-dot t)
+  (setq jedi:use-shortcuts t)
+  ;; (add-to-list 'company-backends 'company-jedi)
+  )
+
+(defun my/python-mode-hook ()
+  (add-to-list 'company-backends 'company-jedi))
+
+(use-package jedi-core
+  :after python-environment
+  :defer t
+  :ensure t
+  :config
+  (setq jedi:environment-root "default"
+        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        jedi:complete-on-dot t)
+  )
+
 (use-package python-mode
   :after python-environment company company-jedi python
   :bind (:map python-mode-map
+              ("C-M-i" . company-complete)
+              ("M-<tab>" . company-complete)
               ("C-c C-k" . comment-dwim))
   :defer t
   :ensure t
@@ -650,26 +674,18 @@
   :config
   (setq-local tab-width 4)
   (setq-local indent-tabs-mode nil)
-  (setq-local py-indent-tabs-mode nil)
+  (setq py-indent-tabs-mode nil
+        py-auto-complete-p nil
+        py-complete-function nil)
   (setq flycheck-python-pycompile-executable "python3"
         flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint"))
-  (add-to-list 'company-backends 'company-jedi)
   :init
   (add-hook 'python-mode-hook 'flycheck-mode)
   (add-hook 'python-mode-hook 'projectile-mode)
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (add-hook 'python-mode-hook 'my/python-mode-hook)
   )
 
-(use-package jedi-core
-  :after python-environment python-mode python
-  :defer t
-  :ensure t
-  :config
-  (setq jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-        jedi:complete-on-dot t)
-  :init
-  (add-hook 'python-mode-hook #'jedi:setup)
-  )
 
 (use-package yasnippet
   :defer t
