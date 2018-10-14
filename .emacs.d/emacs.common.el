@@ -147,6 +147,7 @@
   )
 
 (use-package company
+  :defer t
   :ensure t
   :commands company-complete
   :bind (("<C-M-i>" . company-complete)
@@ -497,6 +498,8 @@
                   "build"
                   )
                 projectile-globally-ignored-directories))
+  :init
+  (add-hook 'after-init-hook 'projectile-mode)
   )
 
 (use-package helm-projectile
