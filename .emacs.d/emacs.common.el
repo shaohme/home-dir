@@ -495,7 +495,7 @@
                   "repl"
                   "target"
                   "venv"
-                  "build"
+                  "build*"
                   )
                 projectile-globally-ignored-directories))
   :init
@@ -575,7 +575,8 @@
               ("C-x C-m" . cmake-ide-run-cmake)
               ("C-c ." . rtags-find-symbol-at-point)
               ("C-c ," . rtags-find-references-at-point)
-              ("C-c C-c" . cmake-ide-compile))
+              ("C-c C-c" . cmake-ide-compile)
+              ("C-c C-k" . comment-or-uncomment-region))
   :config
   (make-local-variable 'company-backends)
   (setq company-backends (delete 'company-semantic company-backends))
