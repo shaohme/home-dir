@@ -267,7 +267,9 @@
 
 (use-package helm-tramp
   :bind ("C-c s" . helm-tramp)
-  :ensure t)
+  :ensure t
+  :config
+  (setq tramp-default-method "ssh"))
 
 ;; (setq tramp-verbose 10)
 
