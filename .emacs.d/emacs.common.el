@@ -872,6 +872,14 @@
 
 (use-package nxml-mode
   :defer t
+  :mode ("\\.xml\\'" . nxml-mode)
+  :mode ("\\.scxml\\'" . nxml-mode)
+  :mode ("\\.xsd\\'" . nxml-mode)
+  :mode ("\\.sch\\'" . nxml-mode)
+  :mode ("\\.rng\\'" . nxml-mode)
+  :mode ("\\.xslt\\'" . nxml-mode)
+  :mode ("\\.svg\\'" . nxml-mode)
+  :mode ("\\.rss\\'" . nxml-mode)
   :bind (:map nxml-mode-map
               ("C-c C-i" . nxml-pretty-format))
   :config
