@@ -146,6 +146,11 @@
         browse-url-firefox-new-window-is-tab t)
   )
 
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
+
 (use-package company
   :defer t
   :ensure t
@@ -1167,6 +1172,7 @@
   :defer t
   :ensure t
   :mode ("\\.json\\'" . json-mode))
+
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
