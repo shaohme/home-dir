@@ -1,0 +1,6 @@
+#!/bin/dash
+if [ -t 1 ] ; then
+    emacsclient -nw ${@}
+else
+    emacsclient -c ${@}
+fi
