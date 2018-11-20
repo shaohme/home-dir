@@ -115,5 +115,12 @@ With argument, do this that many times."
   (interactive "p")
   (delete-word (- arg)))
 
+(defun ensure-package (packagename)
+  (unless (package-installed-p packagename)
+    (package-refresh-contents)
+    (package-install packagename))
+  )
+
+
 (provide 'local-common)
 ;;; local-common.el ends here
