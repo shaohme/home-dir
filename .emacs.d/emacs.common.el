@@ -22,9 +22,18 @@
 (require 'gdb-mi)
 (require 'tramp)
 
-(load-theme 'spacemacs-dark t)
-(load-theme 'tramp t)
-(spaceline-spacemacs-theme)
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (select-frame frame)
+                (load-theme 'spacemacs-dark t)
+                (load-theme 'tramp t)
+                (spaceline-spacemacs-theme)))
+
+  (load-theme 'spacemacs-dark t)
+  (load-theme 'tramp t)
+  (spaceline-spacemacs-theme))
 
 
 (setq-default frame-title-format '("%b [%m] %F")
