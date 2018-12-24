@@ -23,9 +23,36 @@
 (require 'tramp)
 
 
-(load-theme 'spacemacs-dark t)
-(load-theme 'tramp t)
+(defvar my:theme 'spacemacs-dark)
+(defvar my:theme-window-loaded nil)
+(defvar my:theme-terminal-loaded nil)
 
+(if (daemonp)
+    (add-hook 'after-make-frame-functions(lambda (frame)
+                       (select-frame frame)
+                       (if (window-system frame)
+                           (unless my:theme-window-loaded
+                             (if my:theme-terminal-loaded
+                                 (enable-theme my:theme)
+                               (load-theme my:theme t))
+                             (setq my:theme-window-loaded t))
+                         (unless my:theme-terminal-loaded
+                           (if my:theme-window-loaded
+                               (enable-theme my:theme)
+                             (load-theme my:theme t))
+                           (setq my:theme-terminal-loaded t)))))
+
+  (progn
+    (load-theme my:theme t)
+    (if (display-graphic-p)
+        (setq my:theme-window-loaded t)
+      (setq my:theme-terminal-loaded t))))
+
+;; (load-theme 'spacemacs-dark t)
+;; (load-theme 'tramp t)
+
+(if window-system
+    (load-theme 'spacemacs-dark t))
 ;; (if (daemonp)
 ;;     (add-hook 'after-make-frame-functions
 ;;               (lambda (frame)
