@@ -1,37 +1,37 @@
 import Locals
 
-import System.IO
 import System.Exit
--- import System.Taffybar.Hooks.PagerHints (pagerHints)
-
-import qualified Data.List as L
+import System.IO
 
 import XMonad
-import XMonad.Actions.Navigation2D
+-- import XMonad.ManageHook
+-- import XMonad.Actions.Navigation2D
 import XMonad.Actions.UpdatePointer
-import XMonad.Actions.UpdateFocus
+-- import XMonad.Actions.UpdateFocus
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.EwmhDesktops (ewmh)
+-- import XMonad.Hooks.SetWMName
+import XMonad.Hooks.EwmhDesktops
 
-import XMonad.Layout.Gaps
-import XMonad.Layout.Fullscreen
-import XMonad.Layout.BinarySpacePartition as BSP
+-- import XMonad.Layout.Gaps
+import XMonad.Layout.Fullscreen hiding (fullscreenEventHook)
+-- import XMonad.Layout.Fullscreen
+-- import XMonad.Layout.BinarySpacePartition as BSP
+import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
-import XMonad.Layout.Tabbed
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.Spacing
+-- import XMonad.Layout.Tabbed
+-- import XMonad.Layout.ThreeColumns
+-- import XMonad.Layout.Spacing
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.NoFrillsDecoration
-import XMonad.Layout.Renamed
-import XMonad.Layout.Simplest
-import XMonad.Layout.SubLayouts
-import XMonad.Layout.WindowNavigation
-import XMonad.Layout.ZoomRow
+-- import XMonad.Layout.NoFrillsDecoration
+-- import XMonad.Layout.Renamed
+-- import XMonad.Layout.Simplest
+-- import XMonad.Layout.SubLayouts
+-- import XMonad.Layout.WindowNavigation
+-- import XMonad.Layout.ZoomRow
 
 import XMonad.Prompt
 import XMonad.Prompt.Window
@@ -39,12 +39,11 @@ import XMonad.Prompt.XMonad
 import XMonad.Prompt.Pass
 
 import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.EZConfig(additionalKeys)
 
 import Graphics.X11.ExtraTypes.XF86
+
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
-
 
 -- Color of current window title in xmobar.
 xmobarTitleColor = "#C678DD"
@@ -52,106 +51,12 @@ xmobarTitleColor = "#C678DD"
 -- Color of current workspace in xmobar.
 xmobarCurrentWorkspaceColor = "#51AFEF"
 
-base03  = "#002b36"
 base02  = "#073642"
-base01  = "#586e75"
-base00  = "#657b83"
-base0   = "#839496"
-base1   = "#93a1a1"
-base2   = "#eee8d5"
-base3   = "#fdf6e3"
 yellow  = "#cd8b00"
-orange  = "#cb4b16"
-red     = "#dc322f"
-magenta = "#d33682"
-violet  = "#6c71c4"
-blue    = "#268bd2"
-cyan    = "#2aa198"
-green   = "#859900"
-active      = yellow
-activeWarn  = red
-inactive    = cyan
-focusColor  = yellow
-unfocusColor = cyan
--- myFont = "-*-terminus-bold-*-*-*-32-*-*-*-*-*-*-*"
-
--- gap         = 0
--- topbar      = 0
 
 
--- topBarTheme = def
---     {
---       fontName              = myFont
---     , inactiveBorderColor   = base03
---     , inactiveColor         = base03
---     , inactiveTextColor     = base03
---     , activeBorderColor     = active
---     , activeColor           = active
---     , activeTextColor       = active
---     , urgentBorderColor     = red
---     , urgentTextColor       = yellow
---     , decoHeight            = topbar
---     }
-
--- myTabTheme = def
---     { fontName              = myFont
---     , activeColor           = active
---     , inactiveColor         = cyan
---     , activeBorderColor     = active
---     , inactiveBorderColor   = base02
---     , activeTextColor       = base03
---     , inactiveTextColor     = base00
---     }
-
--- addTopBar =  noFrillsDeco shrinkText topBarTheme
--- addSpace  = renamed [CutWordsLeft 2] . spacing gap
--- tab       =  avoidStruts
---              $ addTopBar
---              $ renamed [Replace "Tabbed"]
---              $ tabbed shrinkText myTabTheme
-
--- layouts   = avoidStruts (
---   (
---     addTopBar
---     $ windowNavigation
---     $ renamed [CutWordsLeft 1]
---     $ addTabs shrinkText myTabTheme
---     $ subLayout [] Simplest
---     $ addSpace (
---       BSP.emptyBSP
---         ||| ThreeColMid 1 (3/100) (1/2)
---         ||| zoomRow
---         ||| Mirror (Tall 1 (3/100) (1/2))
---         ||| Tall 1 (3/100) (1/2)
---       )
---   )
---     ||| tab
---   )
-
--- myLayout    = layouts
--- myLayout = avoidStruts (addTopBar tabbed shrinkText topBarTheme ||| Full)
-
-myTabConfig = def {
-  inactiveBorderColor = "#FF0000"
-  , activeTextColor = "#00FF00"
-  }
-
--- myLayout = tabbed shrinkText myTabConfig
-
-myManageHook = composeAll
-    [
-      -- className =? "Google-chrome"                --> doShift "2:web"
-     resource  =? "desktop_window"               --> doIgnore
-    , className =? "Steam"                        --> doCenterFloat
-    -- , className =? "Gimp"                         --> doCenterFloat
-    , resource  =? "gpicview"                     --> doCenterFloat
-    , className =? "Pavucontrol"                  --> doCenterFloat
-    , className =? "stalonetray"                  --> doIgnore
-    , isFullscreen                                --> (doF W.focusDown <+> doFullFloat)
-    -- , isFullscreen                             --> doFullFloat
-    , manageDocks,
-      fullscreenManageHook
-    ]
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = ["con","edit","www","mail"] ++ map show [5 .. 9]
 
 myPromptConfig = def {
     font = Locals.myFont
@@ -161,6 +66,7 @@ myPromptConfig = def {
   --                          (promptKeymap def)
   -- , maxComplRows = 7
   }
+
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [
@@ -179,13 +85,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((controlMask .|. modMask, xK_m),
      spawn "emacs --eval '(gnus)'")
 
+  , ((mod4Mask,xK_Print),spawn "scrot '%F-%H-%M-%S.png' -e 'mv $f ~/pic/'") -- screenshot
+
   , ((modMask .|. shiftMask, xK_g),
      windowPrompt myPromptConfig Goto wsWindows)
 
-  , ((modMask .|. shiftMask, xK_b),
-     windowPrompt myPromptConfig
-      { autoComplete = Just 500000 }
-      Goto allWindows)
+  -- , ((modMask .|. shiftMask, xK_b),
+  --    windowPrompt myPromptConfig
+  --     { autoComplete = Just 500000 }
+  --     Goto allWindows)
 
   , ((modMask .|. controlMask, xK_s),
      passPrompt myPromptConfig)
@@ -311,6 +219,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_q),
      restart "xmonad" True)
   ]
+  -- switching workspaces, and moving windows between spaces
   ++
   [((m .|. modMask, k), windows $ f i)
       | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
@@ -338,38 +247,53 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
   ]
 
+myManageHook :: ManageHook
+myManageHook = composeAll
+    [
+       manageDocks
+      -- resource  =? "desktop_window"               --> doIgnore
+    , className =? "Steam"       --> doCenterFloat
+    -- , resource  =? "gpicview"                     --> doCenterFloat
+    , className =? "Pavucontrol" --> doCenterFloat
+    , className =? "vlc" --> doFloat
+    , className =? "Vlc" --> doFloat
+    , isDialog --> doCenterFloat
+    , isFullscreen               --> doFullFloat
+    , manageHook def
+    ]
+
+
+-- myEventHook = ewmhDesktopsEventHook <+> fullscreenEventHook <+> hintsEventHook <+> docksEventHook
+myEventHook = docksEventHook
+
 
 main = do
-  xmproc <- spawnPipe "xmobar"
-  xmonad $ docks
-    $ ewmh
-    $ defaults {
-         logHook = dynamicLogWithPP xmobarPP {
+    xmproc <- spawnPipe "xmobar"
+    xmonad $ ewmh $ def
+        {
+        -- manageHook = manageDocks <+> manageHook def
+          manageHook = myManageHook
+        -- smartborders is added to remove "focus border" when only one window or fullscreen
+        , layoutHook = smartBorders . avoidStruts  $  layoutHook def
+        -- , handleEventHook = handleEventHook def <+> docksEventHook
+        , handleEventHook = myEventHook
+        , logHook = dynamicLogWithPP xmobarPP {
                   ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "" . wrap "[" "]"
                 , ppTitle = xmobarColor xmobarTitleColor "" . shorten 50
                 , ppSep = "   "
                 , ppOutput = hPutStrLn xmproc
          } >> updatePointer (0.75, 0.75) (0.75, 0.75)
-      }
-
-defaults = def {
-    terminal           = "urxvt",
-    focusFollowsMouse  = True,
-    borderWidth        = Locals.myBorderWidth,
-    -- mod1Mask = "left alt"
-    -- mod3Mask = "right alt"
-    -- mod4Mask = "windows key"
-    -- mod5Mask = "alt gr"
-    modMask            = mod4Mask,
-    normalBorderColor  = base02,
-    focusedBorderColor = yellow,
-    keys               = myKeys,
-    mouseBindings      = myMouseBindings,
-    layoutHook         = avoidStruts  $ layoutHook def,
-    handleEventHook    = fullscreenEventHook <+> docksEventHook,
-    manageHook         = myManageHook <+> manageHook def,
-    startupHook        = do
-        startupHook def
-        spawn "~/bin/xmonad-startup.sh"
-        adjustEventInput
-}
+          -- mod1Mask = "left alt"
+          -- mod3Mask = "right alt"
+          -- mod4Mask = "windows key"
+          -- mod5Mask = "alt gr"
+        , modMask = mod4Mask
+        , normalBorderColor  = base02
+        , focusedBorderColor = yellow
+        , keys = myKeys
+        , workspaces = myWorkspaces
+        , mouseBindings = myMouseBindings
+        , terminal = "urxvt"
+        , startupHook = spawn "~/bin/xmonad-startup.sh"
+        -- more changes
+        }

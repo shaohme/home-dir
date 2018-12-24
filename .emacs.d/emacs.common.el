@@ -23,17 +23,20 @@
 (require 'tramp)
 
 
-(if (daemonp)
-    (add-hook 'after-make-frame-functions
-              (lambda (frame)
-                (select-frame frame)
-                (load-theme 'spacemacs-dark t)
-                (load-theme 'tramp t)
-                (spaceline-spacemacs-theme)))
+(load-theme 'spacemacs-dark t)
+(load-theme 'tramp t)
 
-  (load-theme 'spacemacs-dark t)
-  (load-theme 'tramp t)
-  (spaceline-spacemacs-theme))
+;; (if (daemonp)
+;;     (add-hook 'after-make-frame-functions
+;;               (lambda (frame)
+;;                 (select-frame frame)
+;;                 (load-theme 'spacemacs-dark t)
+;;                 (load-theme 'tramp t)))
+;;                 ;; (spaceline-spacemacs-theme)))
+
+;;   (load-theme 'spacemacs-dark t)
+;;   (load-theme 'tramp t))
+  ;; (spaceline-spacemacs-theme))
 
 
 (setq-default frame-title-format '("%b [%m] %F")
@@ -102,12 +105,18 @@
 (transient-mark-mode 1)
 (size-indication-mode 1)
 
+
+;; save recentf every X sec because we're running in daemon mode
+;; (run-at-time (current-time) 60 'recentf-save-list)
+
 (global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-x t") 'beginning-of-buffer)
 (global-set-key (kbd "C-x e") 'end-of-buffer)
 (global-set-key (kbd "C-x C-b") nil)
 (global-set-key (kbd "M-<backspace>") 'backward-delete-word)
 (global-set-key (kbd "<f8>") 'switch-dictionary)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
 (global-unset-key (kbd "C-x c"))
 
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
@@ -119,6 +128,11 @@
 (require 'volatile-highlights)
 
 (volatile-highlights-mode t)
+
+(ensure-package 'undo-tree)
+(require 'undo-tree)
+
+(global-undo-tree-mode 1)
 
 (defun init-makefile-mode()
   (setq indent-tabs-mode t)
@@ -626,6 +640,31 @@
 (add-hook 'sql-mode-hook 'flyspell-prog-mode)
 
 
+;;; CSS mode
+(require 'css-mode)
+
+(add-to-list 'auto-mode-alist '("\\.css?\\'" . css-mode))
+(add-hook 'css-mode-hook #'flycheck-mode)
+(add-hook 'css-mode-hook #'rainbow-mode)
+
+
+;;; Sass mode
+(ensure-package 'sass-mode)
+(require 'sass-mode)
+
+(add-hook 'sass-mode-hook #'flycheck-mode)
+(add-hook 'sass-mode-hook #'rainbow-mode)
+
+
+;;; Scss mode
+(ensure-package 'scss-mode)
+(require 'scss-mode)
+(add-to-list 'auto-mode-alist '("\\.scss?\\'" . scss-mode))
+
+(add-hook 'scss-mode-hook #'flycheck-mode)
+(add-hook 'scss-mode-hook #'rainbow-mode)
+
+
 ;;; Web mode
 (ensure-package 'web-mode)
 (require 'web-mode)
@@ -641,8 +680,6 @@
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.scss?\\'" . web-mode))
 
 (setq web-mode-enable-auto-pairing t
       web-mode-enable-auto-closing t
@@ -659,14 +696,8 @@
 
 (define-key web-mode-map (kbd "C-c C-k") #'web-mode-comment-or-uncomment)
 
-
-;;; Sass mode
-
-(ensure-package 'sass-mode)
-(require 'sass-mode)
-
-(add-hook 'sass-mode-hook 'flycheck-mode)
-
+(add-hook 'web-mode-hook #'flycheck-mode)
+(add-hook 'web-mode-hook #'rainbow-mode)
 
 ;;; Lisp mode
 
@@ -706,10 +737,15 @@
 
 (ensure-package 'haskell-mode)
 (require 'haskell-mode)
+(ensure-package 'company-ghc)
+(require 'company-ghc)
+(ensure-package 'flycheck-haskell)
+(require 'flycheck-haskell)
 (ensure-package 'hindent)
 (require 'hindent)
 
 (add-to-list 'auto-mode-alist '("\\.xmobarrc\\'" . haskell-mode))
+(add-to-list 'company-backends 'company-ghc)
 (add-hook 'haskell-mode-hook #'hindent-mode)
 (add-hook 'haskell-mode-hook #'flycheck-mode)
 (add-hook 'haskell-mode-hook #'rainbow-mode)
@@ -728,9 +764,12 @@
 (require 'tern)
 (ensure-package 'company-tern)
 (require 'company-tern)
+(ensure-package 'rjsx-mode)
+(require 'rjsx-mode)
 
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
 
 (setq js-indent-level 2
       tern-command (append tern-command '("--no-port-file")))
@@ -771,6 +810,8 @@
 
 (ensure-package 'ledger-mode)
 (require 'ledger-mode)
+(ensure-package 'flycheck-ledger)
+(require 'flycheck-ledger)
 
 (add-hook 'ledger-mode-hook 'flycheck-mode)
 
