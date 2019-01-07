@@ -453,6 +453,8 @@
 (ensure-package 'projectile)
 (require 'projectile)
 
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
 (setq projectile-globally-ignored-directories
       (append '(
                 ".git"
@@ -466,6 +468,7 @@
                 )
               projectile-globally-ignored-directories))
 (add-hook 'after-init-hook 'projectile-mode)
+
 
 (ensure-package 'helm-projectile)
 (require 'helm-projectile)
@@ -580,7 +583,6 @@
     (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
                                               ("* ||\n[i]" "RET"))))
   (add-to-list 'company-backends '(company-irony-c-headers company-irony))
-  (add-hook 'flycheck-mode-hook #'flycheck-irony-setup)
   (add-to-list 'company-backends #'company-irony)
   (add-to-list 'company-backends #'company-irony-c-headers)
   )
@@ -589,6 +591,7 @@
 (add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
 (add-hook 'c-mode-common-hook #'smartparens-mode)
 (add-hook 'c-mode-common-hook #'irony-mode)
+(add-hook 'c-mode-common-hook #'flycheck-irony-setup)
 (add-hook 'c-mode-common-hook #'flycheck-mode)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'auto-fill-mode)
@@ -825,7 +828,6 @@
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (add-hook 'typescript-mode-hook #'init-tide-mode)
 (add-hook 'typescript-mode-hook #'flycheck-mode)
-(add-hook 'typescript-mode-hook #'projectile-mode)
 (add-hook 'typescript-mode-hook #'tide-hl-identifier-mode)
 (add-hook 'typescript-mode-hook #'eldoc-mode)
 (add-hook 'typescript-mode-hook #'turn-on-auto-fill)
@@ -1007,8 +1009,8 @@
 (require 'go-mode)
 (ensure-package 'go-add-tags)
 (require 'go-add-tags)
-(ensure-package 'go-projectile)
-(require 'go-projectile)
+;; (ensure-package 'go-projectile)
+;; (require 'go-projectile)
 (ensure-package 'go-dlv)
 (require 'go-dlv)
 (ensure-package 'go-direx)
