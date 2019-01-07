@@ -828,6 +828,7 @@
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
 (add-hook 'typescript-mode-hook #'init-tide-mode)
 (add-hook 'typescript-mode-hook #'flycheck-mode)
+(add-hook 'typescript-mode-hook #'projectile-mode)
 (add-hook 'typescript-mode-hook #'tide-hl-identifier-mode)
 (add-hook 'typescript-mode-hook #'eldoc-mode)
 (add-hook 'typescript-mode-hook #'turn-on-auto-fill)
@@ -1009,8 +1010,8 @@
 (require 'go-mode)
 (ensure-package 'go-add-tags)
 (require 'go-add-tags)
-;; (ensure-package 'go-projectile)
-;; (require 'go-projectile)
+(ensure-package 'go-projectile)
+(require 'go-projectile)
 (ensure-package 'go-dlv)
 (require 'go-dlv)
 (ensure-package 'go-direx)
@@ -1019,6 +1020,8 @@
 (require 'go-guru)
 (ensure-package 'golint)
 (require 'golint)
+
+(setq go-projectile-tools-path (expand-file-name "~/gocode"))
 
 (add-to-list 'company-backends #'company-go)
 (add-to-list 'auto-mode-alist '("C-c ." . godef-jump))
