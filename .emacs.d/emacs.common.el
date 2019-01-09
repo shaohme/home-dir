@@ -413,6 +413,8 @@
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'message)
 
+(add-hook 'prog-mode-hook #'auto-revert-mode)
+
 (ensure-package 'pass)
 (require 'pass)
 
@@ -424,6 +426,9 @@
 
 (push '("*Backtrace*"
         :dedicated t :position bottom :stick t :noselect nil :height 0.33)
+      popwin:special-display-config)
+(push '("*Compilation*"
+        :dedicated t :position bottom :stick t :noselect t   :height 0.2)
       popwin:special-display-config)
 (push '("*compilation*"
         :dedicated t :position bottom :stick t :noselect t   :height 0.2)
@@ -511,7 +516,6 @@
 (require 'diff-hl)
 
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-(add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
 (ensure-package 'yasnippet)
 (require 'yasnippet)
@@ -759,8 +763,6 @@
 (add-hook 'LaTeX-mode-hook #'TeX-PDF-mode)
 (add-hook 'LaTeX-mode-hook #'company-auctex-init)
 (add-hook 'LaTeX-mode-hook #'turn-on-auto-fill)
-(add-hook 'pdf-view-mode-hook #'auto-revert-mode)
-(add-hook 'doc-view-mode-hook #'auto-revert-mode)
 
 
 ;;; Haskell mode
@@ -1024,9 +1026,9 @@
 (setq go-projectile-tools-path (expand-file-name "~/gocode"))
 
 (add-to-list 'company-backends #'company-go)
-(add-to-list 'auto-mode-alist '("C-c ." . godef-jump))
-(add-to-list 'auto-mode-alist '("C-c C-c" . compile))
-(add-to-list 'auto-mode-alist '("C-c C-r" . recompile))
+(define-key go-mode-map (kbd "C-c .") #'godef-jump)
+(define-key go-mode-map (kbd "C-c C-c") #'compile)
+(define-key go-mode-map (kbd "C-c C-r") #'recompile)
 
 (defun init-go-mode()
   (add-hook 'before-save-hook #'gofmt-before-save)
