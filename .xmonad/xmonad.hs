@@ -55,8 +55,6 @@ base02  = "#073642"
 yellow  = "#cd8b00"
 
 
-myWorkspaces :: [WorkspaceId]
-myWorkspaces = ["con","edit","www","mail"] ++ map show [5 .. 9]
 
 myPromptConfig = def {
     font = Locals.myFont
