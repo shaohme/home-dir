@@ -636,19 +636,24 @@
   (setq python-indent-guess-indent-offset nil
         python-indent-offset 4
         python-shell-interpreter "python3"
-        python-environment-directory "~/.virtualenvs"
-        jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        ;; python-environment-directory "~/.virtualenvs"
+        ;; jedi:environment-root "default"
+        ;; jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
         jedi:complete-on-dot t
         jedi:use-shortcuts t
         py-indent-tabs-mode nil
         py-auto-complete-p nil
         py-complete-function nil
+        flycheck-python-flake8-executable "flake8"
         flycheck-python-pycompile-executable "python3"
-        flycheck-python-pylint-executable (concat python-environment-directory "/default/bin/pylint")
+        flycheck-python-pylint-executable "pylint3"
         )
   (setq-local tab-width 4)
   (setq-local indent-tabs-mode nil)
+  )
+
+(defun after-init-python-mode()
+  (eldoc-mode -1)
   )
 
 (define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
@@ -659,6 +664,8 @@
 (add-hook 'python-mode-hook #'init-python-mode)
 (add-hook 'python-mode-hook #'flycheck-mode)
 (add-hook 'python-mode-hook #'jedi:setup)
+(add-hook 'python-mode-hook #'jedi:setup)
+(add-hook 'python-mode-hook #'after-init-python-mode)
 
 
 ;;; Apache mode
