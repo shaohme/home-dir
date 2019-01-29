@@ -75,6 +75,7 @@
               major-mode 'text-mode
               )
 
+
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
       password-cache t
@@ -96,7 +97,7 @@
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
-      ispell-program-name "hunspell"
+      ispell-program-name (executable-find "hunspell")
       ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
@@ -532,6 +533,16 @@
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 
+(ensure-package 'impatient-mode)
+(require 'impatient-mode)
+
+(setq httpd-host (quote local)
+      httpd-port 8218)
+
+(ensure-package 'flymd)
+(require 'flymd)
+
+
 ;;; CMake mode
 
 (ensure-package 'cmake-ide)
@@ -549,7 +560,7 @@
 (ensure-package 'magit)
 (require 'magit)
 
-(add-hook 'git-commit-mode-hook 'flyspell-mode)
+(add-hook 'git-commit-mode-hook 'turn-on-flyspell)
 (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
 
 
@@ -636,9 +647,9 @@
   (setq python-indent-guess-indent-offset nil
         python-indent-offset 4
         python-shell-interpreter "python3"
-        ;; python-environment-directory "~/.virtualenvs"
-        ;; jedi:environment-root "default"
-        ;; jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        python-environment-directory "~/.virtualenvs"
+        jedi:environment-root "default"
+        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
         jedi:complete-on-dot t
         jedi:use-shortcuts t
         py-indent-tabs-mode nil
@@ -739,6 +750,7 @@
 
 (add-hook 'web-mode-hook #'flycheck-mode)
 (add-hook 'web-mode-hook #'rainbow-mode)
+(add-hook 'web-mode-hook #'impatient-mode)
 
 ;;; Lisp mode
 
@@ -901,7 +913,7 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
-(add-hook 'markdown-mode-hook #'flyspell-mode)
+(add-hook 'markdown-mode-hook #'turn-on-flyspell)
 
 
 
