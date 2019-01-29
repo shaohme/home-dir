@@ -65,7 +65,6 @@
 ;;   (load-theme 'tramp t))
   ;; (spaceline-spacemacs-theme))
 
-
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
@@ -98,10 +97,10 @@
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
       ispell-program-name (executable-find "hunspell")
-      ispell-dictionary "en_US"
+      ;; ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
-      flyspell-issue-message-flag nil
+      ;; flyspell-issue-message-flag nil
       browse-url-browser-function 'browse-url-firefox
       browse-url-new-window-flag t
       browse-url-firefox-new-window-is-tab t
@@ -399,10 +398,10 @@
 
 (add-hook 'gnus-summary-mode-hook 'emojify-mode)
 (add-hook 'mail-mode-hook 'footnote-mode)
-(add-hook 'mail-mode-hook 'turn-on-flyspell)
+(add-hook 'mail-mode-hook 'flyspell-mode)
 (add-hook 'mail-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'footnote-mode)
-(add-hook 'message-mode-hook 'turn-on-flyspell)
+(add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
 (add-hook 'message-send-hook
@@ -560,7 +559,7 @@
 (ensure-package 'magit)
 (require 'magit)
 
-(add-hook 'git-commit-mode-hook 'turn-on-flyspell)
+(add-hook 'git-commit-mode-hook 'flyspell-mode)
 (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
 
 
@@ -913,7 +912,7 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
-(add-hook 'markdown-mode-hook #'turn-on-flyspell)
+(add-hook 'markdown-mode-hook #'flyspell-mode)
 
 
 
