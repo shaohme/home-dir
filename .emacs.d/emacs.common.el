@@ -427,9 +427,9 @@
 (push '("*Backtrace*"
         :dedicated t :position bottom :stick t :noselect nil :height 0.33)
       popwin:special-display-config)
-(push '("*Compilation*"
-        :dedicated t :position bottom :stick t :noselect t   :height 0.2)
-      popwin:special-display-config)
+;; (push '("*Compilation*"
+;;         :dedicated t :position bottom :stick t :noselect t   :height 0.2)
+;;       popwin:special-display-config)
 (push '("*compilation*"
         :dedicated t :position bottom :stick t :noselect t   :height 0.2)
       popwin:special-display-config)
@@ -451,6 +451,7 @@
 (push '("^\\*Man .*\\*$"
         :regexp t    :position bottom :stick t :noselect nil :height 0.33)
       popwin:special-display-config)
+(push '(compilation-mode :noselect t :stick t :height 0.2) popwin:special-display-config)
 
 (popwin-mode t)
 
@@ -1041,7 +1042,9 @@
 (ensure-package 'golint)
 (require 'golint)
 
-(setq go-projectile-tools-path (expand-file-name "~/gocode"))
+(setq go-projectile-tools-path (expand-file-name "~/gocode")
+      ;; gofmt-args (quote ("-e"))
+      )
 
 (add-to-list 'company-backends #'company-go)
 (define-key go-mode-map (kbd "C-c .") #'godef-jump)
