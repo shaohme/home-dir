@@ -65,7 +65,6 @@
 ;;   (load-theme 'tramp t))
   ;; (spaceline-spacemacs-theme))
 
-
 (setq-default frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
@@ -74,6 +73,7 @@
               flycheck-emacs-lisp-load-path load-path
               major-mode 'text-mode
               )
+
 
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
@@ -96,11 +96,11 @@
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
-      ispell-program-name "hunspell"
-      ispell-dictionary "en_US"
+      ispell-program-name (executable-find "hunspell")
+      ;; ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
-      flyspell-issue-message-flag nil
+      ;; flyspell-issue-message-flag nil
       browse-url-browser-function 'browse-url-firefox
       browse-url-new-window-flag t
       browse-url-firefox-new-window-is-tab t
@@ -398,10 +398,10 @@
 
 (add-hook 'gnus-summary-mode-hook 'emojify-mode)
 (add-hook 'mail-mode-hook 'footnote-mode)
-(add-hook 'mail-mode-hook 'turn-on-flyspell)
+(add-hook 'mail-mode-hook 'flyspell-mode)
 (add-hook 'mail-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'footnote-mode)
-(add-hook 'message-mode-hook 'turn-on-flyspell)
+(add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
 (add-hook 'message-send-hook
@@ -427,9 +427,9 @@
 (push '("*Backtrace*"
         :dedicated t :position bottom :stick t :noselect nil :height 0.33)
       popwin:special-display-config)
-(push '("*Compilation*"
-        :dedicated t :position bottom :stick t :noselect t   :height 0.2)
-      popwin:special-display-config)
+;; (push '("*Compilation*"
+;;         :dedicated t :position bottom :stick t :noselect t   :height 0.2)
+;;       popwin:special-display-config)
 (push '("*compilation*"
         :dedicated t :position bottom :stick t :noselect t   :height 0.2)
       popwin:special-display-config)
@@ -451,6 +451,7 @@
 (push '("^\\*Man .*\\*$"
         :regexp t    :position bottom :stick t :noselect nil :height 0.33)
       popwin:special-display-config)
+(push '(compilation-mode :noselect t :stick t :height 0.2) popwin:special-display-config)
 
 (popwin-mode t)
 
@@ -530,6 +531,16 @@
 
 (require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
+
+(ensure-package 'impatient-mode)
+(require 'impatient-mode)
+
+(setq httpd-host (quote local)
+      httpd-port 8218)
+
+(ensure-package 'flymd)
+(require 'flymd)
 
 
 ;;; CMake mode
@@ -636,9 +647,9 @@
   (setq python-indent-guess-indent-offset nil
         python-indent-offset 4
         python-shell-interpreter "python3"
-        ;; python-environment-directory "~/.virtualenvs"
-        ;; jedi:environment-root "default"
-        ;; jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        python-environment-directory "~/.virtualenvs"
+        jedi:environment-root "default"
+        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
         jedi:complete-on-dot t
         jedi:use-shortcuts t
         py-indent-tabs-mode nil
@@ -739,6 +750,7 @@
 
 (add-hook 'web-mode-hook #'flycheck-mode)
 (add-hook 'web-mode-hook #'rainbow-mode)
+(add-hook 'web-mode-hook #'impatient-mode)
 
 ;;; Lisp mode
 
@@ -1030,7 +1042,9 @@
 (ensure-package 'golint)
 (require 'golint)
 
-(setq go-projectile-tools-path (expand-file-name "~/gocode"))
+(setq go-projectile-tools-path (expand-file-name "~/gocode")
+      ;; gofmt-args (quote ("-e"))
+      )
 
 (add-to-list 'company-backends #'company-go)
 (define-key go-mode-map (kbd "C-c .") #'godef-jump)
