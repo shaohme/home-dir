@@ -921,6 +921,8 @@
 (ensure-package 'groovy-mode)
 (require 'groovy-mode)
 
+(add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
+
 (defun init-groovy-mode()
   (setq-local company-dabbrev-downcase nil)
   (setq-local company-dabbrev-ignore-case t)
@@ -1061,6 +1063,11 @@
 (add-hook 'go-mode-hook #'go-eldoc-setup)
 
 
+(ensure-package 'docker-compose-mode)
+(require 'docker-compose-mode)
+(require 'flycheck-docker-compose-config)
+
+(flycheck-docker-compose-config-enable)
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
