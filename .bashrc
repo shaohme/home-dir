@@ -41,3 +41,11 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 alias e='emacsclient -n'
+
+PFILE=$HOME/.emacs.d/projectile-bookmarks.eld
+if [ -f ${PFILE} ]; then
+    while read -d '" "' part; do
+        n=`basename "$part"`
+        alias s_$n="cd $part"
+    done <<< $(cat $PFILE | sed -e 's/(//g' | sed -e 's/)//g')
+fi
