@@ -21,7 +21,9 @@
 (require 'gud)
 (require 'gdb-mi)
 (require 'tramp)
-
+(require 'smerge-mode)
+(require 'popup)
+(require 'async)
 
 (defvar my:theme 'spacemacs-dark)
 (defvar my:theme-window-loaded nil)
@@ -106,8 +108,7 @@
       browse-url-firefox-new-window-is-tab t
       tramp-default-method "ssh"
       gdb-many-windows t
-      gdb-show-main t
-      )
+      gdb-show-main t)
 
 (ensure-package 'realgud)
 (require 'realgud)
@@ -220,12 +221,10 @@
 
 (global-set-key (kbd "M-x") #'helm-M-x)
 (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
 (global-set-key (kbd "C-c h") #'helm-command-prefix)
 (global-set-key (kbd "M-y") #'helm-show-kill-ring)
 (global-set-key (kbd "C-x b") #'helm-mini)
-(global-set-key (kbd "C-x C-f") #'helm-find-files)
-(global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
+;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
 ;;          ;; show minibuffer history with Helm
 ;; (define-key helm-minibuffer-local-map (kbd "M-p") #'helm-minibuffer-history)
 ;; (define-key helm-minibuffer-local-map (kbd "M-n") #'helm-minibuffer-history))
@@ -235,6 +234,13 @@
 ;;          ;;       ("r" . helm-info-emacs)
 ;;          ;;       ("C-l" . helm-locate-library))
 (global-set-key (kbd "C-c s") #'helm-tramp)
+
+(define-key global-map [remap find-file] 'helm-find-files)
+(define-key global-map [remap occur] 'helm-occur)
+(define-key global-map [remap list-buffers] 'helm-buffers-list)
+(define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+(define-key global-map [remap execute-extended-command] 'helm-M-x)
+
 (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
 ;; make TAB works in terminal
 (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
@@ -1055,6 +1061,9 @@
 
 (defun init-go-mode()
   (add-hook 'before-save-hook #'gofmt-before-save)
+  (setq-local projectile-globally-ignored-directories
+              ;; 'vendor' dir is made by go modules
+              (append '("vendor") projectile-globally-ignored-directories))
   )
 
 (add-hook 'go-mode-hook #'init-go-mode)
@@ -1068,6 +1077,11 @@
 (require 'flycheck-docker-compose-config)
 
 (flycheck-docker-compose-config-enable)
+
+
+(unless (boundp 'completion-in-region-function)
+  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
