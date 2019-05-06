@@ -496,7 +496,8 @@
       company-minimum-prefix-length 2
       ;; aligns annotation to the right hand side
       company-tooltip-align-annotations t
-      company-selection-wrap-around t)
+      company-selection-wrap-around t
+      company-dabbrev-downcase nil)
 
 (global-set-key (kbd "<C-M-i>") #'company-complete)
 (define-key company-active-map (kbd "<tab>") #'company-complete-selection)
@@ -929,12 +930,6 @@
 
 (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
 
-(defun init-groovy-mode()
-  (setq-local company-dabbrev-downcase nil)
-  (setq-local company-dabbrev-ignore-case t)
-  )
-
-(add-hook 'groovy-mode-hook #'init-groovy-mode)
 (add-hook 'groovy-mode-hook #'flycheck-mode)
 (add-hook 'groovy-mode-hook #'groovy-electric-mode)
 
