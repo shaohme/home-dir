@@ -609,17 +609,16 @@
   (add-to-list 'company-backends #'company-irony-c-headers)
   )
 
-(add-hook 'c-mode-common-hook #'init-cc-mode)
-(add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
 (add-hook 'c-mode-common-hook #'smartparens-mode)
-(add-hook 'c-mode-common-hook #'irony-mode)
-(add-hook 'c-mode-common-hook #'flycheck-irony-setup)
 (add-hook 'c-mode-common-hook #'flycheck-mode)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'auto-fill-mode)
-(add-hook 'c-mode-common-hook #'modern-c++-font-lock-mode)
-(add-hook 'c-mode-common-hook #'cmake-ide-setup)
-(add-hook 'c-mode-common-hook #'irony-cdb-autosetup-compile-options)
+(add-hook 'c-mode-hook #'init-cc-mode)
+(add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
+(add-hook 'c++-mode-hook #'irony-mode)
+(add-hook 'c++-mode-hook #'flycheck-irony-setup)
+(add-hook 'c++-mode-hook #'cmake-ide-setup)
+(add-hook 'c++-mode-hook #'irony-cdb-autosetup-compile-options)
 
 (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
 (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
@@ -1072,6 +1071,10 @@
 (require 'flycheck-docker-compose-config)
 
 (flycheck-docker-compose-config-enable)
+
+
+(ensure-package 'protobuf-mode)
+(require 'protobuf-mode)
 
 
 (unless (boundp 'completion-in-region-function)
