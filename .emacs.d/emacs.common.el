@@ -1077,6 +1077,10 @@
 (require 'protobuf-mode)
 
 
+(ensure-package 'gitconfig-mode)
+(require 'gitconfig-mode)
+
+
 (unless (boundp 'completion-in-region-function)
   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
