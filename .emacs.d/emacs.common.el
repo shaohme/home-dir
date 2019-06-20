@@ -24,6 +24,7 @@
 (require 'smerge-mode)
 (require 'popup)
 (require 'async)
+(require 'ldap-mode)
 
 (defvar my:theme 'spacemacs-dark)
 (defvar my:theme-window-loaded nil)
@@ -491,12 +492,14 @@
 (ensure-package 'company)
 (require 'company)
 (require 'company-dabbrev)
+(require 'company-dabbrev-code)
 
 (setq company-idle-delay 0.4
       company-minimum-prefix-length 2
       ;; aligns annotation to the right hand side
       company-tooltip-align-annotations t
       company-selection-wrap-around t
+      company-dabbrev-code-everywhere t
       company-dabbrev-downcase nil)
 
 (global-set-key (kbd "<C-M-i>") #'company-complete)
@@ -1018,7 +1021,9 @@
 (ensure-package 'company-lua)
 (require 'company-lua)
 
-(add-to-list 'company-backends 'company-lua)
+;;; combine lua and dabbrev in one completion, so if lua fails dabbrev
+;;; can provide
+(add-to-list 'company-backends '(company-lua company-dabbrev-code))
 
 (add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
 (add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
@@ -1079,6 +1084,10 @@
 
 (ensure-package 'gitconfig-mode)
 (require 'gitconfig-mode)
+
+(ensure-package 'apt-sources-list)
+(require 'apt-sources-list)
+
 
 
 (unless (boundp 'completion-in-region-function)
