@@ -1088,6 +1088,8 @@
 (ensure-package 'apt-sources-list)
 (require 'apt-sources-list)
 
+(ensure-package 'x509-mode)
+(require 'x509-mode)
 
 
 (unless (boundp 'completion-in-region-function)
