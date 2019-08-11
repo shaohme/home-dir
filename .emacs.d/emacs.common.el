@@ -681,7 +681,7 @@
 )
 
 (defun after-init-python-mode()
-  ;; (eldoc-mode -1)
+  (eldoc-mode -1)
   )
 
 (define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
