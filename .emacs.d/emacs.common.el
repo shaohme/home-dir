@@ -592,11 +592,15 @@
 (require 'modern-cpp-font-lock)
 
 (defun init-cc-mode()
-  (make-local-variable 'company-backends)
-  (setq company-backends (delete 'company-semantic company-backends))
-  (setq company-backends (delete 'company-clang company-backends))
-  (setq company-backends (delete 'company-capf company-backends))
-  (setq company-backends (delete 'company-etags company-backends))
+  (set (make-local-variable 'company-backends)
+       '((company-irony-c-headers company-irony company-dabbrev-code)
+         company-capf company-files))
+
+  ;; (make-local-variable 'company-backends)
+  ;; (setq company-backends (delete 'company-semantic company-backends))
+  ;; (setq company-backends (delete 'company-clang company-backends))
+  ;; (setq company-backends (delete 'company-capf company-backends))
+  ;; (setq company-backends (delete 'company-etags company-backends))
   (setq-local c-default-style "stroustrup")
   (setq-local c-basic-offset 4)
   (setq-local tab-width 4)
@@ -607,9 +611,14 @@
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
                                               ("* ||\n[i]" "RET"))))
-  (add-to-list 'company-backends '(company-irony-c-headers company-irony))
-  (add-to-list 'company-backends #'company-irony)
-  (add-to-list 'company-backends #'company-irony-c-headers)
+  ;; (add-to-list 'company-backends '())
+  ;; (add-to-list 'company-backends #'company-irony)
+  ;; (add-to-list 'company-backends #'company-irony-c-headers)
+  (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
+  (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
+  (define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
+  (define-key c-mode-base-map (kbd "C-c C-c") #'cmake-ide-compile)
+  (define-key c-mode-base-map (kbd "C-c C-k") #'comment-or-uncomment-region)
   )
 
 (add-hook 'c-mode-common-hook #'smartparens-mode)
@@ -617,17 +626,12 @@
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'auto-fill-mode)
 (add-hook 'c-mode-hook #'init-cc-mode)
+(add-hook 'c++-mode-hook #'init-cc-mode)
 (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
 (add-hook 'c++-mode-hook #'irony-mode)
 (add-hook 'c++-mode-hook #'flycheck-irony-setup)
 (add-hook 'c++-mode-hook #'cmake-ide-setup)
 (add-hook 'c++-mode-hook #'irony-cdb-autosetup-compile-options)
-
-(define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
-(define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
-(define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
-(define-key c-mode-base-map (kbd "C-c C-c") #'cmake-ide-compile)
-(define-key c-mode-base-map (kbd "C-c C-k") #'comment-or-uncomment-region)
 
 
 ;;; Org mode
@@ -652,38 +656,40 @@
 (ensure-package 'python-mode)
 (require 'python-mode)
 
+(setq python-indent-guess-indent-offset nil
+      python-indent-offset 4
+      python-shell-interpreter "python3"
+      python-environment-directory "~/.virtualenvs"
+      jedi:environment-root "default"
+      jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+      jedi:complete-on-dot t
+      jedi:use-shortcuts t
+      py-indent-tabs-mode nil
+      py-auto-complete-p nil
+      py-complete-function nil
+      flycheck-python-flake8-executable "flake8"
+      flycheck-python-pycompile-executable "python3"
+      flycheck-python-pylint-executable "pylint3"
+      )
+
 (defun init-python-mode()
-  (setq python-indent-guess-indent-offset nil
-        python-indent-offset 4
-        python-shell-interpreter "python3"
-        python-environment-directory "~/.virtualenvs"
-        jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-        jedi:complete-on-dot t
-        jedi:use-shortcuts t
-        py-indent-tabs-mode nil
-        py-auto-complete-p nil
-        py-complete-function nil
-        flycheck-python-flake8-executable "flake8"
-        flycheck-python-pycompile-executable "python3"
-        flycheck-python-pylint-executable "pylint3"
-        )
   (setq-local tab-width 4)
   (setq-local indent-tabs-mode nil)
-  )
+  (set (make-local-variable 'company-backends)
+       '((company-jedi company-dabbrev-code)
+         company-capf company-files))
+)
 
 (defun after-init-python-mode()
-  (eldoc-mode -1)
+  ;; (eldoc-mode -1)
   )
 
 (define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
 
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-(add-to-list 'company-backends 'company-jedi)
 
 (add-hook 'python-mode-hook #'init-python-mode)
 (add-hook 'python-mode-hook #'flycheck-mode)
-(add-hook 'python-mode-hook #'jedi:setup)
 (add-hook 'python-mode-hook #'jedi:setup)
 (add-hook 'python-mode-hook #'after-init-python-mode)
 
@@ -733,7 +739,7 @@
 (require 'company-web)
 
 (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tlp\\.php\\'" . web-mode))
+;; (add-to-list 'auto-mode-alist '("\\.tlp\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
@@ -752,14 +758,33 @@
       web-mode-css-indent-offset 2
       web-mode-code-indent-offset 2)
 
-(add-to-list 'company-backends 'company-web-html)
-(add-to-list 'company-backends 'company-yasnippet)
-
 (define-key web-mode-map (kbd "C-c C-k") #'web-mode-comment-or-uncomment)
+
+(defun init-web-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-web-html company-yasnippet company-dabbrev-code)
+         company-capf company-files))
+  )
 
 (add-hook 'web-mode-hook #'flycheck-mode)
 (add-hook 'web-mode-hook #'rainbow-mode)
 (add-hook 'web-mode-hook #'impatient-mode)
+(add-hook 'web-mode-hook #'init-web-mode)
+
+;;; PHP mode
+(ensure-package 'php-mode)
+(require 'php-mode)
+(ensure-package 'company-php)
+(require 'company-php)
+
+(defun init-php-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-ac-php-backend company-dabbrev-code)
+         company-capf company-files))
+  )
+
+(add-hook 'php-mode-hook #'init-php-mode)
+
 
 ;;; Lisp mode
 
@@ -805,10 +830,17 @@
 (require 'hindent)
 
 (add-to-list 'auto-mode-alist '("\\.xmobarrc\\'" . haskell-mode))
-(add-to-list 'company-backends 'company-ghc)
+
+(defun init-haskell-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-ghc company-dabbrev-code)
+         company-capf company-files))
+  )
+
 (add-hook 'haskell-mode-hook #'hindent-mode)
 (add-hook 'haskell-mode-hook #'flycheck-mode)
 (add-hook 'haskell-mode-hook #'rainbow-mode)
+(add-hook 'haskell-mode-hook #'init-haskell-mode)
 
 
 ;;; JS mode
@@ -840,6 +872,9 @@
 (defun init-js2-mode()
   (setq-local flycheck-disabled-checkers
               (append flycheck-disabled-checkers '(json-jsonlist)))
+  (set (make-local-variable 'company-backends)
+       '((company-tern company-dabbrev-code)
+         company-capf company-files))
   )
 
 (defun init-tide-mode()
@@ -849,13 +884,12 @@
   (add-hook 'before-save-hook 'tide-format-before-save)
   )
 
-(add-to-list 'company-backends 'company-tern)
-
 (add-hook 'js-mode-hook #'flycheck-mode)
 (add-hook 'js2-mode-hook #'flycheck-mode)
 (add-hook 'js2-mode-hook #'tern-mode)
 (add-hook 'js2-mode-hook #'turn-on-auto-fill)
 (add-hook 'js2-mode-hook #'js2-refactor-mode)
+(add-hook 'js2-mode-hook #'init-js2-mode)
 (add-hook 'typescript-mode-hook #'init-tide-mode)
 (add-hook 'typescript-mode-hook #'flycheck-mode)
 (add-hook 'typescript-mode-hook #'projectile-mode)
@@ -884,10 +918,17 @@
 (ensure-package 'flycheck-checkbashisms)
 (require 'flycheck-checkbashisms)
 
-(add-to-list 'company-backends '(company-shell company-shell-env))
+(defun init-sh-set-shell-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-shell company-shell-env company-dabbrev-code)
+         company-capf company-files))
+  )
+
 (add-hook 'sh-set-shell-hook #'flycheck-mode)
 (add-hook 'sh-set-shell-hook #'flycheck-checkbashisms-setup)
 (add-hook 'sh-set-shell-hook #'yas-minor-mode)
+(add-hook 'sh-set-shell-hook #'init-sh-set-shell-mode)
+
 
 
 
@@ -978,7 +1019,14 @@
 (add-to-list 'auto-mode-alist '("\\.tf\\'" . terraform-mode))
 (add-to-list 'auto-mode-alist '("\\.tf.json\\'" . terraform-mode))
 
-(add-to-list 'company-backends 'company-terraform)
+
+(defun init-terraform-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-terraform company-dabbrev-code)
+         company-capf company-files))
+  )
+
+(add-to-list 'terraform-mode-hook #'init-terraform-mode)
 
 
 ;;; JSON mode
@@ -1001,9 +1049,10 @@
 (defun init-racer-mode()
   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)
   (setq company-tooltip-align-annotations t)
+  (set (make-local-variable 'company-backends)
+       '((company-racer company-dabbrev-code)
+         company-capf company-files))
   )
-
-(add-to-list 'company-backends 'company-racer)
 
 (add-hook 'racer-mode-hook #'init-racer-mode)
 (add-hook 'racer-mode-hook #'eldoc-mode)
@@ -1023,12 +1072,18 @@
 
 ;;; combine lua and dabbrev in one completion, so if lua fails dabbrev
 ;;; can provide
-(add-to-list 'company-backends '(company-lua company-dabbrev-code))
 
 (add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
 (add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
 (add-to-list 'auto-mode-alist '("\\.slua" . lua-mode))
 
+(defun init-lua-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-lua company-dabbrev-code)
+         company-capf company-files))
+  )
+
+(add-hook 'lua-mode-hook #'init-lua-mode)
 (add-hook 'lua-mode-hook #'flycheck-mode)
 (add-hook 'lua-mode-hook #'auto-fill-mode)
 
@@ -1053,7 +1108,6 @@
       ;; gofmt-args (quote ("-e"))
       )
 
-(add-to-list 'company-backends #'company-go)
 (define-key go-mode-map (kbd "C-c .") #'godef-jump)
 (define-key go-mode-map (kbd "C-c C-c") #'compile)
 (define-key go-mode-map (kbd "C-c C-r") #'recompile)
@@ -1063,6 +1117,9 @@
   (setq-local projectile-globally-ignored-directories
               ;; 'vendor' dir is made by go modules
               (append '("vendor") projectile-globally-ignored-directories))
+  (set (make-local-variable 'company-backends)
+       '((company-go company-dabbrev-code)
+         company-capf company-files))
   )
 
 (add-hook 'go-mode-hook #'init-go-mode)
@@ -1091,6 +1148,8 @@
 (ensure-package 'x509-mode)
 (require 'x509-mode)
 
+(ensure-package 'love-minor-mode)
+(require 'love-minor-mode)
 
 (unless (boundp 'completion-in-region-function)
   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
