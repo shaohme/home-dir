@@ -656,21 +656,7 @@
 (ensure-package 'python-mode)
 (require 'python-mode)
 
-(setq python-indent-guess-indent-offset nil
-      python-indent-offset 4
-      python-shell-interpreter "python3"
-      python-environment-directory "~/.virtualenvs"
-      jedi:environment-root "default"
-      jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-      jedi:complete-on-dot t
-      jedi:use-shortcuts t
-      py-indent-tabs-mode nil
-      py-auto-complete-p nil
-      py-complete-function nil
-      flycheck-python-flake8-executable "flake8"
-      flycheck-python-pycompile-executable "python3"
-      flycheck-python-pylint-executable "pylint3"
-      )
+
 
 (defun init-python-mode()
   (setq-local tab-width 4)
@@ -678,6 +664,27 @@
   (set (make-local-variable 'company-backends)
        '((company-jedi company-dabbrev-code)
          company-capf company-files))
+  (setq python-indent-guess-indent-offset nil
+        python-indent-offset 4
+        python-shell-interpreter "python3"
+        python-environment-directory "~/.virtualenvs"
+        jedi:environment-root "default"
+        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+        jedi:complete-on-dot t
+        jedi:use-shortcuts t
+
+        ;; py-indent-tabs-mode nil
+        ;; py-auto-complete-p nil
+        ;; py-complete-function nil
+        ;; jedi:tooltip-method nil
+        ;; jedi:get-in-function-call-delay 0
+        flycheck-python-flake8-executable "flake8"
+        flycheck-python-pycompile-executable "python3"
+        flycheck-python-pylint-executable "pylint3"
+        )
+  ;; (company-quickhelp-mode t)
+  (flycheck-mode t)
+  (jedi-mode t)
 )
 
 (defun after-init-python-mode()
@@ -689,8 +696,6 @@
 (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
 (add-hook 'python-mode-hook #'init-python-mode)
-(add-hook 'python-mode-hook #'flycheck-mode)
-(add-hook 'python-mode-hook #'jedi:setup)
 (add-hook 'python-mode-hook #'after-init-python-mode)
 
 
