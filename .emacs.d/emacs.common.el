@@ -730,55 +730,12 @@
 (add-hook 'elpy-mode-hook #'init-elpy-mode)
 
 (define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
+(define-key elpy-mode-map (kbd "C-c C-k") #'comment-dwim)
 
 (pyvenv-workon "default")
 
-;; (require 'python)
-;; (ensure-package 'python-environment)
-;; (require 'python-environment)
-;; (ensure-package 'jedi-core)
-;; (require 'jedi-core)
-;; (ensure-package 'company-jedi)
-;; (require 'company-jedi)
-;; (ensure-package 'python-mode)
-;; (require 'python-mode)
+(require 'pip-requirements)
 
-
-
-;; (defun init-python-mode()
-;;   (setq-local tab-width 4)
-;;   (setq-local indent-tabs-mode nil)
-;;   (set (make-local-variable 'company-backends)
-;;        '((company-jedi company-dabbrev-code)
-;;          company-capf company-files))
-;;   (setq python-indent-guess-indent-offset nil
-;;         python-indent-offset 4
-;;         python-shell-interpreter "python3"
-;;         python-environment-directory "~/.virtualenvs"
-;;         jedi:environment-root "default"
-;;         jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-;;         jedi:complete-on-dot t
-;;         jedi:use-shortcuts t
-
-;;         ;; py-indent-tabs-mode nil
-;;         ;; py-auto-complete-p nil
-;;         ;; py-complete-function nil
-;;         ;; jedi:tooltip-method nil
-;;         ;; jedi:get-in-function-call-delay 0
-;;         flycheck-python-flake8-executable "flake8"
-;;         flycheck-python-pycompile-executable "python3"
-;;         flycheck-python-pylint-executable "pylint3"
-;;         )
-;;   ;; (company-quickhelp-mode t)
-;;   (flycheck-mode t)
-;;   (jedi-mode t)
-;; )
-
-;; (defun after-init-python-mode()
-;;   (eldoc-mode -1)
-;;   )
-
-;; (define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
 
 ;; (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
 
@@ -1012,8 +969,8 @@
 
 (defun init-sh-set-shell-mode()
   (set (make-local-variable 'company-backends)
-       '((company-shell company-shell-env company-dabbrev-code)
-         company-capf company-files))
+       '((company-shell company-shell-env company-files company-dabbrev-code)
+         company-capf))
   )
 
 (add-hook 'sh-set-shell-hook #'flycheck-mode)
