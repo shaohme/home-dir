@@ -22,7 +22,9 @@
 (require 'gdb-mi)
 (require 'tramp)
 (require 'smerge-mode)
+(ensure-package 'popup)
 (require 'popup)
+(ensure-package 'async)
 (require 'async)
 (require 'ldap-mode)
 
@@ -511,9 +513,6 @@
 (ensure-package 'flycheck)
 (require 'flycheck)
 
-(setq flycheck-json-python-json-executable "python3"
-      flycheck-jscsrc ".jscsrc.json")
-
 
 (ensure-package 'systemd)
 (require 'systemd)
@@ -646,57 +645,145 @@
 
 ;;; Python mode
 
-(require 'python)
-(ensure-package 'python-environment)
-(require 'python-environment)
-(ensure-package 'jedi-core)
-(require 'jedi-core)
-(ensure-package 'company-jedi)
-(require 'company-jedi)
-(ensure-package 'python-mode)
-(require 'python-mode)
+(ensure-package 'elpy)
+(require 'elpy)
+(elpy-enable)
 
+;; Remove flymake and use flycheck
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
 
+;; Wait idle seconds before running flycheck
+(setq flycheck-idle-change-delay 2)
 
-(defun init-python-mode()
-  (setq-local tab-width 4)
-  (setq-local indent-tabs-mode nil)
+;; Set timeout for backend rpc
+(setq elpy-rpc-timeout 3)
+
+;; do not try to guess the indent offset
+;; Avoid this message: "Can’t guess python-indent-offset, using defaults: 4"
+;; http://stackoverflow.com/questions/18778894/emacs-24-3-python-cant-guess-python-indent-offset-using-defaults-4
+(setq python-indent-guess-indent-offset nil)
+
+;; enable newline-and-indent on return
+;; (define-key global-map (kbd "RET") 'newline-and-indent)
+
+;; navigate between Flycheck errors (I'm not using Flymake)
+(define-key elpy-mode-map (kbd "C-c C-n") 'flycheck-next-error)
+(define-key elpy-mode-map (kbd "C-c C-p") 'flycheck-previous-error)
+;; disable the old ones
+(define-key elpy-mode-map (kbd "C-c n") nil)
+(define-key elpy-mode-map (kbd "C-c p") nil)
+
+;; disable find-file-in-project because of helm
+(define-key elpy-mode-map (kbd "C-c C-f") nil)
+
+;; disable elpy-rgrep-symbol of helm
+(define-key elpy-mode-map (kbd "C-c C-s") nil)
+
+;; disable this to be used by avy
+(define-key elpy-mode-map (kbd "C-c C-c") nil)
+(define-key python-mode-map (kbd "C-c C-c") nil)
+
+;; https://masteringemacs.org/article/compiling-running-scripts-emacs
+(defun python--add-debug-highlight ()
+  "Adds a highlighter for '# DEBUG #' string"
+  (highlight-lines-matching-regexp "# DEBUG #\\s-*$" 'hi-red-b))
+(add-hook 'python-mode-hook 'python--add-debug-highlight)
+
+(defun init-elpy-mode()
   (set (make-local-variable 'company-backends)
-       '((company-jedi company-dabbrev-code)
+       '((elpy-company-backend company-dabbrev-code)
          company-capf company-files))
-  (setq python-indent-guess-indent-offset nil
-        python-indent-offset 4
-        python-shell-interpreter "python3"
-        python-environment-directory "~/.virtualenvs"
-        jedi:environment-root "default"
-        jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
-        jedi:complete-on-dot t
-        jedi:use-shortcuts t
+  (setq flycheck-check-syntax-automatically '(save idle-change new-line)
+        company-minimum-prefix-length 3
 
-        ;; py-indent-tabs-mode nil
-        ;; py-auto-complete-p nil
-        ;; py-complete-function nil
-        ;; jedi:tooltip-method nil
-        ;; jedi:get-in-function-call-delay 0
-        flycheck-python-flake8-executable "flake8"
-        flycheck-python-pycompile-executable "python3"
-        flycheck-python-pylint-executable "pylint3"
+        ;; show quick-access numbers for the first ten candidates (M-<number>
+        ;; selects the specific option)
+        company-show-numbers t
+
+        ;; all characters from `company-auto-complete-cha2rs' trigger insertion
+        ;; of the selected completion candidate
+        company-auto-complete nil
+
+        company-auto-complete-chars '(?\( ?\) ?.)
+
+        ;; align annotations to the right tooltip border
+        company-tooltip-align-annotations t
         )
-  ;; (company-quickhelp-mode t)
-  (flycheck-mode t)
-  (jedi-mode t)
-)
-
-(defun after-init-python-mode()
-  (eldoc-mode -1)
   )
 
-(define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
+;; https://emacs.stackexchange.com/a/12403
+;; show private methods/attributes at the end when suggesting
+;; (defun company-transform-python (candidates)
+;;   (let ((deleted))
+;;     (mapcar #'(lambda (c)
+;;          (if (or (string-prefix-p "__" c) (string-prefix-p ".__" c))
+;;             (progn
+;;               (add-to-list 'deleted c)
+;;               (setq candidates (delete c candidates)))))
+;;             candidates)
+;;     (append candidates (nreverse deleted))
+;;     ))
+;; (append company-transformers '(company-transform-python))
 
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+(add-hook 'elpy-mode-hook #'init-elpy-mode)
 
-(add-hook 'python-mode-hook #'init-python-mode)
-(add-hook 'python-mode-hook #'after-init-python-mode)
+(define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
+
+(pyvenv-workon "default")
+
+;; (require 'python)
+;; (ensure-package 'python-environment)
+;; (require 'python-environment)
+;; (ensure-package 'jedi-core)
+;; (require 'jedi-core)
+;; (ensure-package 'company-jedi)
+;; (require 'company-jedi)
+;; (ensure-package 'python-mode)
+;; (require 'python-mode)
+
+
+
+;; (defun init-python-mode()
+;;   (setq-local tab-width 4)
+;;   (setq-local indent-tabs-mode nil)
+;;   (set (make-local-variable 'company-backends)
+;;        '((company-jedi company-dabbrev-code)
+;;          company-capf company-files))
+;;   (setq python-indent-guess-indent-offset nil
+;;         python-indent-offset 4
+;;         python-shell-interpreter "python3"
+;;         python-environment-directory "~/.virtualenvs"
+;;         jedi:environment-root "default"
+;;         jedi:server-command (list (concat python-environment-directory "/" jedi:environment-root "/bin/jediepcserver"))
+;;         jedi:complete-on-dot t
+;;         jedi:use-shortcuts t
+
+;;         ;; py-indent-tabs-mode nil
+;;         ;; py-auto-complete-p nil
+;;         ;; py-complete-function nil
+;;         ;; jedi:tooltip-method nil
+;;         ;; jedi:get-in-function-call-delay 0
+;;         flycheck-python-flake8-executable "flake8"
+;;         flycheck-python-pycompile-executable "python3"
+;;         flycheck-python-pylint-executable "pylint3"
+;;         )
+;;   ;; (company-quickhelp-mode t)
+;;   (flycheck-mode t)
+;;   (jedi-mode t)
+;; )
+
+;; (defun after-init-python-mode()
+;;   (eldoc-mode -1)
+;;   )
+
+;; (define-key python-mode-map (kbd "C-c C-k") #'comment-dwim)
+
+;; (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+
+;; (add-hook 'python-mode-hook #'init-python-mode)
+;; (add-hook 'python-mode-hook #'after-init-python-mode)
 
 
 ;;; Apache mode
@@ -1038,6 +1125,9 @@
 (ensure-package 'json-mode)
 (require 'json-mode)
 (add-to-list 'auto-mode-alist '("\\.json\\'" . json-mode))
+
+(setq flycheck-json-python-json-executable "python3"
+      flycheck-jscsrc ".jscsrc.json")
 
 
 ;;; Rust mode
