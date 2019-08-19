@@ -115,11 +115,15 @@ With argument, do this that many times."
   (interactive "p")
   (delete-word (- arg)))
 
+(defvar local--package-refreshed)
+
 (defun ensure-package (packagename)
   (unless (package-installed-p packagename)
-    (package-refresh-contents)
-    (package-install packagename))
-  )
+    (if (not (boundp 'local--package-refreshed))
+        (eval (package-refresh-contents)
+              (setq local--package-refreshed t)))
+    (package-install packagename)
+  ))
 
 
 (defun markdown-html (buffer)
