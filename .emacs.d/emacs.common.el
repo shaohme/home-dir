@@ -574,6 +574,10 @@
 
 
 
+(ensure-package 'gitignore-mode)
+(require 'gitignore-mode)
+
+
 ;;; C/C++ mode
 
 (require 'cc-mode)
