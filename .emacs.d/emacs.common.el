@@ -101,7 +101,7 @@
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
-      ispell-program-name (executable-find "hunspell")
+
       ;; ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
@@ -112,6 +112,10 @@
       tramp-default-method "ssh"
       gdb-many-windows t
       gdb-show-main t)
+
+(when (executable-find "hunspell")
+  (setq-default ispell-program-name "hunspell")
+  (setq ispell-really-hunspell t))
 
 (ensure-package 'realgud)
 (require 'realgud)
