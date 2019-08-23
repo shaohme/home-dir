@@ -79,7 +79,6 @@
               major-mode 'text-mode
               )
 
-
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
       password-cache t
@@ -101,7 +100,8 @@
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
-
+      ispell-current-dictionary "en_US"
+      ispell-local-dictionary "en_US"
       ;; ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
@@ -116,6 +116,7 @@
 (when (executable-find "hunspell")
   (setq-default ispell-program-name "hunspell")
   (setq ispell-really-hunspell t))
+
 
 (ensure-package 'realgud)
 (require 'realgud)
@@ -168,6 +169,9 @@
 (require 'undo-tree)
 
 (global-undo-tree-mode 1)
+
+
+;;; Makefile mode
 
 (defun init-makefile-mode()
   (setq indent-tabs-mode t)
@@ -411,10 +415,10 @@
 
 (add-hook 'gnus-summary-mode-hook 'emojify-mode)
 (add-hook 'mail-mode-hook 'footnote-mode)
-(add-hook 'mail-mode-hook 'flyspell-mode)
+;; (add-hook 'mail-mode-hook 'flyspell-mode)
 (add-hook 'mail-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'footnote-mode)
-(add-hook 'message-mode-hook 'flyspell-mode)
+;; (add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
 (add-hook 'message-send-hook
@@ -573,7 +577,7 @@
 (ensure-package 'magit)
 (require 'magit)
 
-(add-hook 'git-commit-mode-hook 'flyspell-mode)
+;; (add-hook 'git-commit-mode-hook 'flyspell-mode)
 (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
 
 
@@ -761,7 +765,7 @@
 
 (require 'sql)
 (add-hook 'sql-mode-hook 'toggle-truncate-lines)
-(add-hook 'sql-mode-hook 'flyspell-prog-mode)
+;; (add-hook 'sql-mode-hook 'flyspell-prog-mode)
 
 
 ;;; CSS mode
@@ -1020,7 +1024,7 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
-(add-hook 'markdown-mode-hook #'flyspell-mode)
+;; (add-hook 'markdown-mode-hook #'flyspell-mode)
 
 
 
