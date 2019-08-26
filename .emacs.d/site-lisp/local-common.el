@@ -93,7 +93,7 @@ close the *compilation* buffer if the compilation is successful"
 (defun switch-dictionary()
   (interactive)
   (let* ((dic ispell-current-dictionary)
-    	 (change (if (string= dic "en_US") "da_DK" "en_US")))
+    	 (change (if (string= dic "en_US") "da" "en_US")))
     (ispell-change-dictionary change)
     ;; Dont check whole buffer as it can be of several languages, and large
     (if (bound-and-true-p flyspell-mode)

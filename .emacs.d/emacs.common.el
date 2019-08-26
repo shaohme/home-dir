@@ -102,20 +102,15 @@
       directory-free-space-args "-Pkh"
       ispell-current-dictionary "en_US"
       ispell-local-dictionary "en_US"
-      ;; ispell-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
-      ;; flyspell-issue-message-flag nil
+      flyspell-issue-message-flag nil
       browse-url-browser-function 'browse-url-firefox
       browse-url-new-window-flag t
       browse-url-firefox-new-window-is-tab t
       tramp-default-method "ssh"
       gdb-many-windows t
       gdb-show-main t)
-
-(when (executable-find "hunspell")
-  (setq-default ispell-program-name "hunspell")
-  (setq ispell-really-hunspell t))
 
 
 (ensure-package 'realgud)
@@ -415,10 +410,10 @@
 
 (add-hook 'gnus-summary-mode-hook 'emojify-mode)
 (add-hook 'mail-mode-hook 'footnote-mode)
-;; (add-hook 'mail-mode-hook 'flyspell-mode)
+(add-hook 'mail-mode-hook 'flyspell-mode)
 (add-hook 'mail-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'footnote-mode)
-;; (add-hook 'message-mode-hook 'flyspell-mode)
+(add-hook 'message-mode-hook 'flyspell-mode)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
 (add-hook 'message-send-hook
@@ -426,6 +421,15 @@
             (message-add-header "X-PGP-Key: fp=\"730C C366 E9E2 C833
   E62F B412  0D20 8662 8A3D 849A\"; id=\"0x8A3D849A\";
   get=<http://www.gotu.dk/8a3d849a.asc>; get=<hkp://pgp.mit.edu/pks/lookup?search=0x0D2086628A3D849A&op=get>; get=<https://keyserver.pgp.com/vkd/DownloadKey.event?keyid=0x0D2086628A3D849A>;")))
+
+(defun after-init-flyspell-mode()
+  ;;; Check the whole buffer after flyspell loads, so to see current
+  ;;; spelling errors
+  (flyspell-buffer)
+  )
+
+(add-hook 'flyspell-mode-hook #'after-init-flyspell-mode)
+
 
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'message)
@@ -577,7 +581,7 @@
 (ensure-package 'magit)
 (require 'magit)
 
-;; (add-hook 'git-commit-mode-hook 'flyspell-mode)
+(add-hook 'git-commit-mode-hook 'flyspell-mode)
 (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
 
 
@@ -765,7 +769,7 @@
 
 (require 'sql)
 (add-hook 'sql-mode-hook 'toggle-truncate-lines)
-;; (add-hook 'sql-mode-hook 'flyspell-prog-mode)
+(add-hook 'sql-mode-hook 'flyspell-prog-mode)
 
 
 ;;; CSS mode
@@ -1024,7 +1028,7 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
-;; (add-hook 'markdown-mode-hook #'flyspell-mode)
+(add-hook 'markdown-mode-hook #'flyspell-mode)
 
 
 
