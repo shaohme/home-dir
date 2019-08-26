@@ -507,6 +507,7 @@
 (require 'company)
 (require 'company-dabbrev)
 (require 'company-dabbrev-code)
+(require 'company-ispell)
 
 (setq company-idle-delay 0.4
       company-minimum-prefix-length 2
@@ -1025,10 +1026,17 @@
 
 (setq markdown-command "multimarkdown")
 
+(defun init-markdown-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-abbrev company-keywords company-ispell)
+         company-capf company-files))
+  )
+
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
 (add-hook 'markdown-mode-hook #'flyspell-mode)
+(add-hook 'markdown-mode-hook #'init-markdown-mode)
 
 
 
