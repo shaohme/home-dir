@@ -70,7 +70,10 @@
 ;;   (load-theme 'tramp t))
   ;; (spaceline-spacemacs-theme))
 
-(setq-default frame-title-format '("%b [%m] %F")
+(setq-default frame-title-format '((:eval (if (buffer-file-name)
+		                                      (abbreviate-file-name (buffer-file-name))
+                                            "%b")))
+ ;; frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
               tab-width 4
@@ -83,7 +86,9 @@
       inhibit-startup-message t
       password-cache t
       password-cache-expiry 86400
-      uniquify-buffer-name-style 'forward
+      ;; uniquify-buffer-name-style 'forward
+      ; Show path if names are same
+      uniquify-buffer-name-style 'post-forward-angle-brackets
       current-language-environment "English"
       backup-directory-alist `(("." . "~/.saves"))
       backup-by-copying t
@@ -100,8 +105,6 @@
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
-      ispell-current-dictionary "en_US"
-      ispell-local-dictionary "en_US"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
       flyspell-issue-message-flag nil
@@ -110,7 +113,15 @@
       browse-url-firefox-new-window-is-tab t
       tramp-default-method "ssh"
       gdb-many-windows t
-      gdb-show-main t)
+      gdb-show-main t
+      buffer-file-coding-system 'utf-8 ; utf-8-unix
+      save-buffer-coding-system 'utf-8-unix ; nil
+      process-coding-system-alist (cons '("grep" utf-8 . utf-8) process-coding-system-alist)
+      adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*"
+      adaptive-fill-first-line-regexp "^* *$"
+      sentence-end "\\([。、！？]\\|……\\|[,.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
+      sentence-end-double-space nil
+      )
 
 
 (ensure-package 'realgud)
@@ -119,8 +130,14 @@
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8-unix)
+(set-locale-environment "en_US.UTF-8")
+(set-default-coding-systems 'utf-8-unix)
+(set-selection-coding-system 'utf-8-unix)
+(set-buffer-file-coding-system 'utf-8-unix)
+(set-clipboard-coding-system 'utf-8) ; included by set-selection-coding-system
+(set-keyboard-coding-system 'utf-8) ; configured by prefer-coding-system
+(set-terminal-coding-system 'utf-8) ; configured by prefer-coding-system
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
 ;; fix for zsh strange chars in shell
@@ -154,6 +171,10 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'text-mode-hook #'goto-address-mode)
 
+(require 'saveplace)
+;;; should we use save-place-local-mode instead?
+(add-hook 'after-init-hook 'save-place-mode)
+
 
 (ensure-package 'volatile-highlights)
 (require 'volatile-highlights)
@@ -164,6 +185,52 @@
 (require 'undo-tree)
 
 (global-undo-tree-mode 1)
+
+(ensure-package 'xclip)
+(require 'xclip)
+
+(xclip-mode 1)
+
+
+(ensure-package 'ag)
+(require 'ag)
+
+(setq ag-reuse-buffers t
+      ag-reuse-window t)
+
+(ensure-package 'wgrep)
+(require 'wgrep)
+(ensure-package 'wgrep-ag)
+(require 'wgrep-ag)
+
+
+(setq wgrep-enable-key "e"
+      wgrep-auto-save-buffer t
+      wgrep-change-readonly-file t)
+
+
+;; Colorize output in the *compilation* buffer (for example when running test via elpy)
+;; https://stackoverflow.com/questions/3072648/cucumbers-ansi-colors-messing-up-emacs-compilation-buffer
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+
+
+(ensure-package 'presentation)
+(require 'presentation)
+
+
+
+(require 'paren)
+(setq show-paren-style 'mixed
+      show-paren-when-point-inside-paren t
+      show-paren-when-point-in-periphery t)
+
+(add-hook 'after-init-hook 'show-paren-mode)
+
 
 
 ;;; Makefile mode
@@ -410,10 +477,10 @@
 
 (add-hook 'gnus-summary-mode-hook 'emojify-mode)
 (add-hook 'mail-mode-hook 'footnote-mode)
-(add-hook 'mail-mode-hook 'flyspell-mode)
+(add-hook 'mail-mode-hook #'turn-on-flyspell)
 (add-hook 'mail-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'footnote-mode)
-(add-hook 'message-mode-hook 'flyspell-mode)
+(add-hook 'message-mode-hook #'turn-on-flyspell)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
 (add-hook 'message-send-hook
@@ -532,6 +599,7 @@
 
 (ensure-package 'smartparens)
 (require 'smartparens)
+(require 'smartparens-config)
 
 ;;; Common development
 
@@ -582,13 +650,22 @@
 (ensure-package 'magit)
 (require 'magit)
 
-(add-hook 'git-commit-mode-hook 'flyspell-mode)
+(add-hook 'git-commit-mode-hook #'turn-on-flyspell)
 (add-hook 'git-commit-mode-hook 'turn-on-auto-fill)
 
 
 
+(ensure-package 'gitattributes-mode)
+(require 'gitattributes-mode)
+
+(ensure-package 'gitconfig-mode)
+(require 'gitconfig-mode)
+
 (ensure-package 'gitignore-mode)
 (require 'gitignore-mode)
+
+
+
 
 
 ;;; C/C++ mode
@@ -1023,8 +1100,17 @@
 ;;; Markdown mode
 (ensure-package 'markdown-mode)
 (require 'markdown-mode)
+(ensure-package 'markdown-toc)
+(require 'markdown-toc)
 
-(setq markdown-command "multimarkdown")
+(setq markdown-command "multimarkdown"
+      markdown-hide-markup nil
+      markdown-bold-underscore t
+      markdown-italic-underscore t
+      markdown-header-scaling t
+      markdown-indent-function t
+      markdown-enable-math t
+      markdown-hide-urls nil)
 
 (defun init-markdown-mode()
   (set (make-local-variable 'company-backends)
@@ -1035,7 +1121,7 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-hook 'markdown-mode-hook #'auto-fill-mode)
 (add-hook 'markdown-mode-hook #'flycheck-mode)
-(add-hook 'markdown-mode-hook #'flyspell-mode)
+(add-hook 'markdown-mode-hook #'turn-on-flyspell)
 (add-hook 'markdown-mode-hook #'init-markdown-mode)
 
 
@@ -1214,6 +1300,8 @@
 (ensure-package 'protobuf-mode)
 (require 'protobuf-mode)
 
+(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
+
 
 (ensure-package 'gitconfig-mode)
 (require 'gitconfig-mode)
@@ -1226,6 +1314,27 @@
 
 (ensure-package 'love-minor-mode)
 (require 'love-minor-mode)
+
+(ensure-package 'plantuml-mode)
+(require 'plantuml-mode)
+(ensure-package 'flycheck-plantuml)
+(require 'flycheck-plantuml)
+
+(defun init-plantuml-mode()
+  (setq plantuml-jar-path (expand-file-name "~/plantuml.jar")
+        plantuml-output-type "png"
+        plantuml-default-exec-mode 'jar)
+  (flycheck-plantuml-setup)
+  )
+
+(add-hook 'plantuml-mode-hook #'init-plantuml-mode)
+
+(add-to-list 'auto-mode-alist '("\\.uml" . plantuml-mode))
+
+
+(ensure-package 'logview)
+(require 'logview)
+
 
 (unless (boundp 'completion-in-region-function)
   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
