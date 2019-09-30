@@ -578,10 +578,7 @@
 
 (setq company-idle-delay 0.4
       company-minimum-prefix-length 2
-      ;; aligns annotation to the right hand side
-      company-tooltip-align-annotations t
       company-selection-wrap-around t
-      company-dabbrev-code-everywhere t
       company-dabbrev-downcase nil)
 
 (global-set-key (kbd "<C-M-i>") #'company-complete)
@@ -786,9 +783,10 @@
 (add-hook 'python-mode-hook 'python--add-debug-highlight)
 
 (defun init-elpy-mode()
+  ;; (set (make-local-variable 'company-backends)
+  ;;      '((elpy-company-backend company-dabbrev-code) company-capf company-files))
   (set (make-local-variable 'company-backends)
-       '((elpy-company-backend company-dabbrev-code)
-         company-capf company-files))
+       '((elpy-company-backend company-dabbrev-code company-files)))
   (setq flycheck-check-syntax-automatically '(save idle-change new-line)
         company-minimum-prefix-length 3
 
@@ -1328,6 +1326,7 @@
   )
 
 (add-hook 'plantuml-mode-hook #'init-plantuml-mode)
+(add-hook 'plantuml-mode-hook #'flycheck-mode)
 
 (add-to-list 'auto-mode-alist '("\\.uml" . plantuml-mode))
 
