@@ -191,6 +191,8 @@
 
 (xclip-mode 1)
 
+(ensure-package 'iedit)
+(require 'iedit)
 
 (ensure-package 'ag)
 (require 'ag)
