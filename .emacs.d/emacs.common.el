@@ -949,11 +949,7 @@
 (ensure-package 'auctex)
 (require 'tex)
 
-(setq TeX-command-force "pdflatex"
-      ;; dont ask for save
-      TeX-view-program-selection '((output-pdf "pdf-tools"))
-      TeX-view-program-list '(("pdf-tools"
-                               "TeX-pdf-tools-sync-view")))
+(setq TeX-command-force "pdflatex")
 
 
 (add-hook 'LaTeX-mode-hook #'TeX-PDF-mode)

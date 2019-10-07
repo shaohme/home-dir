@@ -14,3 +14,4 @@ text/x-haskell=emacs.desktop
 application/json=emacs.desktop
 application/x-directory=emacs-dired.desktop
 inode/directory=emacs-dired.desktop
+application/pdf=org.gnome.Evince.desktop
