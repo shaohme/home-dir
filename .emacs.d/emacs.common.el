@@ -467,7 +467,7 @@
       nnfolder-directory (concat message-directory "archive/")
       nnfolder-active-file (concat message-directory "archive")
       smtpmail-debug-info t
-      bbdb-file (expand-file-name "bbdb" user-emacs-directory)
+      bbdb-file (substitute-in-file-name "$HOME/db/bbdb")
       ;; bbdb-pop-up-window-size 0.15
       ;; bbdb-mua-pop-up-window-size 0.15
       bbdb-mua-update-interactive-p '(query . create)
