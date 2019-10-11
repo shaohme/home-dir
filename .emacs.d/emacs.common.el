@@ -5,14 +5,12 @@
 (require 'local-common)
 
 ;; Load theme first
+(ensure-package 'color-theme-sanityinc-tomorrow)
+(require 'color-theme-sanityinc-tomorrow)
 
-(ensure-package 'spacemacs-theme)
-(ensure-package 'spaceline)
-(ensure-package 'tramp-theme)
+(load-theme 'sanityinc-tomorrow-night t)
 
-(require 'spacemacs-dark-theme)
-(require 'spaceline-config)
-(require 'tramp-theme)
+
 (require 'ispell)
 (require 'recentf)
 (require 'eww)
@@ -28,47 +26,6 @@
 (require 'async)
 (require 'ldap-mode)
 
-(defvar my:theme 'spacemacs-dark)
-(defvar my:theme-window-loaded nil)
-(defvar my:theme-terminal-loaded nil)
-
-(if (daemonp)
-    (add-hook 'after-make-frame-functions(lambda (frame)
-                       (select-frame frame)
-                       (if (window-system frame)
-                           (unless my:theme-window-loaded
-                             (if my:theme-terminal-loaded
-                                 (enable-theme my:theme)
-                               (load-theme my:theme t))
-                             (setq my:theme-window-loaded t))
-                         (unless my:theme-terminal-loaded
-                           (if my:theme-window-loaded
-                               (enable-theme my:theme)
-                             (load-theme my:theme t))
-                           (setq my:theme-terminal-loaded t)))))
-
-  (progn
-    (load-theme my:theme t)
-    (if (display-graphic-p)
-        (setq my:theme-window-loaded t)
-      (setq my:theme-terminal-loaded t))))
-
-;; (load-theme 'spacemacs-dark t)
-;; (load-theme 'tramp t)
-
-(if window-system
-    (load-theme 'spacemacs-dark t))
-;; (if (daemonp)
-;;     (add-hook 'after-make-frame-functions
-;;               (lambda (frame)
-;;                 (select-frame frame)
-;;                 (load-theme 'spacemacs-dark t)
-;;                 (load-theme 'tramp t)))
-;;                 ;; (spaceline-spacemacs-theme)))
-
-;;   (load-theme 'spacemacs-dark t)
-;;   (load-theme 'tramp t))
-  ;; (spaceline-spacemacs-theme))
 
 (setq-default frame-title-format '((:eval (if (buffer-file-name)
 		                                      (abbreviate-file-name (buffer-file-name))
@@ -500,7 +457,7 @@
 (add-hook 'flyspell-mode-hook #'after-init-flyspell-mode)
 
 
-(bbdb-initialize 'gnus 'message)
+(bbdb-initialize 'gnus 'message 'sendmail)
 (bbdb-mua-auto-update-init 'message)
 
 (add-hook 'prog-mode-hook #'auto-revert-mode)
