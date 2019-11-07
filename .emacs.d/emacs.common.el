@@ -1225,17 +1225,23 @@
       )
 
 (define-key go-mode-map (kbd "C-c .") #'godef-jump)
+(define-key go-mode-map (kbd "C-c C-i") #'gofmt)
 (define-key go-mode-map (kbd "C-c C-c") #'compile)
 (define-key go-mode-map (kbd "C-c C-r") #'recompile)
 
 (defun init-go-mode()
-  (add-hook 'before-save-hook #'gofmt-before-save)
+  ;; (add-hook 'before-save-hook #'gofmt-before-save)
+  ;; go-vet disabled because its command "go tool vet" is deprecated
+  ;; on newer golang platforms
+  (setq flycheck-disabled-checkers '(go-vet go-test))
   (setq-local projectile-globally-ignored-directories
               ;; 'vendor' dir is made by go modules
               (append '("vendor") projectile-globally-ignored-directories))
   (set (make-local-variable 'company-backends)
-       '((company-go company-dabbrev-code)
-         company-capf company-files))
+       '((company-go company-dabbrev-code) company-files))
+  ;; (set (make-local-variable 'company-backends)
+  ;;      '((company-go company-dabbrev-code)
+  ;;        company-capf company-files))
   (flycheck-golangci-lint-setup)
   )
 

@@ -96,7 +96,7 @@ See URL `https://github.com/golangci/golangci-lint'."
   "Setup Flycheck GolangCI-Lint.
 Add `golangci-lint' to `flycheck-checkers'."
   (interactive)
-  (add-to-list 'flycheck-checkers 'golangci-lint))
+  (add-to-list 'flycheck-checkers 'golangci-lint t))
 
 (provide 'flycheck-golangci-lint)
 ;;; flycheck-golangci-lint.el ends here
