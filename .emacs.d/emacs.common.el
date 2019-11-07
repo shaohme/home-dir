@@ -1218,6 +1218,7 @@
 (require 'go-guru)
 (ensure-package 'golint)
 (require 'golint)
+(require 'flycheck-golangci-lint)
 
 (setq go-projectile-tools-path (expand-file-name "~/gocode")
       ;; gofmt-args (quote ("-e"))
@@ -1235,12 +1236,13 @@
   (set (make-local-variable 'company-backends)
        '((company-go company-dabbrev-code)
          company-capf company-files))
+  (flycheck-golangci-lint-setup)
   )
 
-(add-hook 'go-mode-hook #'init-go-mode)
 (add-hook 'go-mode-hook #'flycheck-mode)
 (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
 (add-hook 'go-mode-hook #'go-eldoc-setup)
+(add-hook 'go-mode-hook #'init-go-mode)
 
 
 (ensure-package 'docker-compose-mode)
