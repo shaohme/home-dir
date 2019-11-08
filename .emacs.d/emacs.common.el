@@ -1224,7 +1224,7 @@
       ;; gofmt-args (quote ("-e"))
       )
 
-(define-key go-mode-map (kbd "C-c .") #'godef-jump)
+(define-key go-mode-map (kbd "M-.") #'godef-jump)
 (define-key go-mode-map (kbd "C-c C-i") #'gofmt)
 (define-key go-mode-map (kbd "C-c C-c") #'compile)
 (define-key go-mode-map (kbd "C-c C-r") #'recompile)
