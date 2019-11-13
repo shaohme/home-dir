@@ -25,6 +25,8 @@
 (ensure-package 'async)
 (require 'async)
 (require 'ldap-mode)
+(require 'mouse)
+(require 'mwheel)
 
 
 (setq-default frame-title-format '((:eval (if (buffer-file-name)
@@ -99,7 +101,11 @@
 (prefer-coding-system 'utf-8)
 ;; fix for zsh strange chars in shell
 (setenv "ESHELL" (expand-file-name "~/bin/eshell"))
-(mouse-wheel-mode 1)
+
+(unless window-system
+  (xterm-mouse-mode t)
+  (mouse-wheel-mode t))
+
 (blink-cursor-mode 0)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -746,12 +752,12 @@
   ;;      '((elpy-company-backend company-dabbrev-code) company-capf company-files))
   (set (make-local-variable 'company-backends)
        '((elpy-company-backend company-dabbrev-code company-files)))
-  (setq flycheck-check-syntax-automatically '(save idle-change new-line)
+  (setq ;; flycheck-check-syntax-automatically '(save idle-change new-line)
         company-minimum-prefix-length 3
 
         ;; show quick-access numbers for the first ten candidates (M-<number>
         ;; selects the specific option)
-        company-show-numbers t
+        ;; company-show-numbers t
 
         ;; all characters from `company-auto-complete-cha2rs' trigger insertion
         ;; of the selected completion candidate
@@ -781,6 +787,7 @@
 (add-hook 'elpy-mode-hook #'init-elpy-mode)
 
 (define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
+(define-key elpy-mode-map (kbd "C-c C-i") 'elpy-format-code)
 (define-key elpy-mode-map (kbd "C-c C-k") #'comment-dwim)
 
 (pyvenv-workon "default")
