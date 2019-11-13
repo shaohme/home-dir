@@ -741,6 +741,10 @@
 (define-key elpy-mode-map (kbd "C-c C-c") nil)
 (define-key python-mode-map (kbd "C-c C-c") nil)
 
+(define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
+(define-key elpy-mode-map (kbd "C-c C-k") #'comment-dwim)
+(define-key elpy-mode-map (kbd "C-c C-i") 'elpy-format-code)
+
 ;; https://masteringemacs.org/article/compiling-running-scripts-emacs
 (defun python--add-debug-highlight ()
   "Adds a highlighter for '# DEBUG #' string"
@@ -749,11 +753,23 @@
 
 (defun init-elpy-mode()
   ;; (set (make-local-variable 'company-backends)
-  ;;      '((elpy-company-backend company-dabbrev-code) company-capf company-files))
+  ;;      '((elpy-company-backend company-dabbrev-code) company-capf
+  ;;      company-files))
+
+  ;; use elpy primarily and append other backends to it
   (set (make-local-variable 'company-backends)
-       '((elpy-company-backend company-dabbrev-code company-files)))
+       '((elpy-company-backend :with company-dabbrev-code :with company-files)))
+
+  ;; this should sort most important backend (elpy) first in
+  ;; candidates followed by others candidates
+  (setq-local company-transformers '(company-sort-by-backend-importance))
+
   (setq ;; flycheck-check-syntax-automatically '(save idle-change new-line)
         company-minimum-prefix-length 3
+
+        ;; disable flake8 as it produces annoying E902 errors when
+        ;; python code contains syntax errors, like empty "if" statements
+        flycheck-disabled-checkers '(python-flake8)
 
         ;; show quick-access numbers for the first ten candidates (M-<number>
         ;; selects the specific option)
@@ -785,10 +801,6 @@
 ;; (append company-transformers '(company-transform-python))
 
 (add-hook 'elpy-mode-hook #'init-elpy-mode)
-
-(define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
-(define-key elpy-mode-map (kbd "C-c C-i") 'elpy-format-code)
-(define-key elpy-mode-map (kbd "C-c C-k") #'comment-dwim)
 
 (pyvenv-workon "default")
 
