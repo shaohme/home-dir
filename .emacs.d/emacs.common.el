@@ -555,6 +555,9 @@
 (ensure-package 'flycheck)
 (require 'flycheck)
 
+;; Wait idle seconds before running flycheck
+(setq flycheck-idle-change-delay 2)
+
 
 (ensure-package 'systemd)
 (require 'systemd)
@@ -710,11 +713,10 @@
   (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
   (add-hook 'elpy-mode-hook 'flycheck-mode))
 
-;; Wait idle seconds before running flycheck
-(setq flycheck-idle-change-delay 2)
-
 ;; Set timeout for backend rpc
-(setq elpy-rpc-timeout 3)
+(setq elpy-rpc-timeout 3
+      elpy-rpc-python-command "python3"
+      elpy-rpc-virtualenv-path (expand-file-name "~/.virtualenvs/elpyrpc3"))
 
 ;; do not try to guess the indent offset
 ;; Avoid this message: "Can’t guess python-indent-offset, using defaults: 4"
