@@ -716,7 +716,10 @@
 ;; Set timeout for backend rpc
 (setq elpy-rpc-timeout 3
       elpy-rpc-python-command "python3"
-      elpy-rpc-virtualenv-path (expand-file-name "~/.virtualenvs/elpyrpc3"))
+      elpy-rpc-virtualenv-path (expand-file-name "~/.virtualenvs/elpyrpc3")
+      ;; set this to nil to avoid "Overlapping strings detected"
+      ;; errors. according to elpy devs its an python.el issue.
+      elpy-eldoc-show-current-function nil)
 
 ;; do not try to guess the indent offset
 ;; Avoid this message: "Can’t guess python-indent-offset, using defaults: 4"
