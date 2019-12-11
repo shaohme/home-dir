@@ -245,16 +245,16 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
   ]
 
+-- WM_CLASS(STRING) = "emacs", "Emacs"  <-- "emacs" is 'resource' (appName) name and "Emacs" is 'className'
 myManageHook :: ManageHook
 myManageHook = composeAll
     [
        manageDocks
-      -- resource  =? "desktop_window"               --> doIgnore
     , className =? "Steam"       --> doCenterFloat
-    -- , resource  =? "gpicview"                     --> doCenterFloat
     , className =? "Pavucontrol" --> doCenterFloat
-    , className =? "vlc" --> doFloat
-    , className =? "Vlc" --> doFloat
+    , stringProperty "WM_WINDOW_ROLE" =? "browser-window" --> doFloat
+    , resource =? "vlc" --> doCenterFloat
+    , className =? "zoom" --> doFloat
     , isDialog --> doCenterFloat
     , isFullscreen               --> doFullFloat
     , manageHook def
