@@ -252,6 +252,7 @@ myManageHook = composeAll
        manageDocks
     , className =? "Steam"       --> doCenterFloat
     , className =? "Pavucontrol" --> doCenterFloat
+    , stringProperty "WM_NAME" =? "Microsoft Teams Notification" --> doIgnore
     , stringProperty "WM_WINDOW_ROLE" =? "browser-window" --> doFloat
     , resource =? "gcr-prompter" --> doCenterFloat -- Pinentry, etc. GnuPG
     , resource =? "vlc" --> doCenterFloat
