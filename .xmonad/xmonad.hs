@@ -45,6 +45,8 @@ import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
+import XMonad.Wallpaper
+
 -- Color of current window title in xmobar.
 xmobarTitleColor = "#C678DD"
 
@@ -269,6 +271,7 @@ myEventHook = docksEventHook
 
 main = do
     xmproc <- spawnPipe "xmobar"
+    setRandomWallpaper ["$HOME/pics/wallpapers"]
     xmonad $ ewmh $ def
         {
         -- manageHook = manageDocks <+> manageHook def
