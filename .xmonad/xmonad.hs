@@ -118,15 +118,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   -- Mute volume.
   , ((0, xF86XK_AudioMute),
-     spawn "/usr/bin/pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo toggle")
+     spawn "pavol.sh toggle")
 
   -- Decrease volume.
   , ((0, xF86XK_AudioLowerVolume),
-     spawn "/usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo '-10%'")
+     spawn "pavol.sh down")
 
   -- Increase volume.
   , ((0, xF86XK_AudioRaiseVolume),
-     spawn "/usr/bin/pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo '+10%'")
+     spawn "pavol.sh up")
 
   -- Audio previous.
   , ((0, 0x1008FF16),
