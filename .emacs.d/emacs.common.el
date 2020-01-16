@@ -669,9 +669,6 @@
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
     (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
                                               ("* ||\n[i]" "RET"))))
-  ;; (add-to-list 'company-backends '())
-  ;; (add-to-list 'company-backends #'company-irony)
-  ;; (add-to-list 'company-backends #'company-irony-c-headers)
   (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
   (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
   (define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
@@ -1107,8 +1104,16 @@
 (ensure-package 'groovy-mode)
 (require 'groovy-mode)
 
+(add-to-list 'flycheck-checkers 'groovy)
+(setq flycheck-groovy-executable "groovy")
 (add-to-list 'auto-mode-alist '("\\Jenkinsfile\\'" . groovy-mode))
 
+(defun init-groovy-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-abbrev company-keywords)
+         company-capf company-files))
+  )
+(add-hook 'groovy-mode-hook #'init-groovy-mode)
 (add-hook 'groovy-mode-hook #'flycheck-mode)
 (add-hook 'groovy-mode-hook #'groovy-electric-mode)
 
@@ -1325,6 +1330,22 @@
 (unless (boundp 'completion-in-region-function)
   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+
+
+(ensure-package 'nginx-mode)
+(require 'nginx-mode)
+
+(ensure-package 'company-nginx)
+(require 'company-nginx)
+
+(add-hook 'nginx-mode-hook #'company-nginx-keywords)
+(add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode))
+
+
+(ensure-package 'csv-mode)
+(require 'csv-mode)
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
