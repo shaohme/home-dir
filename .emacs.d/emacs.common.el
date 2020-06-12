@@ -5,10 +5,12 @@
 (require 'local-common)
 
 ;; Load theme first
-(ensure-package 'color-theme-sanityinc-tomorrow)
-(require 'color-theme-sanityinc-tomorrow)
+;; (ensure-package 'color-theme-sanityinc-tomorrow)
+;; (require 'color-theme-sanityinc-tomorrow)
+(ensure-package 'zenburn-theme)
+(require 'zenburn-theme)
 
-(load-theme 'sanityinc-tomorrow-night t)
+(load-theme 'zenburn t)
 
 
 (require 'ispell)
@@ -40,7 +42,6 @@
               flycheck-emacs-lisp-load-path load-path
               major-mode 'text-mode
               )
-
 (setq user-full-name "Martin Kjær Jørgensen"
       inhibit-startup-message t
       password-cache t
@@ -100,7 +101,7 @@
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
 ;; fix for zsh strange chars in shell
-(setenv "ESHELL" (expand-file-name "~/bin/eshell"))
+;; (setenv "ESHELL" (expand-file-name "~/bin/eshell"))
 
 (unless window-system
   (xterm-mouse-mode t)
@@ -214,101 +215,124 @@
 (which-key-mode t)
 
 
+
+
+;;; Ivy
+(ensure-package 'amx)
+(require 'amx)
+(ensure-package 'ivy)
+(require 'ivy)
+(ensure-package 'counsel)
+(require 'counsel)
+(ensure-package 'swiper)
+(require 'swiper)
+
+(ivy-mode 1)
+;; used to add history to minibuffer selections like M-x
+;; instead of smex which produces compile errors on install
+(amx-mode 1)
+
+(setq ivy-use-virtual-buffers t
+      ivy-count-format "(%d/%d) ")
+
+(global-set-key (kbd "C-s") 'swiper-isearch)
+
 ;;; Helm mode
 
-(ensure-package 'helm)
-(require 'helm)
-(require 'helm-config)
-(require 'helm-grep)
-(require 'helm-utils)
-(require 'helm-man)
-(require 'helm-help)
-(require 'helm-files)
-(ensure-package 'helm-swoop)
-(require 'helm-swoop)
-(ensure-package 'helm-tramp)
-(require 'helm-tramp)
-(ensure-package 'helm-pass)
-(require 'helm-pass)
-(ensure-package 'helm-ls-git)
-(require 'helm-ls-git)
-(ensure-package 'helm-ag)
-(require 'helm-ag)
+;; (ensure-package 'helm)
+;; (require 'helm)
+;; (require 'helm-config)
+;; (require 'helm-grep)
+;; (require 'helm-utils)
+;; (require 'helm-man)
+;; (require 'helm-help)
+;; (require 'helm-files)
+;; (ensure-package 'helm-swoop)
+;; (require 'helm-swoop)
+;; (ensure-package 'helm-tramp)
+;; (require 'helm-tramp)
+;; (ensure-package 'helm-pass)
+;; (require 'helm-pass)
+;; (ensure-package 'helm-ls-git)
+;; (require 'helm-ls-git)
+;; (ensure-package 'helm-ag)
+;; (require 'helm-ag)
+;; (ensure-package 'helm-flycheck)
+;; (require 'helm-flycheck)
 
-(setq ;; mouse-sel-retain-highlight t
-      ;; open helm buffer inside current window, not occupy whole other window
-      helm-split-window-inside-p t
-      ;; scroll 4 lines other window using M-<next>/M-<prior>
-      helm-scroll-amount 4
-      ;; limit the number of displayed canidates
-      helm-candidate-number-limit 500
-      ;; move to end or beginning of source when reaching top or bottom of source.
-      helm-move-to-line-cycle-in-source t
-      ;; fuzzy matching buffer names when non-nil
-      ;; useful in helm-mini that lists buffers
-      helm-autoresize-max-height 40
-      helm-autoresize-min-height 20
-      helm-ff-search-library-in-sexp t
-      helm-ff-file-name-history-use-recentf t
-      helm-multi-swoop-edit-save t
-      ;; If this value is t, split window inside the current window
-      helm-swoop-split-with-multiple-windows t
-      ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-      helm-swoop-split-direction 'split-window-vertically
-      )
 
-(global-set-key (kbd "M-x") #'helm-M-x)
-(global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-(global-set-key (kbd "C-c h") #'helm-command-prefix)
-(global-set-key (kbd "M-y") #'helm-show-kill-ring)
-(global-set-key (kbd "C-x b") #'helm-mini)
-;; (global-set-key (kbd "C-h SPC") #'helm-all-mark-rings)
-;;          ;; show minibuffer history with Helm
-;; (define-key helm-minibuffer-local-map (kbd "M-p") #'helm-minibuffer-history)
-;; (define-key helm-minibuffer-local-map (kbd "M-n") #'helm-minibuffer-history))
-(global-set-key (kbd "C-c s") #'helm-multi-swoop-all)
-;;          ;; (:map help-command
-;;          ;;       ("C-f" . helm-apropos)
-;;          ;;       ("r" . helm-info-emacs)
-;;          ;;       ("C-l" . helm-locate-library))
-(global-set-key (kbd "C-c s") #'helm-tramp)
+;; (setq ;; mouse-sel-retain-highlight t
+;;       ;; open helm buffer inside current window, not occupy whole other window
+;;       helm-split-window-inside-p t
+;;       ;; scroll 4 lines other window using M-<next>/M-<prior>
+;;       helm-scroll-amount 4
+;;       ;; limit the number of displayed canidates
+;;       helm-candidate-number-limit 500
+;;       ;; move to end or beginning of source when reaching top or bottom of source.
+;;       helm-move-to-line-cycle-in-source t
+;;       ;; fuzzy matching buffer names when non-nil
+;;       ;; useful in helm-mini that lists buffers
+;;       helm-autoresize-max-height 40
+;;       helm-autoresize-min-height 20
+;;       helm-ff-search-library-in-sexp t
+;;       helm-ff-file-name-history-use-recentf t
+;;       helm-multi-swoop-edit-save t
+;;       ;; If this value is t, split window inside the current window
+;;       helm-swoop-split-with-multiple-windows t
+;;       ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
+;;       helm-swoop-split-direction 'split-window-vertically
+;;       )
 
-(define-key global-map [remap find-file] 'helm-find-files)
-(define-key global-map [remap occur] 'helm-occur)
-(define-key global-map [remap list-buffers] 'helm-buffers-list)
-(define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
-(define-key global-map [remap execute-extended-command] 'helm-M-x)
+;; (global-set-key (kbd "M-x") #'helm-M-x)
+;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
+;; (global-set-key (kbd "C-c h") #'helm-command-prefix)
+;; (global-set-key (kbd "M-y") #'helm-show-kill-ring)
+;; (global-set-key (kbd "C-x b") #'helm-mini)
+;; (global-set-key (kbd "C-c s") #'helm-tramp)
 
-(define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
+;; (define-key global-map [remap find-file] 'helm-find-files)
+;; (define-key global-map [remap occur] 'helm-occur)
+;; (define-key global-map [remap list-buffers] 'helm-buffers-list)
+;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+;; (define-key global-map [remap execute-extended-command] 'helm-M-x)
+
+;; (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
 ;; make TAB works in terminal
-(define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
+;; (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
 ;; list actions ; using C-z
-(define-key helm-map (kbd "C-z") #'helm-select-action)
-(define-key helm-grep-mode-map (kbd "<return>") #'helm-grep-mode-jump-other-window)
-(define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-forward)
-(define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-backward)
-(define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
-(define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
+;; (define-key helm-map (kbd "C-z") #'helm-select-action)
+;; (define-key helm-grep-mode-map (kbd "<return>") #'helm-grep-mode-jump-other-window)
+;; (define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-forward)
+;; (define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-backward)
+;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
+;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
 
-(defun spacemacs//helm-hide-minibuffer-maybe ()
-  "Hide minibuffer in Helm session if we use the header line as input field."
-  (when (with-helm-buffer helm-echo-input-in-header-line)
-    (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-      (overlay-put ov 'window (selected-window))
-      (overlay-put ov 'face
-                   (let ((bg-color (face-background 'default nil)))
-                     `(:background ,bg-color :foreground ,bg-color)))
-      (setq-local cursor-type nil))))
-
-
-(add-hook 'helm-minibuffer-set-up-hook 'spacemacs//helm-hide-minibuffer-maybe)
-(add-hook 'helm-mode-hook #'helm-autoresize-mode)
-(add-hook 'helm-goto-line-before-hook #'helm-save-current-pos-to-mark-ring)
+;; (defun spacemacs//helm-hide-minibuffer-maybe ()
+;;   "Hide minibuffer in Helm session if we use the header line as input field."
+;;   (when (with-helm-buffer helm-echo-input-in-header-line)
+;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
+;;       (overlay-put ov 'window (selected-window))
+;;       (overlay-put ov 'face
+;;                    (let ((bg-color (face-background 'default nil)))
+;;                      `(:background ,bg-color :foreground ,bg-color)))
+;;       (setq-local cursor-type nil))))
 
 
-(helm-mode t)
-(helm-autoresize-mode t)
+;; (add-hook 'helm-minibuffer-set-up-hook 'spacemacs//helm-hide-minibuffer-maybe)
+;; (add-hook 'helm-mode-hook #'helm-autoresize-mode)
+;; (add-hook 'helm-goto-line-before-hook #'helm-save-current-pos-to-mark-ring)
 
+
+;; (helm-mode t)
+;; (helm-autoresize-mode t)
+
+
+;; (define-key global-map [remap find-file] 'helm-find-files)
+;; (define-key global-map [remap occur] 'helm-occur)
+;; (define-key global-map [remap list-buffers] 'helm-buffers-list)
+;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
+;; (define-key global-map [remap execute-extended-command] 'helm-M-x)
+;; (define-key global-map [remap apropos-command] 'helm-apropos)
 
 ;; Gnus and mail
 (ensure-package 'emojify)
@@ -434,7 +458,8 @@
       ;; bbdb-pop-up-window-size 0.15
       ;; bbdb-mua-pop-up-window-size 0.15
       bbdb-mua-update-interactive-p '(query . create)
-      bbdb-mua-auto-update-p 'query
+      ;; bbdb-mua-auto-update-p 'query
+      bbdb-mua-auto-update-p 'create
       bbdb-message-all-addresses t)
 
 
@@ -448,11 +473,14 @@
 (add-hook 'message-mode-hook #'turn-on-flyspell)
 (add-hook 'message-mode-hook 'turn-on-auto-fill)
 (add-hook 'message-mode-hook 'emojify-mode)
-(add-hook 'message-send-hook
-          (lambda ()
-            (message-add-header "X-PGP-Key: fp=\"730C C366 E9E2 C833
-  E62F B412  0D20 8662 8A3D 849A\"; id=\"0x8A3D849A\";
-  get=<http://www.gotu.dk/8a3d849a.asc>; get=<hkp://pgp.mit.edu/pks/lookup?search=0x0D2086628A3D849A&op=get>; get=<https://keyserver.pgp.com/vkd/DownloadKey.event?keyid=0x0D2086628A3D849A>;")))
+
+
+;; unneeded or find alternative
+;; (add-hook 'message-send-hook
+;;           (lambda ()
+;;             (message-add-header "X-PGP-Key: fp=\"730C C366 E9E2 C833
+;;   E62F B412  0D20 8662 8A3D 849A\"; id=\"0x8A3D849A\";
+;;   get=<http://www.gotu.dk/8a3d849a.asc>; get=<hkp://pgp.mit.edu/pks/lookup?search=0x0D2086628A3D849A&op=get>; get=<https://keyserver.pgp.com/vkd/DownloadKey.event?keyid=0x0D2086628A3D849A>;")))
 
 (defun after-init-flyspell-mode()
   ;;; Check the whole buffer after flyspell loads, so to see current
@@ -514,7 +542,8 @@
 
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 
-(setq projectile-globally-ignored-directories
+(setq projectile-completion-system 'ivy
+      projectile-globally-ignored-directories
       (append '(
                 ".git"
                 ".svn"
@@ -528,11 +557,16 @@
               projectile-globally-ignored-directories))
 (add-hook 'after-init-hook 'projectile-mode)
 
+(ensure-package 'counsel-projectile)
+(require 'counsel-projectile)
+;; (ensure-package 'helm-projectile)
+;; (require 'helm-projectile)
 
-(ensure-package 'helm-projectile)
-(require 'helm-projectile)
+;; (add-hook 'projectile-mode-hook #'helm-projectile-on)
 
-(add-hook 'projectile-mode-hook #'helm-projectile-on)
+;; dont add counsel-projectile to projectile-mode-hook.
+;; lisp max depth errors occurs
+(add-hook 'after-init-hook 'counsel-projectile-mode)
 
 
 (ensure-package 'company)
@@ -971,8 +1005,8 @@
 (require 'tide)
 (ensure-package 'tern)
 (require 'tern)
-(ensure-package 'company-tern)
-(require 'company-tern)
+;; (ensure-package 'company-tern)
+;; (require 'company-tern)
 (ensure-package 'rjsx-mode)
 (require 'rjsx-mode)
 
@@ -989,9 +1023,9 @@
 (defun init-js2-mode()
   (setq-local flycheck-disabled-checkers
               (append flycheck-disabled-checkers '(json-jsonlist)))
-  (set (make-local-variable 'company-backends)
-       '((company-tern company-dabbrev-code)
-         company-capf company-files))
+  ;; (set (make-local-variable 'company-backends)
+  ;;      '((company-tern company-dabbrev-code)
+  ;;        company-capf company-files))
   )
 
 (defun init-tide-mode()
@@ -1118,6 +1152,10 @@
 (add-hook 'groovy-mode-hook #'groovy-electric-mode)
 
 
+;;; Indent tools
+(ensure-package 'indent-tools)
+(require 'indent-tools)
+
 
 ;;; YAML mode
 
@@ -1128,7 +1166,7 @@
 
 (add-hook 'yaml-mode-hook #'flycheck-mode)
 (add-hook 'yaml-mode-hook #'flycheck-yamllint-setup)
-
+(add-hook 'yaml-mode-hook #'indent-tools-minor-mode)
 
 ;;; Meson mode
 
@@ -1266,8 +1304,11 @@
   (setq-local projectile-globally-ignored-directories
               ;; 'vendor' dir is made by go modules
               (append '("vendor") projectile-globally-ignored-directories))
+  ;; (set (make-local-variable 'company-backends)
+  ;;      '((company-go company-dabbrev-code) company-files))
   (set (make-local-variable 'company-backends)
-       '((company-go company-dabbrev-code) company-files))
+       '((company-go) company-files))
+
   ;; (set (make-local-variable 'company-backends)
   ;;      '((company-go company-dabbrev-code)
   ;;        company-capf company-files))
@@ -1310,26 +1351,23 @@
 (ensure-package 'flycheck-plantuml)
 (require 'flycheck-plantuml)
 
-(defun init-plantuml-mode()
-  (setq plantuml-jar-path (expand-file-name "~/plantuml.jar")
-        plantuml-output-type "png"
-        plantuml-default-exec-mode 'jar)
-  (flycheck-plantuml-setup)
-  )
+(setq plantuml-jar-path (expand-file-name "~/plantuml.jar")
+      plantuml-output-type "txt"
+      plantuml-default-exec-mode 'jar)
 
-(add-hook 'plantuml-mode-hook #'init-plantuml-mode)
+(add-hook 'plantuml-mode-hook #'flycheck-plantuml-setup)
 (add-hook 'plantuml-mode-hook #'flycheck-mode)
 
-(add-to-list 'auto-mode-alist '("\\.uml" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.plantuml" . plantuml-mode))
 
 
 (ensure-package 'logview)
 (require 'logview)
 
 
-(unless (boundp 'completion-in-region-function)
-  (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-  (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
+;; (unless (boundp 'completion-in-region-function)
+;;   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
+;;   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 
 
 (ensure-package 'nginx-mode)
@@ -1346,6 +1384,12 @@
 (require 'csv-mode)
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 
+
+(ensure-package 'gdscript-mode)
+(require 'gdscript-mode)
+
+(setq gdscript-use-tab-indents nil ;; If true, use tabs for indents. Default: t
+      gdscript-indent-offset 4) ;; Controls the width of tab-based indents
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
