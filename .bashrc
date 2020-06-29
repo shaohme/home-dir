@@ -1,8 +1,13 @@
-# If not running interactively, don't do anything
+
+source /etc/profile
+source "${HOME}/.profile"
+
 case $- in
     *i*) ;;
       *) return;;
 esac
+
+
 
 HISTCONTROL=ignoreboth
 
@@ -39,36 +44,56 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+[ -x /bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
-    . /etc/bash_completion
-fi
+alias e='${EDITOR}'
 
-
-alias e='emacsclient -n'
-
+# Set SSH to use gpg-agent
 unset SSH_AGENT_PID
 if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
 	export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
 fi
 
-gpg-connect-agent updatestartuptty /bye >/dev/null
+export GPG_TTY=$(tty)
 
-# PFILE=$HOME/.emacs.d/projectile-bookmarks.eld
-# if [ -f ${PFILE} ]; then
-#     while read -d '" "' part; do
-#         n=`basename "$part"`
-#         alias s_$n="cd $part"
-#     done <<< $(cat $PFILE | sed -e 's/(//g' | sed -e 's/)//g')
-# fi
+if type "kubectl" > /dev/null; then
+    source <(kubectl completion bash)
+fi
 
-export PS1="\w $ "
+if type "aws_completer" > /dev/null; then
+    complete -C 'aws_completer' aws
+fi
 
-source $HOME/.local/bin/virtualenvwrapper.sh
+if [ -f "$HOME/.local/bin/bashmarks.sh" ]; then
+    source "$HOME/.local/bin/bashmarks.sh"
+fi
 
-function jwt-decode() {
-  sed 's/\./\n/g' <<< $(cut -d. -f1,2 <<< $1) | base64 --decode | jq
-}
+if [ -f "/usr/share/virtualenvwrapper/virtualenvwrapper.sh" ]; then
+    source "/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+fi
+
+case "$TERM" in
+xterm*|rxvt*)
+    PROMPT_COMMAND='echo -ne "\033]0;${PWD}\007"'
+
+    # Show the currently running command in the terminal title:
+    # http://www.davidpashley.com/articles/xterm-titles-with-bash.html
+    show_command_in_title_bar()
+    {
+        case "$BASH_COMMAND" in
+            *\033]0*)
+                # The command is trying to set the title bar as well;
+                # this is most likely the execution of $PROMPT_COMMAND.
+                # In any case nested escapes confuse the terminal, so don't
+                # output them.
+                ;;
+            *)
+                echo -ne "\033]0;${BASH_COMMAND}\007"
+                ;;
+        esac
+    }
+    trap show_command_in_title_bar DEBUG
+    ;;
+*)
+    ;;
+esac

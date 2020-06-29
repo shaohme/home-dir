@@ -12,7 +12,6 @@
 
 (load-theme 'zenburn t)
 
-
 (require 'ispell)
 (require 'recentf)
 (require 'eww)
@@ -121,7 +120,7 @@
 ;; save recentf every X sec because we're running in daemon mode
 ;; (run-at-time (current-time) 60 'recentf-save-list)
 
-(global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
+;; (global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-x t") 'beginning-of-buffer)
 (global-set-key (kbd "C-x e") 'end-of-buffer)
 (global-set-key (kbd "C-x C-b") nil)
@@ -129,6 +128,7 @@
 (global-set-key (kbd "<f8>") 'switch-dictionary)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-c C-k") 'comment-dwim)
 (global-unset-key (kbd "C-x c"))
 
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
@@ -590,7 +590,9 @@
 (require 'flycheck)
 
 ;; Wait idle seconds before running flycheck
-(setq flycheck-idle-change-delay 2)
+(setq flycheck-idle-change-delay 2
+      ;; jump to next error instead of warning or info
+      flycheck-navigation-minimum-level 'error)
 
 
 (ensure-package 'systemd)
@@ -617,6 +619,12 @@
 
 (ensure-package 'rainbow-mode)
 (require 'rainbow-mode)
+
+(ensure-package 'rainbow-delimiters)
+(require 'rainbow-delimiters)
+
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+
 
 (require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -953,6 +961,20 @@
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
+
+(ensure-package 'slime)
+(require 'slime)
+(ensure-package 'slime-company)
+(require 'slime-company)
+(require 'slime-autoloads)
+
+(setq inferior-lisp-program "/bin/sbcl")
+
+(defun init-lisp-mode()
+  (slime-setup '(slime-company))
+  )
+
+(add-hook 'lisp-mode-hook #'init-lisp-mode)
 
 ;; LaTeX mode
 
