@@ -207,5 +207,6 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
     position top
-    status_command i3status
+    status_command i3status | ~/bin/i3status-title-on-bar --color '#02FFBF'
+    # status_command i3status
 }
