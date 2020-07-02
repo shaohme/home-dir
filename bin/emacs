@@ -1,6 +1,6 @@
 #!/bin/dash
 if [ -t 1 ] ; then
-    emacsclient -nw ${@}
+    emacsclient -q -a /usr/bin/emacs -nw ${@}
 else
-    emacsclient -c ${@}
+    urxvt -e emacsclient -q -a /usr/bin/emacs -c ${@}
 fi
