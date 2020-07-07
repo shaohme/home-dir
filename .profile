@@ -36,6 +36,10 @@ export PYTHON_VIRTUALENV_DIR="${HOME}/.virtualenvs"
 export WINEARCH=win32
 export WINEPREFIX="${HOME}/.wine32"
 
+# vaapi on GST shows no features on introspection running on
+# amd hardware. try override this for now, and trust mesa vaapi driver quality
+export GST_VAAPI_ALL_DRIVERS=1
+
 # export XAUTHORITY=/home/mkj/.Xauthority
 # export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 
