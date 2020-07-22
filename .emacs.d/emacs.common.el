@@ -60,7 +60,7 @@
       visible-cursor nil
       initial-major-mode 'text-mode
       initial-scratch-message nil
-      x-underline-at-descent-line t
+      ;; x-underline-at-descent-line t
       scroll-step 1
       dired-listing-switches "-lah"
       directory-free-space-args "-Pkh"
@@ -76,10 +76,10 @@
       buffer-file-coding-system 'utf-8 ; utf-8-unix
       save-buffer-coding-system 'utf-8-unix ; nil
       process-coding-system-alist (cons '("grep" utf-8 . utf-8) process-coding-system-alist)
-      adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*"
-      adaptive-fill-first-line-regexp "^* *$"
-      sentence-end "\\([。、！？]\\|……\\|[,.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
-      sentence-end-double-space nil
+      ;; adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*"
+      ;; adaptive-fill-first-line-regexp "^* *$"
+      ;; sentence-end "\\([。、！？]\\|……\\|[,.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
+      ;; sentence-end-double-space nil
       )
 
 
@@ -155,8 +155,7 @@
 
 (xclip-mode 1)
 
-(ensure-package 'iedit)
-(require 'iedit)
+
 
 (ensure-package 'ag)
 (require 'ag)
@@ -1412,6 +1411,12 @@
 
 (setq gdscript-use-tab-indents nil ;; If true, use tabs for indents. Default: t
       gdscript-indent-offset 4) ;; Controls the width of tab-based indents
+
+
+(ensure-package 'iedit)
+(require 'iedit)
+(global-set-key (kbd "C-;") 'iedit-mode)
+(setq iedit-toggle-key-default (kbd "C-;"))
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
