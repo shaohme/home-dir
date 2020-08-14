@@ -6,11 +6,13 @@ pkill picom
 # pkill stalonetray
 pkill urxvtd
 pkill steam
-pkill clipit
+# pkill clipit
 pkill syncthing-gtk
 # pkill xscreensaver
 pkill nm-applet
-# /usr/bin/emacsclient --eval "(kill-emacs)"
+pkill redshift-gtk
+pkill pasystray
+/usr/bin/emacsclient --eval "(kill-emacs)"
 
 picom -CGb
 urxvtd -q -o -f
@@ -25,11 +27,12 @@ diodon &
 
 # run daemon from within X session as systemd seems
 # to leave evironment variables for one thing
-# /usr/bin/emacs --daemon &
+/usr/bin/emacs --daemon &
 syncthing-gtk &
 nm-applet &
-radeon-profile &
+# radeon-profile &
 flameshot &
 # xscreensaver &
-
+redshift-gtk &
+pasystray &
 # steam -silent &
