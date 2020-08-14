@@ -625,6 +625,14 @@
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 
+;;; Indent tools
+(ensure-package 'indent-tools)
+(require 'indent-tools)
+
+(add-hook 'prog-mode-hook #'indent-tools-minor-mode)
+
+
+
 (require 'ediff)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
@@ -1173,11 +1181,6 @@
 (add-hook 'groovy-mode-hook #'groovy-electric-mode)
 
 
-;;; Indent tools
-(ensure-package 'indent-tools)
-(require 'indent-tools)
-
-
 ;;; YAML mode
 
 (ensure-package 'flycheck-yamllint)
@@ -1187,7 +1190,6 @@
 
 (add-hook 'yaml-mode-hook #'flycheck-mode)
 (add-hook 'yaml-mode-hook #'flycheck-yamllint-setup)
-(add-hook 'yaml-mode-hook #'indent-tools-minor-mode)
 
 ;;; Meson mode
 
