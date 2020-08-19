@@ -1,60 +1,47 @@
+# return if non-interactive
+[[ $- == *i* ]] || return
 
-source /etc/profile
-source "${HOME}/.profile"
-
-case $- in
-    *i*) ;;
-      *) return;;
-esac
-
-
+# return if not executed in terminal
+if ! [ -t 1 ] ; then
+    return
+fi
 
 HISTCONTROL=ignoreboth
-
-shopt -s histappend
-
 HISTSIZE=1000
 HISTFILESIZE=2000
 
+shopt -s histappend
 shopt -s checkwinsize
+
+
+if [ "$(id -u)" -eq 0 ]; then
+  PS1='\w # '
+else
+  PS1='\w $ '
+fi
+
+if ! [ -z "${ANDROID_NDK_HOME}" ]; then
+    LATEST_NDK_DIR=$(ls -td ${ANDROID_NDK_HOME}/*/ | head -1)
+    if ! [ -z "${LATEST_NDK_DIR}" ] && ! [ "${LATEST_NDK_DIR}" = "/tmp" ]; then
+        PATH="$PATH:${LATEST_NDK_DIR}"
+    fi
+fi
+
+export GPG_TTY="$( tty )"
 
 case "$TERM" in
     xterm-color|*-256color) color_prompt=yes;;
 esac
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
-
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
-
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-
-[ -x /bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-alias e='${EDITOR}'
-
-# Set SSH to use gpg-agent
-unset SSH_AGENT_PID
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-	export SSH_AUTH_SOCK="${HOME}/.gnupg/S.gpg-agent.ssh"
-fi
-
-export GPG_TTY=$(tty)
 
 if type "kubectl" > /dev/null; then
     source <(kubectl completion bash)
@@ -64,12 +51,12 @@ if type "aws_completer" > /dev/null; then
     complete -C 'aws_completer' aws
 fi
 
-if [ -f "$HOME/.local/bin/bashmarks.sh" ]; then
-    source "$HOME/.local/bin/bashmarks.sh"
+if [ -f $HOME/.local/bin/bashmarks.sh ]; then
+    . $HOME/.local/bin/bashmarks.sh
 fi
 
-if [ -f "/usr/share/virtualenvwrapper/virtualenvwrapper.sh" ]; then
-    source "/usr/share/virtualenvwrapper/virtualenvwrapper.sh"
+if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
+    . /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 fi
 
 case "$TERM" in
@@ -97,3 +84,16 @@ xterm*|rxvt*)
 *)
     ;;
 esac
+
+
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+if [ -f ${HOME}/.bash_aliases ]; then
+    . ${HOME}/.bash_aliases
+fi
