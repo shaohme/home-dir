@@ -43,11 +43,11 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-if type "kubectl" > /dev/null; then
+if command -v kubectl &> /dev/null; then
     source <(kubectl completion bash)
 fi
 
-if type "aws_completer" > /dev/null; then
+if command -v aws_completer &> /dev/null; then
     complete -C 'aws_completer' aws
 fi
 
