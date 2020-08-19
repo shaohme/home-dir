@@ -80,6 +80,8 @@
       ;; adaptive-fill-first-line-regexp "^* *$"
       ;; sentence-end "\\([。、！？]\\|……\\|[,.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
       ;; sentence-end-double-space nil
+      confirm-kill-emacs nil
+      confirm-kill-processes nil
       )
 
 
