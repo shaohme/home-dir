@@ -6,15 +6,11 @@ else
     export ANDROID_HOME="${HOME}/.local/share/android-sdk"
 fi
 export ANDROID_NDK_HOME="${ANDROID_HOME}/ndk"
-export GRADLE_HOME="${HOME}/.local/lib/gradle"
-export GROOVY_HOME="${HOME}/.local/lib/groovy"
-export GRAILS_HOME="${HOME}/.local/lib/grails"
-export MAVEN_HOME="${HOME}/.local/lib/maven"
 export RUST_SRC_PATH="/usr/lib/rustlib/src/rust"
 export GOPATH="${HOME}/gocode"
 export NPM_PACKAGES="${HOME}/.local"
 
-export PATH="${HOME}/bin:${HOME}/.local/bin:/usr/sbin:/usr/games/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${HOME}/.local/lib/netbeans/bin:$GRADLE_HOME/bin:$GROOVY_HOME/bin:$SCALA_HOME/bin:$MAVEN_HOME/bin:$GRAILS_HOME/bin:${HOME}/share/eclipse:${HOME}/.cask/bin:/usr/local/games:${HOME}/.cargo/bin:${HOME}/.cabal/bin:${PATH}:$GOROOT/bin:$GOPATH/bin:${HOME}/.luarocks/bin:${HOME}/.gem/ruby/2.5.0/bin:${HOME}/.gem/ruby/2.7.0/bin:${HOME}/.local/lib/idea/bin"
+export PATH="${HOME}/bin:${HOME}/.local/bin:/usr/sbin:/usr/games/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${HOME}/.cask/bin:/usr/local/games:${HOME}/.cargo/bin:${HOME}/.cabal/bin:${PATH}:$GOROOT/bin:$GOPATH/bin:${HOME}/.luarocks/bin:${HOME}/.gem/ruby/2.5.0/bin:${HOME}/.gem/ruby/2.7.0/bin:${HOME}/.local/lib/idea/bin"
 
 export PROJECTS_HOME="${HOME}/dev"
 export SDL_AUDIODRIVER="pulse"
