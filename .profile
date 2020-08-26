@@ -10,7 +10,7 @@ export RUST_SRC_PATH="/usr/lib/rustlib/src/rust"
 export GOPATH="${HOME}/gocode"
 export NPM_PACKAGES="${HOME}/.local"
 
-export PATH="${HOME}/bin:${HOME}/.local/bin:/usr/sbin:/usr/games/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${HOME}/.cask/bin:/usr/local/games:${HOME}/.cargo/bin:${HOME}/.cabal/bin:${PATH}:$GOROOT/bin:$GOPATH/bin:${HOME}/.luarocks/bin:${HOME}/.gem/ruby/2.5.0/bin:${HOME}/.gem/ruby/2.7.0/bin:${HOME}/.local/lib/idea/bin"
+export PATH="${HOME}/bin:${HOME}/.local/bin:/usr/sbin:/usr/games/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/emulator:${ANDROID_HOME}/platform-tools:${HOME}/.cask/bin:/usr/local/games:${HOME}/.cargo/bin:${HOME}/.cabal/bin:${HOME}/.ghcup/bin:$GOROOT/bin:$GOPATH/bin:${HOME}/.luarocks/bin:${HOME}/.gem/ruby/2.5.0/bin:${HOME}/.gem/ruby/2.7.0/bin:${HOME}/.local/lib/idea/bin:${HOME}/.local/lib/luarocks/bin:$PATH"
 
 export PROJECTS_HOME="${HOME}/dev"
 export SDL_AUDIODRIVER="pulse"

@@ -96,7 +96,14 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+
+  if [ -d ~/.bash_completion.d ]; then
+      for bcfile in ~/.bash_completion.d/* ; do
+          . $bcfile
+      done
+  fi
 fi
+
 
 if [ -f ${HOME}/.bash_aliases ]; then
     . ${HOME}/.bash_aliases
