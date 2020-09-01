@@ -570,6 +570,19 @@
 (add-hook 'after-init-hook 'counsel-projectile-mode)
 
 
+
+(ensure-package 'lsp-mode)
+(require 'lsp-clients)
+;; disable lsp diagnostics (flycheck) for now.
+;; it sets lsp as sole or default flycheck provider
+;; and makes errors when idle if enabled.
+;; no use for it anyway for now.
+(setq lsp-diagnostic-package :none)
+
+(ensure-package 'lsp-ivy)
+(require 'lsp-ivy)
+
+
 (ensure-package 'company)
 (require 'company)
 (require 'company-dabbrev)
@@ -612,6 +625,9 @@
 
 (ensure-package 'yasnippet)
 (require 'yasnippet)
+(yas-reload-all)
+(add-hook 'prog-mode-hook #'yas-minor-mode)
+
 (require 'term)
 
 (setq yas-dont-activate-functions t)
@@ -1095,21 +1111,26 @@
 ;;; Shell-script mode
 
 (require 'shell)
-(ensure-package 'company-shell)
-(require 'company-shell)
-(ensure-package 'flycheck-checkbashisms)
-(require 'flycheck-checkbashisms)
+;; (ensure-package 'company-shell)
+;; (require 'company-shell)
+;; (ensure-package 'flycheck-checkbashisms)
+;; (require 'flycheck-checkbashisms)
 
 (defun init-sh-set-shell-mode()
   (set (make-local-variable 'company-backends)
-       '((company-shell company-shell-env company-files company-dabbrev-code)
-         company-capf))
+       '((company-cepf company-dabbrev-code)
+         company-files))
   )
 
-(add-hook 'sh-set-shell-hook #'flycheck-mode)
-(add-hook 'sh-set-shell-hook #'flycheck-checkbashisms-setup)
-(add-hook 'sh-set-shell-hook #'yas-minor-mode)
-(add-hook 'sh-set-shell-hook #'init-sh-set-shell-mode)
+;; (add-hook 'sh-set-shell-hook #'flycheck-mode)
+;; (add-hook 'sh-set-shell-hook #'flycheck-checkbashisms-setup)
+;; (add-hook 'sh-set-shell-hook #'yas-minor-mode)
+;; (add-hook 'sh-set-shell-hook #'yas-minor-mode)
+;; (add-hook 'sh-set-shell-hook #'init-sh-set-shell-mode)
+(add-hook 'sh-hook #'flycheck-mode)
+(add-hook 'sh-hook #'lsp)
+(add-hook 'sh-hook #'flycheck-checkbashisms-setup)
+(add-hook 'sh-hook #'init-sh-set-shell-mode)
 
 
 
@@ -1276,6 +1297,7 @@
 (require 'lua-mode)
 (ensure-package 'company-lua)
 (require 'company-lua)
+(require 'lsp-lua-emmy)
 
 ;;; combine lua and dabbrev in one completion, so if lua fails dabbrev
 ;;; can provide
@@ -1286,40 +1308,36 @@
 
 (defun init-lua-mode()
   (set (make-local-variable 'company-backends)
-       '((company-lua company-dabbrev-code)
-         company-capf company-files))
+       '((company-capf company-dabbrev-code)
+         company-files))
   )
 
 (add-hook 'lua-mode-hook #'init-lua-mode)
 (add-hook 'lua-mode-hook #'flycheck-mode)
+(add-hook 'lua-mode-hook #'lsp)
 (add-hook 'lua-mode-hook #'auto-fill-mode)
 
 
 ;;; Go mode
 (ensure-package 'go-mode)
 (require 'go-mode)
-(ensure-package 'go-add-tags)
-(require 'go-add-tags)
 (ensure-package 'go-projectile)
 (require 'go-projectile)
 (ensure-package 'go-dlv)
 (require 'go-dlv)
 (ensure-package 'go-direx)
 (require 'go-direx)
-(require 'go-eldoc)
-(require 'go-guru)
-(ensure-package 'golint)
-(require 'golint)
-(require 'flycheck-golangci-lint)
+;; (ensure-package 'flycheck-golangci-lint)
+;; (require 'flycheck-golangci-lint)
 
 (setq go-projectile-tools-path (expand-file-name "~/gocode")
       ;; gofmt-args (quote ("-e"))
       )
 
-(define-key go-mode-map (kbd "M-.") #'godef-jump)
-(define-key go-mode-map (kbd "C-c C-i") #'gofmt)
-(define-key go-mode-map (kbd "C-c C-c") #'compile)
-(define-key go-mode-map (kbd "C-c C-r") #'recompile)
+(define-key go-mode-map (kbd "M-.") #'lsp-find-definition)
+(define-key go-mode-map (kbd "C-c C-i") #'lsp-format-buffer)
+;; (define-key go-mode-map (kbd "C-c C-c") #'compile)
+;; (define-key go-mode-map (kbd "C-c C-r") #'recompile)
 
 (defun init-go-mode()
   ;; (add-hook 'before-save-hook #'gofmt-before-save)
@@ -1332,17 +1350,19 @@
   ;; (set (make-local-variable 'company-backends)
   ;;      '((company-go company-dabbrev-code) company-files))
   (set (make-local-variable 'company-backends)
-       '((company-go) company-files))
-
+       '((company-capf) company-files))
+  (setq company-idle-delay 0)
+  (setq company-minimum-prefix-length 2)
   ;; (set (make-local-variable 'company-backends)
   ;;      '((company-go company-dabbrev-code)
   ;;        company-capf company-files))
-  (flycheck-golangci-lint-setup)
+  ;; (flycheck-golangci-lint-setup)
   )
 
 (add-hook 'go-mode-hook #'flycheck-mode)
-(add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
-(add-hook 'go-mode-hook #'go-eldoc-setup)
+(add-hook 'go-mode-hook #'lsp)
+;; (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
+;; (add-hook 'go-mode-hook #'go-eldoc-setup)
 (add-hook 'go-mode-hook #'init-go-mode)
 
 
