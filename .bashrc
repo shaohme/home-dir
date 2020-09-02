@@ -51,12 +51,12 @@ if command -v aws_completer &> /dev/null; then
     complete -C 'aws_completer' aws
 fi
 
-if [ -f $HOME/.local/bin/bashmarks.sh ]; then
+if [ -x $HOME/.local/bin/bashmarks.sh ]; then
     . $HOME/.local/bin/bashmarks.sh
 fi
 
-if [ -f /usr/share/virtualenvwrapper/virtualenvwrapper.sh ]; then
-    . /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+if [ -f /usr/bin/virtualenvwrapper_lazy.sh ]; then
+    . /usr/bin/virtualenvwrapper_lazy.sh
 fi
 
 if [ -f "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
