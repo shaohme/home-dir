@@ -38,6 +38,7 @@
               indent-tabs-mode nil
               tab-width 4
               save-place 1
+              indent-tabs-mode nil
               flycheck-emacs-lisp-load-path load-path
               major-mode 'text-mode
               )
@@ -538,6 +539,7 @@
 (popwin-mode t)
 
 
+
 (ensure-package 'projectile)
 (require 'projectile)
 
@@ -617,6 +619,13 @@
 (require 'smartparens-config)
 
 ;;; Common development
+
+(defun init-prog-mode()
+  ;;; C Mode seems to set indent-tabs-mode to 't'
+  (setq indent-tabs-mode nil)
+  )
+
+(add-hook 'prog-mode-hook #'init-prog-mode)
 
 (ensure-package 'diff-hl)
 (require 'diff-hl)
@@ -730,7 +739,6 @@
   (setq-local c-basic-offset 4)
   (setq-local tab-width 4)
   (setq-local fill-column 80)
-  (setq-local indent-tabs-mode nil)
   (c-set-offset 'innamespace 0)
   (sp-with-modes '(c-mode c++-mode)
     (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
