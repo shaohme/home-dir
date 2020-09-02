@@ -1005,15 +1005,20 @@
 
 (ensure-package 'company-auctex)
 (require 'company-auctex)
+(ensure-package 'lsp-latex)
+(require 'lsp-latex)
 (ensure-package 'auctex)
 (require 'tex)
 
 (setq TeX-command-force "pdflatex")
 
 
-(add-hook 'LaTeX-mode-hook #'TeX-PDF-mode)
-(add-hook 'LaTeX-mode-hook #'company-auctex-init)
+(add-hook 'tex-mode-hook #'TeX-PDF-mode)
+(add-hook 'tex-mode-hook #'lsp)
+(add-hook 'LaTeX-mode-hook #'lsp)
 (add-hook 'LaTeX-mode-hook #'turn-on-auto-fill)
+(add-hook 'yatex-mode-hook #'lsp)
+(add-hook 'bibtex-mode-hook #'lsp)
 
 
 ;;; Haskell mode
