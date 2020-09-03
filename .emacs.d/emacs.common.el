@@ -620,6 +620,11 @@
 
 ;;; Common development
 
+(require 'erefactor)
+
+(define-key prog-mode-map "\C-c\C-v" erefactor-map)
+
+
 (defun init-prog-mode()
   ;;; C Mode seems to set indent-tabs-mode to 't'
   (setq indent-tabs-mode nil)
