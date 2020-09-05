@@ -8,6 +8,7 @@ pkill nm-applet
 pkill redshift-gtk
 pkill pasystray
 pkill ssh-agent
+pkill blueman-applet
 
 if command -v ssh-agent &> /dev/null; then
     eval $(ssh-agent -s)
@@ -59,6 +60,10 @@ fi
 
 if command -v pasystray &> /dev/null; then
     pasystray &
+fi
+
+if command -v blueman-applet &> /dev/null; then
+    blueman-applet &
 fi
 
 exec i3

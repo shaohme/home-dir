@@ -24,7 +24,7 @@ for_window [class="Syncthing GTK"] floating enable
 for_window [class="ibus*"] floating enable
 for_window [class="Steam"] floating enable
 for_window [class="flameshot*"] floating enable
-
+for_window [class="Blueman*"] floating enable
 
 
 
@@ -39,18 +39,13 @@ font pango:monospace 12
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c 000000 --nofork
 
 # setting bg color
 exec --no-startup-id xsetroot -solid "#17212b"
 
 # setting wallpaper
 exec --no-startup-id feh --bg-scale ~/pics/wallpapers/6898386-stunning-cosmos-wallpaper.jpg
-
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
-exec --no-startup-id ~/bin/xsession-startup.sh
-# exec --no-startup-id nm-applet
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -155,7 +150,7 @@ bindsym $mod+6 workspace number $ws6
 bindsym $mod+7 workspace number $ws7
 bindsym $mod+8 workspace number $ws8
 bindsym $mod+9 workspace number $ws9
-bindsym $mod+0 workspace number $ws10
+# bindsym $mod+0 workspace number $ws10
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace number $ws1
@@ -175,6 +170,8 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+bindsym $mod+0 exec "i3lock -c 000000 --nofork"
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -207,6 +204,6 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 bar {
     position top
-    status_command i3status | ~/bin/i3status-title-on-bar --color '#02FFBF'
-    # status_command i3status
+    # status_command i3status | ~/bin/i3status-title-on-bar --color '#02FFBF'
+    status_command i3status
 }
