@@ -12,6 +12,9 @@
 
 (load-theme 'zenburn t)
 
+;; ignore (require 'cl deprecated) warnings in >=emacs-27
+(setq byte-compile-warnings '(cl-functions))
+
 (require 'ispell)
 (require 'recentf)
 (require 'eww)
@@ -37,8 +40,6 @@
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
               tab-width 4
-              save-place 1
-              indent-tabs-mode nil
               flycheck-emacs-lisp-load-path load-path
               major-mode 'text-mode
               )
@@ -140,13 +141,13 @@
 
 (require 'saveplace)
 ;;; should we use save-place-local-mode instead?
-(add-hook 'after-init-hook 'save-place-mode)
+;; (add-hook 'after-init-hook 'save-place-mode)
+(save-place-mode 1)
 
+;; (ensure-package 'volatile-highlights)
+;; (require 'volatile-highlights)
 
-(ensure-package 'volatile-highlights)
-(require 'volatile-highlights)
-
-(volatile-highlights-mode t)
+;; (volatile-highlights-mode t)
 
 (ensure-package 'undo-tree)
 (require 'undo-tree)
@@ -579,8 +580,10 @@
 ;; it sets lsp as sole or default flycheck provider
 ;; and makes errors when idle if enabled.
 ;; no use for it anyway for now.
-(setq lsp-diagnostic-package :none)
-
+(setq lsp-diagnostic-package :none
+      ;; needed for better LSP completion performance
+      read-process-output-max (* 1024 1024)
+      gc-cons-threshold 134217728)
 (ensure-package 'lsp-ivy)
 (require 'lsp-ivy)
 
@@ -615,7 +618,6 @@
 (require 'systemd)
 
 (ensure-package 'smartparens)
-(require 'smartparens)
 (require 'smartparens-config)
 
 ;;; Common development
@@ -623,6 +625,7 @@
 (require 'erefactor)
 
 (define-key prog-mode-map "\C-c\C-v" erefactor-map)
+(add-hook 'prog-mode-hook 'erefactor-lazy-highlight-turn-on)
 
 
 (defun init-prog-mode()
@@ -778,6 +781,23 @@
 
 (setq org-journal-dir "~/org/journal/")
 
+
+;;; Java
+(ensure-package 'lsp-java)
+(require 'lsp-java)
+(ensure-package 'dap-mode)
+(require 'dap-mode)
+(require 'dap-java)
+
+(defun init-java-mode()
+  (setq lsp-java-java-path "~/.sdkman/candidates/java/11.0.8.hs-adpt/bin/java")
+  (dap-auto-configure-mode)
+  )
+
+(add-hook 'java-mode-hook #'init-java-mode)
+(add-hook 'java-mode-hook #'lsp)
+(add-hook 'java-mode-hook #'dap-mode)
+(add-hook 'java-mode-hook #'flycheck-mode)
 
 ;;; Python mode
 
@@ -1311,29 +1331,30 @@
 
 ;;; Lua mode
 
-(ensure-package 'lua-mode)
-(require 'lua-mode)
-(ensure-package 'company-lua)
-(require 'company-lua)
-(require 'lsp-lua-emmy)
+;; (ensure-package 'lua-mode)
+;; (require 'lua-mode)
+;; (ensure-package 'company-lua)
+;; (require 'company-lua)
 
 ;;; combine lua and dabbrev in one completion, so if lua fails dabbrev
 ;;; can provide
 
-(add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
-(add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
-(add-to-list 'auto-mode-alist '("\\.slua" . lua-mode))
+;; (add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
+;; (add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
+;; (add-to-list 'auto-mode-alist '("\\.slua" . lua-mode))
 
-(defun init-lua-mode()
-  (set (make-local-variable 'company-backends)
-       '((company-capf company-dabbrev-code)
-         company-files))
-  )
+;; (defun init-lua-mode()
+;;   (require 'lsp-lua-emmy)
+;;   (set (make-local-variable 'company-backends)
+;;        '((company-lua company-keywords company-dabbrev-code
+;;                        company-yasnippet)
+;;          company-capf company-files))
+;;   )
 
-(add-hook 'lua-mode-hook #'init-lua-mode)
-(add-hook 'lua-mode-hook #'flycheck-mode)
-(add-hook 'lua-mode-hook #'lsp)
-(add-hook 'lua-mode-hook #'auto-fill-mode)
+;; (add-hook 'lua-mode-hook #'init-lua-mode)
+;; ;; (add-hook 'lua-mode-hook #'lsp)
+;; (add-hook 'lua-mode-hook #'flycheck-mode)
+;; (add-hook 'lua-mode-hook #'auto-fill-mode)
 
 
 ;;; Go mode
@@ -1358,6 +1379,7 @@
 ;; (define-key go-mode-map (kbd "C-c C-r") #'recompile)
 
 (defun init-go-mode()
+  (setq indent-tabs-mode nil)
   ;; (add-hook 'before-save-hook #'gofmt-before-save)
   ;; go-vet disabled because its command "go tool vet" is deprecated
   ;; on newer golang platforms
@@ -1368,20 +1390,21 @@
   ;; (set (make-local-variable 'company-backends)
   ;;      '((company-go company-dabbrev-code) company-files))
   (set (make-local-variable 'company-backends)
-       '((company-capf) company-files))
-  (setq company-idle-delay 0)
+       '((company-capf :with company-dabbrev) company-files))
+  (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
   ;; (set (make-local-variable 'company-backends)
   ;;      '((company-go company-dabbrev-code)
   ;;        company-capf company-files))
   ;; (flycheck-golangci-lint-setup)
+  (define-key go-mode-map (kbd "C-c C-v r") #'lsp-rename)
   )
 
+(add-hook 'go-mode-hook #'init-go-mode)
 (add-hook 'go-mode-hook #'flycheck-mode)
 (add-hook 'go-mode-hook #'lsp)
 ;; (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
 ;; (add-hook 'go-mode-hook #'go-eldoc-setup)
-(add-hook 'go-mode-hook #'init-go-mode)
 
 
 (ensure-package 'docker-compose-mode)
@@ -1406,8 +1429,8 @@
 (ensure-package 'x509-mode)
 (require 'x509-mode)
 
-(ensure-package 'love-minor-mode)
-(require 'love-minor-mode)
+;; (ensure-package 'love-minor-mode)
+;; (require 'love-minor-mode)
 
 (ensure-package 'plantuml-mode)
 (require 'plantuml-mode)
