@@ -13,7 +13,7 @@
 (load-theme 'zenburn t)
 
 ;; ignore (require 'cl deprecated) warnings in >=emacs-27
-(setq byte-compile-warnings '(cl-functions))
+;; (setq byte-compile-warnings '(cl-functions))
 
 (require 'ispell)
 (require 'recentf)
@@ -65,7 +65,6 @@
       ;; x-underline-at-descent-line t
       scroll-step 1
       dired-listing-switches "-lah"
-      directory-free-space-args "-Pkh"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
       flyspell-issue-message-flag nil
@@ -84,8 +83,11 @@
       ;; sentence-end-double-space nil
       confirm-kill-emacs nil
       confirm-kill-processes nil
+      ispell-program-name (executable-find "hunspell")
+      ispell-really-hunspell t
       )
 
+;; (ispell-change-dictionary "en_US")
 
 (ensure-package 'realgud)
 (require 'realgud)
@@ -395,7 +397,6 @@
       ;;      gnus-sum-thread-tree-vertical "│"
       gnus-sum-thread-tree-vertical "|"
       ;; Show pretty widecars
-      gnus-use-correct-string-widths t
       gnus-tree-minimize-window nil
       gnus-treat-strip-leading-blank-lines t
       gnus-treat-strip-multiple-blank-lines t
@@ -576,11 +577,12 @@
 
 (ensure-package 'lsp-mode)
 (require 'lsp-clients)
+(require 'lsp-diagnostics)
 ;; disable lsp diagnostics (flycheck) for now.
 ;; it sets lsp as sole or default flycheck provider
 ;; and makes errors when idle if enabled.
 ;; no use for it anyway for now.
-(setq lsp-diagnostic-package :none
+(setq lsp-diagnostics-provider :none
       ;; needed for better LSP completion performance
       read-process-output-max (* 1024 1024)
       gc-cons-threshold 134217728)
@@ -672,11 +674,6 @@
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
 
-(ensure-package 'impatient-mode)
-(require 'impatient-mode)
-
-(setq httpd-host (quote local)
-      httpd-port 8218)
 
 (ensure-package 'flymd)
 (require 'flymd)
@@ -1011,9 +1008,15 @@
 
 (require 'lisp-mode)
 
+(defun init-elisp-mode()
+  ;;; annoying doc warnings
+  (add-to-list 'flycheck-disabled-checkers 'emacs-lisp-checkdoc)
+  )
+
 (add-hook 'lisp-interaction-mode-hook 'turn-on-auto-fill)
 (add-hook 'lisp-interaction-mode-hook 'flycheck-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook #'init-elisp-mode)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-auto-fill)
 (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
@@ -1046,12 +1049,12 @@
 (setq TeX-command-force "pdflatex")
 
 
-(add-hook 'tex-mode-hook #'TeX-PDF-mode)
-(add-hook 'tex-mode-hook #'lsp)
-(add-hook 'LaTeX-mode-hook #'lsp)
+;; (add-hook 'tex-mode-hook #'TeX-PDF-mode)
+;; (add-hook 'tex-mode-hook #'lsp)
+;; (add-hook 'LaTeX-mode-hook #'lsp)
 (add-hook 'LaTeX-mode-hook #'turn-on-auto-fill)
-(add-hook 'yatex-mode-hook #'lsp)
-(add-hook 'bibtex-mode-hook #'lsp)
+;; (add-hook 'yatex-mode-hook #'lsp)
+;; (add-hook 'bibtex-mode-hook #'lsp)
 
 
 ;;; Haskell mode
@@ -1364,10 +1367,6 @@
 (require 'go-projectile)
 (ensure-package 'go-dlv)
 (require 'go-dlv)
-(ensure-package 'go-direx)
-(require 'go-direx)
-;; (ensure-package 'flycheck-golangci-lint)
-;; (require 'flycheck-golangci-lint)
 
 (setq go-projectile-tools-path (expand-file-name "~/gocode")
       ;; gofmt-args (quote ("-e"))
