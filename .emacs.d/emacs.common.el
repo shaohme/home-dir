@@ -83,11 +83,19 @@
       ;; sentence-end-double-space nil
       confirm-kill-emacs nil
       confirm-kill-processes nil
+      ;; ispell options apparently needed to work on Gentoo systems
+      ;; otherwise ispell complains it cannot find dictionaries
       ispell-program-name (executable-find "hunspell")
+      ispell-dictionary "en_US"
       ispell-really-hunspell t
+      ispell-personal-dictionary "~/.ispell"
+      ispell-hunspell-dictionary-alist (quote (("en_US" "[[:alpha:]]" "[^[:alpha:]]" "['’]" t ("-d" "en_US") nil utf-8)
+                                            ("da_DK" "[[:alpha:]]" "[^[:alpha:]]" "['’]" t ("-d" "da_DK") nil utf-8)
+                                            ))
+      ispell-local-dictionary "en_US"
       )
 
-;; (ispell-change-dictionary "en_US")
+(ispell-change-dictionary "en_US")
 
 (ensure-package 'realgud)
 (require 'realgud)
@@ -714,59 +722,64 @@
 
 
 
-;;; C/C++ mode
+;;; C mode
 
 (require 'cc-mode)
-(ensure-package 'rtags)
-(require 'rtags)
-(ensure-package 'company-irony)
-(require 'company-irony)
-(ensure-package 'company-irony-c-headers)
-(require 'company-irony-c-headers)
-(ensure-package 'irony)
-(require 'irony)
-(ensure-package 'flycheck-irony)
-(require 'flycheck-irony)
-(ensure-package 'modern-cpp-font-lock)
-(require 'modern-cpp-font-lock)
+(ensure-package 'company-c-headers)
+(require 'company-c-headers)
+(ensure-package 'ggtags)
+(require 'ggtags)
+;; (ensure-package 'rtags)
+;; (require 'rtags)
+;; (ensure-package 'company-irony)
+;; (require 'company-irony)
+;; (ensure-package 'company-irony-c-headers)
+;; (require 'company-irony-c-headers)
+;; (ensure-package 'irony)
+;; (require 'irony)
+;; (ensure-package 'flycheck-irony)
+;; (require 'flycheck-irony)
+;; (ensure-package 'modern-cpp-font-lock)
+;; (require 'modern-cpp-font-lock)
 
-(defun init-cc-mode()
+(defun init-c-mode()
   (set (make-local-variable 'company-backends)
-       '((company-irony-c-headers company-irony company-dabbrev-code)
-         company-capf company-files))
+       '((company-capf company-c-headers company-dabbrev-code)
+         company-files))
 
   ;; (make-local-variable 'company-backends)
   ;; (setq company-backends (delete 'company-semantic company-backends))
   ;; (setq company-backends (delete 'company-clang company-backends))
   ;; (setq company-backends (delete 'company-capf company-backends))
   ;; (setq company-backends (delete 'company-etags company-backends))
-  (setq-local c-default-style "stroustrup")
+  (setq-local c-default-style "gnu")
   (setq-local c-basic-offset 4)
   (setq-local tab-width 4)
   (setq-local fill-column 80)
-  (c-set-offset 'innamespace 0)
-  (sp-with-modes '(c-mode c++-mode)
-    (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-    (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
-                                              ("* ||\n[i]" "RET"))))
-  (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
-  (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
-  (define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
-  (define-key c-mode-base-map (kbd "C-c C-c") #'cmake-ide-compile)
+  ;; (c-set-offset 'innamespace 0)
+  ;; (sp-with-modes '(c-mode c++-mode)
+  ;;   (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
+  ;;   (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
+  ;;                                             ("* ||\n[i]" "RET"))))
+  ;; (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
+  ;; (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
+  ;; (define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
+  ;; (define-key c-mode-base-map (kbd "C-c C-c") #'cmake-ide-compile)
   (define-key c-mode-base-map (kbd "C-c C-k") #'comment-or-uncomment-region)
   )
 
+(add-hook 'c-mode-hook #'init-c-mode)
 (add-hook 'c-mode-common-hook #'smartparens-mode)
-(add-hook 'c-mode-common-hook #'flycheck-mode)
+;; (add-hook 'c-mode-common-hook #'flycheck-mode)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'auto-fill-mode)
-(add-hook 'c-mode-hook #'init-cc-mode)
-(add-hook 'c++-mode-hook #'init-cc-mode)
-(add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
-(add-hook 'c++-mode-hook #'irony-mode)
-(add-hook 'c++-mode-hook #'flycheck-irony-setup)
-(add-hook 'c++-mode-hook #'cmake-ide-setup)
-(add-hook 'c++-mode-hook #'irony-cdb-autosetup-compile-options)
+(add-hook 'c-mode-hook #'ggtags-mode)
+;; (add-hook 'c++-mode-hook #'init-cc-mode)
+;; (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
+;; (add-hook 'c++-mode-hook #'irony-mode)
+;; (add-hook 'c++-mode-hook #'flycheck-irony-setup)
+;; (add-hook 'c++-mode-hook #'cmake-ide-setup)
+;; (add-hook 'c++-mode-hook #'irony-cdb-autosetup-compile-options)
 
 
 ;;; Org mode
@@ -787,7 +800,10 @@
 (require 'dap-java)
 
 (defun init-java-mode()
-  (setq lsp-java-java-path "~/.sdkman/candidates/java/11.0.8.hs-adpt/bin/java")
+  (setq lsp-java-java-path "~/.sdkman/candidates/java/11.0.8.hs-adpt/bin/java"
+        lsp-diagnostics-provider :auto
+        lsp-enable-file-watchers t
+        lsp-file-watch-threshold 10000)
   (dap-auto-configure-mode)
   )
 
@@ -1039,22 +1055,23 @@
 
 ;; LaTeX mode
 
+(ensure-package 'auctex)
+(require 'tex)
 (ensure-package 'company-auctex)
 (require 'company-auctex)
 (ensure-package 'lsp-latex)
 (require 'lsp-latex)
-(ensure-package 'auctex)
-(require 'tex)
 
 (setq TeX-command-force "pdflatex")
 
 
-;; (add-hook 'tex-mode-hook #'TeX-PDF-mode)
-;; (add-hook 'tex-mode-hook #'lsp)
-;; (add-hook 'LaTeX-mode-hook #'lsp)
+(add-hook 'tex-mode-hook #'lsp)
+(add-hook 'tex-mode-hook #'flyspell-mode)
+(add-hook 'LaTeX-mode-hook #'lsp)
 (add-hook 'LaTeX-mode-hook #'turn-on-auto-fill)
-;; (add-hook 'yatex-mode-hook #'lsp)
-;; (add-hook 'bibtex-mode-hook #'lsp)
+(add-hook 'LaTeX-mode-hook #'flyspell-mode)
+(add-hook 'yatex-mode-hook #'lsp)
+(add-hook 'bibtex-mode-hook #'lsp)
 
 
 ;;; Haskell mode
@@ -1159,7 +1176,7 @@
 
 (defun init-sh-set-shell-mode()
   (set (make-local-variable 'company-backends)
-       '((company-cepf company-dabbrev-code)
+       '((company-capf :with company-dabbrev-code)
          company-files))
   )
 
@@ -1181,8 +1198,18 @@
 (ensure-package 'html5-schema)
 (require 'html5-schema)
 (require 'nxml-mode)
+(require 'lsp-xml)
 
-(setq nxml-slash-auto-complete-flag t)
+(defun init-nxml-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-capf :with company-dabbrev-code)
+         company-files))
+  )
+
+(setq nxml-slash-auto-complete-flag t
+      lsp-xml-jar-file "~/.emacs.d/org.eclipse.lsp4xml-0.3.0-uber.jar"
+      )
+
 
 (define-key nxml-mode-map (kbd "C-c C-i") #'nxml-pretty-format)
 
@@ -1195,6 +1222,8 @@
 (add-to-list 'auto-mode-alist '("\\.svg\\'" . nxml-mode))
 (add-to-list 'auto-mode-alist '("\\.rss\\'" . nxml-mode))
 
+(add-hook 'nxml-mode-hook #'init-nxml-mode)
+(add-hook 'nxml-mode-hook #'company-mode)
 (add-hook 'nxml-mode-hook #'flycheck-mode)
 
 
@@ -1252,8 +1281,16 @@
 (ensure-package 'yaml-mode)
 (require 'yaml-mode)
 
+(defun init-yaml-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-capf :with company-dabbrev) company-files))
+  )
+
 (add-hook 'yaml-mode-hook #'flycheck-mode)
+(add-hook 'yaml-mode-hook #'company-mode)
+(add-hook 'yaml-mode-hook #'lsp)
 (add-hook 'yaml-mode-hook #'flycheck-yamllint-setup)
+(add-hook 'yaml-mode-hook #'indent-tools-minor-mode)
 
 ;;; Meson mode
 
