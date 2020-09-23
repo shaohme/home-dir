@@ -1,26 +1,37 @@
 [user]
 	name = Martin Kjær Jørgensen
 	email = mkj@gotu.dk
+	signingkey = C57BA9E100588495
 [core]
 	editor = "emacs"
+	excludesfile = ~/.gitignore_global
 [color]
 	status = auto
 	branch = auto
 	interactive = auto
 	diff = auto
 
-[credential "https://git-codecommit.us-east-1.amazonaws.com"]
-    helper = !aws-credentials-helper.py
-	helper = !aws --profile saml codecommit credential-helper $@
- 	UseHttpPath = true
-
 [credential]
     helper = store
 [diff]
 	tool = emacs
 [difftool "emacs"]
-    cmd = emacsclient -c --eval \"(ediff-files \\\"$LOCAL\\\" \\\"$REMOTE\\\")\"
+    cmd = emacs --eval \"(ediff-files \\\"$LOCAL\\\" \\\"$REMOTE\\\")\"
 [merge]
     tool = ediff
 [mergetool "ediff"]
-    cmd = emacsclient -c --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+    cmd = emacs --eval \"(ediff-merge-files-with-ancestor \\\"$LOCAL\\\" \\\"$REMOTE\\\" \\\"$BASE\\\" nil \\\"$MERGED\\\")\"
+
+[includeIf "gitdir:work/"]
+	path = .gitconfig-work
+
+[includeIf "gitdir:git-codecommit.us-east-1.amazonaws.com/"]
+	path = .gitconfig-work
+
+[includeIf "gitdir:touchpeak.com/"]
+	path = .gitconfig-work
+
+[includeIf "gitdir:shiji.com/"]
+	path = .gitconfig-work
+[pull]
+	rebase = false

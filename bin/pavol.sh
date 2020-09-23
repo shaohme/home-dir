@@ -4,6 +4,10 @@ default_sink=$(pactl info | grep -i "default\ sink" | awk ' {print $3}')
 if [ "$1" = "toggle" ]
 then
     pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+elif [ "$1" = "mictoggle" ]
+then
+    pactl set-source-mute @DEFAULT_SOURCE@ toggle
 else
     volume=0
     sink_hit=0
