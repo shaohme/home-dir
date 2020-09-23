@@ -5,8 +5,6 @@
 (require 'local-common)
 
 ;; Load theme first
-;; (ensure-package 'color-theme-sanityinc-tomorrow)
-;; (require 'color-theme-sanityinc-tomorrow)
 (ensure-package 'zenburn-theme)
 (require 'zenburn-theme)
 
@@ -36,7 +34,6 @@
 (setq-default frame-title-format '((:eval (if (buffer-file-name)
 		                                      (abbreviate-file-name (buffer-file-name))
                                             "%b")))
- ;; frame-title-format '("%b [%m] %F")
 ;;; Disable tab-indentation, because it screws with web-mode offset's
               indent-tabs-mode nil
               tab-width 4
@@ -62,8 +59,6 @@
       visible-cursor nil
       initial-major-mode 'text-mode
       initial-scratch-message nil
-      ;; x-underline-at-descent-line t
-      scroll-step 1
       dired-listing-switches "-lah"
       recentf-max-menu-items 25
       eww-download-directory "~/dwl/"
@@ -77,10 +72,6 @@
       buffer-file-coding-system 'utf-8 ; utf-8-unix
       save-buffer-coding-system 'utf-8-unix ; nil
       process-coding-system-alist (cons '("grep" utf-8 . utf-8) process-coding-system-alist)
-      ;; adaptive-fill-regexp "[ t]+|[ t]*([0-9]+.|*+)[ t]*"
-      ;; adaptive-fill-first-line-regexp "^* *$"
-      ;; sentence-end "\\([。、！？]\\|……\\|[,.?!][]\"')}]*\\($\\|[ \t]\\)\\)[ \t\n]*"
-      ;; sentence-end-double-space nil
       confirm-kill-emacs nil
       confirm-kill-processes nil
       ;; ispell options apparently needed to work on Gentoo systems
@@ -97,9 +88,6 @@
 
 (ispell-change-dictionary "en_US")
 
-(ensure-package 'realgud)
-(require 'realgud)
-
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -113,8 +101,6 @@
 (set-terminal-coding-system 'utf-8) ; configured by prefer-coding-system
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
-;; fix for zsh strange chars in shell
-;; (setenv "ESHELL" (expand-file-name "~/bin/eshell"))
 
 (unless window-system
   (xterm-mouse-mode t)
@@ -131,10 +117,6 @@
 (size-indication-mode 1)
 
 
-;; save recentf every X sec because we're running in daemon mode
-;; (run-at-time (current-time) 60 'recentf-save-list)
-
-;; (global-set-key (kbd "C-c C-k") 'comment-or-uncomment-region)
 (global-set-key (kbd "C-x t") 'beginning-of-buffer)
 (global-set-key (kbd "C-x e") 'end-of-buffer)
 (global-set-key (kbd "C-x C-b") nil)
@@ -142,7 +124,7 @@
 (global-set-key (kbd "<f8>") 'switch-dictionary)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-c C-k") 'comment-dwim)
+(global-set-key (kbd "M-;") 'comment-dwim)
 (global-unset-key (kbd "C-x c"))
 
 (add-to-list 'compilation-finish-functions 'notify-compilation-result)
@@ -151,13 +133,7 @@
 
 (require 'saveplace)
 ;;; should we use save-place-local-mode instead?
-;; (add-hook 'after-init-hook 'save-place-mode)
 (save-place-mode 1)
-
-;; (ensure-package 'volatile-highlights)
-;; (require 'volatile-highlights)
-
-;; (volatile-highlights-mode t)
 
 (ensure-package 'undo-tree)
 (require 'undo-tree)
@@ -168,7 +144,6 @@
 (require 'xclip)
 
 (xclip-mode 1)
-
 
 
 (ensure-package 'ag)
@@ -201,8 +176,6 @@
 (ensure-package 'presentation)
 (require 'presentation)
 
-
-
 (require 'paren)
 (setq show-paren-style 'mixed
       show-paren-when-point-inside-paren t
@@ -211,9 +184,7 @@
 (add-hook 'after-init-hook 'show-paren-mode)
 
 
-
 ;;; Makefile mode
-
 (defun init-makefile-mode()
   (setq indent-tabs-mode t)
   )
@@ -228,124 +199,50 @@
 (which-key-mode t)
 
 
-
-
 ;;; Ivy
 (ensure-package 'amx)
 (require 'amx)
 (ensure-package 'ivy)
 (require 'ivy)
+(ensure-package 'ivy-rich)
+(require 'ivy-rich)
 (ensure-package 'counsel)
 (require 'counsel)
 (ensure-package 'swiper)
 (require 'swiper)
 
+;; as per recommendation from ivy-rich website
+(setq ivy-use-virtual-buffers t
+      ivy-rich-path-style 'abbrev
+      ivy-count-format "(%d/%d) "
+      enable-recursive-minibuffers t)
+(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+
 (ivy-mode 1)
+(ivy-rich-mode 1)
+
 ;; used to add history to minibuffer selections like M-x
 ;; instead of smex which produces compile errors on install
 (amx-mode 1)
 
-(setq ivy-use-virtual-buffers t
-      ivy-count-format "(%d/%d) ")
+(global-set-key "\C-s" 'swiper)
+(global-set-key (kbd "C-c C-r") 'ivy-resume)
+(global-set-key (kbd "<f6>") 'ivy-resume)
+(global-set-key (kbd "M-x") 'counsel-M-x)
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "<f1> f") 'counsel-describe-function)
+(global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+(global-set-key (kbd "<f1> o") 'counsel-describe-symbol)
+(global-set-key (kbd "<f1> l") 'counsel-find-library)
+(global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+(global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+(global-set-key (kbd "C-c g") 'counsel-git)
+(global-set-key (kbd "C-c j") 'counsel-git-grep)
+(global-set-key (kbd "C-c k") 'counsel-ag)
+(global-set-key (kbd "C-x l") 'counsel-locate)
+(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
+(define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
-(global-set-key (kbd "C-s") 'swiper-isearch)
-
-;;; Helm mode
-
-;; (ensure-package 'helm)
-;; (require 'helm)
-;; (require 'helm-config)
-;; (require 'helm-grep)
-;; (require 'helm-utils)
-;; (require 'helm-man)
-;; (require 'helm-help)
-;; (require 'helm-files)
-;; (ensure-package 'helm-swoop)
-;; (require 'helm-swoop)
-;; (ensure-package 'helm-tramp)
-;; (require 'helm-tramp)
-;; (ensure-package 'helm-pass)
-;; (require 'helm-pass)
-;; (ensure-package 'helm-ls-git)
-;; (require 'helm-ls-git)
-;; (ensure-package 'helm-ag)
-;; (require 'helm-ag)
-;; (ensure-package 'helm-flycheck)
-;; (require 'helm-flycheck)
-
-
-;; (setq ;; mouse-sel-retain-highlight t
-;;       ;; open helm buffer inside current window, not occupy whole other window
-;;       helm-split-window-inside-p t
-;;       ;; scroll 4 lines other window using M-<next>/M-<prior>
-;;       helm-scroll-amount 4
-;;       ;; limit the number of displayed canidates
-;;       helm-candidate-number-limit 500
-;;       ;; move to end or beginning of source when reaching top or bottom of source.
-;;       helm-move-to-line-cycle-in-source t
-;;       ;; fuzzy matching buffer names when non-nil
-;;       ;; useful in helm-mini that lists buffers
-;;       helm-autoresize-max-height 40
-;;       helm-autoresize-min-height 20
-;;       helm-ff-search-library-in-sexp t
-;;       helm-ff-file-name-history-use-recentf t
-;;       helm-multi-swoop-edit-save t
-;;       ;; If this value is t, split window inside the current window
-;;       helm-swoop-split-with-multiple-windows t
-;;       ;; Split direcion. 'split-window-vertically or 'split-window-horizontally
-;;       helm-swoop-split-direction 'split-window-vertically
-;;       )
-
-;; (global-set-key (kbd "M-x") #'helm-M-x)
-;; (global-set-key (kbd "C-x r b") #'helm-filtered-bookmarks)
-;; (global-set-key (kbd "C-c h") #'helm-command-prefix)
-;; (global-set-key (kbd "M-y") #'helm-show-kill-ring)
-;; (global-set-key (kbd "C-x b") #'helm-mini)
-;; (global-set-key (kbd "C-c s") #'helm-tramp)
-
-;; (define-key global-map [remap find-file] 'helm-find-files)
-;; (define-key global-map [remap occur] 'helm-occur)
-;; (define-key global-map [remap list-buffers] 'helm-buffers-list)
-;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
-;; (define-key global-map [remap execute-extended-command] 'helm-M-x)
-
-;; (define-key helm-map (kbd "<tab>") #'helm-execute-persistent-action)
-;; make TAB works in terminal
-;; (define-key helm-map (kbd "C-i") #'helm-execute-persistent-action)
-;; list actions ; using C-z
-;; (define-key helm-map (kbd "C-z") #'helm-select-action)
-;; (define-key helm-grep-mode-map (kbd "<return>") #'helm-grep-mode-jump-other-window)
-;; (define-key helm-grep-mode-map (kbd "p") #'helm-grep-mode-jump-other-window-forward)
-;; (define-key helm-grep-mode-map (kbd "n") #'helm-grep-mode-jump-other-window-backward)
-;; (define-key helm-swoop-map (kbd "M-i") #'helm-multi-swoop-all-from-helm-swoop)
-;; (define-key isearch-mode-map (kbd "M-i") #'helm-swoop-from-isearch)
-
-;; (defun spacemacs//helm-hide-minibuffer-maybe ()
-;;   "Hide minibuffer in Helm session if we use the header line as input field."
-;;   (when (with-helm-buffer helm-echo-input-in-header-line)
-;;     (let ((ov (make-overlay (point-min) (point-max) nil nil t)))
-;;       (overlay-put ov 'window (selected-window))
-;;       (overlay-put ov 'face
-;;                    (let ((bg-color (face-background 'default nil)))
-;;                      `(:background ,bg-color :foreground ,bg-color)))
-;;       (setq-local cursor-type nil))))
-
-
-;; (add-hook 'helm-minibuffer-set-up-hook 'spacemacs//helm-hide-minibuffer-maybe)
-;; (add-hook 'helm-mode-hook #'helm-autoresize-mode)
-;; (add-hook 'helm-goto-line-before-hook #'helm-save-current-pos-to-mark-ring)
-
-
-;; (helm-mode t)
-;; (helm-autoresize-mode t)
-
-
-;; (define-key global-map [remap find-file] 'helm-find-files)
-;; (define-key global-map [remap occur] 'helm-occur)
-;; (define-key global-map [remap list-buffers] 'helm-buffers-list)
-;; (define-key global-map [remap dabbrev-expand] 'helm-dabbrev)
-;; (define-key global-map [remap execute-extended-command] 'helm-M-x)
-;; (define-key global-map [remap apropos-command] 'helm-apropos)
 
 ;; Gnus and mail
 (ensure-package 'emojify)
@@ -549,6 +446,14 @@
 (popwin-mode t)
 
 
+(ensure-package 'ivy-xref)
+(require 'ivy-xref)
+(setq xref-show-definitions-function #'ivy-xref-show-defs)
+
+(ensure-package 'dumb-jump)
+(require 'dumb-jump)
+(setq dumb-jump-selector 'ivy)
+
 
 (ensure-package 'projectile)
 (require 'projectile)
@@ -572,25 +477,35 @@
 
 (ensure-package 'counsel-projectile)
 (require 'counsel-projectile)
-;; (ensure-package 'helm-projectile)
-;; (require 'helm-projectile)
 
-;; (add-hook 'projectile-mode-hook #'helm-projectile-on)
+(define-key global-map [remap projectile-find-file] #'+ivy/projectile-find-file)
+(define-key global-map [remap projectile-find-dir] #'counsel-projectile-find-dir)
+(define-key global-map [remap projectile-switch-to-buffer] #'counsel-projectile-switch-to-buffer)
+(define-key global-map [remap projectile-grep] #'counsel-projectile-grep)
+(define-key global-map [remap projectile-ag] #'counsel-projectile-ag)
+(define-key global-map [remap projectile-switch-project] #'counsel-projectile-switch-project)
 
 ;; dont add counsel-projectile to projectile-mode-hook.
 ;; lisp max depth errors occurs
 (add-hook 'after-init-hook 'counsel-projectile-mode)
 
+(ensure-package 'dap-mode)
+(require 'dap-mode)
 
 
 (ensure-package 'lsp-mode)
 (require 'lsp-clients)
 (require 'lsp-diagnostics)
+
+(ensure-package 'eglot)
+(require 'eglot)
+(add-to-list 'eglot-server-programs '((c++-mode) "clangd"))
+
 ;; disable lsp diagnostics (flycheck) for now.
 ;; it sets lsp as sole or default flycheck provider
 ;; and makes errors when idle if enabled.
 ;; no use for it anyway for now.
-(setq lsp-diagnostics-provider :none
+(setq lsp-diagnostics-provider :flycheck
       ;; needed for better LSP completion performance
       read-process-output-max (* 1024 1024)
       gc-cons-threshold 134217728)
@@ -649,6 +564,7 @@
 (require 'diff-hl)
 
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
+(add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
 (ensure-package 'yasnippet)
 (require 'yasnippet)
@@ -692,10 +608,6 @@
 (ensure-package 'cmake-ide)
 (require 'cmake-ide)
 
-(ensure-package 'cmake-font-lock)
-(require 'cmake-font-lock)
-(add-hook 'cmake-mode-hook #'cmake-font-lock-activate)
-
 (ensure-package 'cmake-mode)
 (require 'cmake-mode)
 
@@ -727,60 +639,46 @@
 (require 'cc-mode)
 (ensure-package 'company-c-headers)
 (require 'company-c-headers)
-(ensure-package 'ggtags)
-(require 'ggtags)
-;; (ensure-package 'rtags)
-;; (require 'rtags)
-;; (ensure-package 'company-irony)
-;; (require 'company-irony)
-;; (ensure-package 'company-irony-c-headers)
-;; (require 'company-irony-c-headers)
-;; (ensure-package 'irony)
-;; (require 'irony)
-;; (ensure-package 'flycheck-irony)
-;; (require 'flycheck-irony)
-;; (ensure-package 'modern-cpp-font-lock)
-;; (require 'modern-cpp-font-lock)
+(ensure-package 'counsel-etags)
+(require 'counsel-etags)
+(ensure-package 'company-ctags)
+(require 'company-ctags)
+(add-hook 'xref-backend-functions #'dumb-jump-xref-activate t)
 
 (defun init-c-mode()
   (set (make-local-variable 'company-backends)
-       '((company-capf company-c-headers company-dabbrev-code)
+       '((company-ctags company-c-headers)
          company-files))
-
-  ;; (make-local-variable 'company-backends)
-  ;; (setq company-backends (delete 'company-semantic company-backends))
-  ;; (setq company-backends (delete 'company-clang company-backends))
-  ;; (setq company-backends (delete 'company-capf company-backends))
-  ;; (setq company-backends (delete 'company-etags company-backends))
-  (setq-local c-default-style "gnu")
+  (company-ctags-auto-setup)
+  (add-to-list 'flycheck-disabled-checkers 'c/c++-clang)
+  (add-to-list 'flycheck-disabled-checkers 'c/c++-cppcheck)
+  (setq-local c-default-style "linux")
   (setq-local c-basic-offset 4)
   (setq-local tab-width 4)
   (setq-local fill-column 80)
-  ;; (c-set-offset 'innamespace 0)
-  ;; (sp-with-modes '(c-mode c++-mode)
-  ;;   (sp-local-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
-  ;;   (sp-local-pair "/*" "*/" :post-handlers '((" | " "SPC")
-  ;;                                             ("* ||\n[i]" "RET"))))
-  ;; (define-key c-mode-base-map (kbd "C-x C-m") #'cmake-ide-run-cmake)
-  ;; (define-key c-mode-base-map (kbd "C-c .") #'rtags-find-symbol-at-point)
-  ;; (define-key c-mode-base-map (kbd "C-c ,") #'rtags-find-references-at-point)
-  ;; (define-key c-mode-base-map (kbd "C-c C-c") #'cmake-ide-compile)
-  (define-key c-mode-base-map (kbd "C-c C-k") #'comment-or-uncomment-region)
+  (setq company-ctags-fuzzy-match-p t
+        )
   )
 
 (add-hook 'c-mode-hook #'init-c-mode)
+
+
 (add-hook 'c-mode-common-hook #'smartparens-mode)
-;; (add-hook 'c-mode-common-hook #'flycheck-mode)
+(add-hook 'c-mode-common-hook #'flycheck-mode)
 (add-hook 'c-mode-common-hook #'hs-minor-mode)
 (add-hook 'c-mode-common-hook #'auto-fill-mode)
-(add-hook 'c-mode-hook #'ggtags-mode)
-;; (add-hook 'c++-mode-hook #'init-cc-mode)
-;; (add-hook 'c++-mode-hook #'modern-c++-font-lock-mode)
-;; (add-hook 'c++-mode-hook #'irony-mode)
-;; (add-hook 'c++-mode-hook #'flycheck-irony-setup)
-;; (add-hook 'c++-mode-hook #'cmake-ide-setup)
-;; (add-hook 'c++-mode-hook #'irony-cdb-autosetup-compile-options)
 
+;; C++ mode
+
+(defun init-cpp-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-capf)
+         company-files))
+  (setq lsp-diagnostics-provider :flycheck)
+  (flymake-mode nil)
+  )
+(add-hook 'c++-mode-hook #'lsp)
+(add-hook 'c++-mode-hook #'init-cpp-mode)
 
 ;;; Org mode
 
@@ -795,13 +693,11 @@
 ;;; Java
 (ensure-package 'lsp-java)
 (require 'lsp-java)
-(ensure-package 'dap-mode)
-(require 'dap-mode)
 (require 'dap-java)
 
 (defun init-java-mode()
   (setq lsp-java-java-path "~/.sdkman/candidates/java/11.0.8.hs-adpt/bin/java"
-        lsp-diagnostics-provider :auto
+        lsp-diagnostics-provider :flycheck
         lsp-enable-file-watchers t
         lsp-file-watch-threshold 10000)
   (dap-auto-configure-mode)
@@ -813,7 +709,6 @@
 (add-hook 'java-mode-hook #'flycheck-mode)
 
 ;;; Python mode
-
 (ensure-package 'elpy)
 (require 'elpy)
 (elpy-enable)
@@ -857,7 +752,6 @@
 (define-key python-mode-map (kbd "C-c C-c") nil)
 
 (define-key elpy-mode-map (kbd "M-q") 'python-fill-paragraph)
-(define-key elpy-mode-map (kbd "C-c C-k") #'comment-dwim)
 (define-key elpy-mode-map (kbd "C-c C-i") 'elpy-format-code)
 
 ;; https://masteringemacs.org/article/compiling-running-scripts-emacs
@@ -867,10 +761,6 @@
 (add-hook 'python-mode-hook 'python--add-debug-highlight)
 
 (defun init-elpy-mode()
-  ;; (set (make-local-variable 'company-backends)
-  ;;      '((elpy-company-backend company-dabbrev-code) company-capf
-  ;;      company-files))
-
   ;; use elpy primarily and append other backends to it
   (set (make-local-variable 'company-backends)
        '((elpy-company-backend :with company-dabbrev-code :with company-files)))
@@ -900,20 +790,6 @@
         company-tooltip-align-annotations t
         )
   )
-
-;; https://emacs.stackexchange.com/a/12403
-;; show private methods/attributes at the end when suggesting
-;; (defun company-transform-python (candidates)
-;;   (let ((deleted))
-;;     (mapcar #'(lambda (c)
-;;          (if (or (string-prefix-p "__" c) (string-prefix-p ".__" c))
-;;             (progn
-;;               (add-to-list 'deleted c)
-;;               (setq candidates (delete c candidates)))))
-;;             candidates)
-;;     (append candidates (nreverse deleted))
-;;     ))
-;; (append company-transformers '(company-transform-python))
 
 (add-hook 'elpy-mode-hook #'init-elpy-mode)
 
@@ -992,7 +868,6 @@
       web-mode-css-indent-offset 2
       web-mode-code-indent-offset 2)
 
-(define-key web-mode-map (kbd "C-c C-k") #'web-mode-comment-or-uncomment)
 
 (defun init-web-mode()
   (set (make-local-variable 'company-backends)
@@ -1169,10 +1044,6 @@
 ;;; Shell-script mode
 
 (require 'shell)
-;; (ensure-package 'company-shell)
-;; (require 'company-shell)
-;; (ensure-package 'flycheck-checkbashisms)
-;; (require 'flycheck-checkbashisms)
 
 (defun init-sh-set-shell-mode()
   (set (make-local-variable 'company-backends)
@@ -1180,11 +1051,6 @@
          company-files))
   )
 
-;; (add-hook 'sh-set-shell-hook #'flycheck-mode)
-;; (add-hook 'sh-set-shell-hook #'flycheck-checkbashisms-setup)
-;; (add-hook 'sh-set-shell-hook #'yas-minor-mode)
-;; (add-hook 'sh-set-shell-hook #'yas-minor-mode)
-;; (add-hook 'sh-set-shell-hook #'init-sh-set-shell-mode)
 (add-hook 'sh-hook #'flycheck-mode)
 (add-hook 'sh-hook #'lsp)
 (add-hook 'sh-hook #'flycheck-checkbashisms-setup)
@@ -1406,41 +1272,29 @@
 (require 'go-dlv)
 
 (setq go-projectile-tools-path (expand-file-name "~/gocode")
-      ;; gofmt-args (quote ("-e"))
       )
 
 (define-key go-mode-map (kbd "M-.") #'lsp-find-definition)
 (define-key go-mode-map (kbd "C-c C-i") #'lsp-format-buffer)
-;; (define-key go-mode-map (kbd "C-c C-c") #'compile)
-;; (define-key go-mode-map (kbd "C-c C-r") #'recompile)
 
 (defun init-go-mode()
   (setq indent-tabs-mode nil)
-  ;; (add-hook 'before-save-hook #'gofmt-before-save)
   ;; go-vet disabled because its command "go tool vet" is deprecated
   ;; on newer golang platforms
   (setq flycheck-disabled-checkers '(go-vet go-test))
   (setq-local projectile-globally-ignored-directories
               ;; 'vendor' dir is made by go modules
               (append '("vendor") projectile-globally-ignored-directories))
-  ;; (set (make-local-variable 'company-backends)
-  ;;      '((company-go company-dabbrev-code) company-files))
   (set (make-local-variable 'company-backends)
        '((company-capf :with company-dabbrev) company-files))
   (setq company-idle-delay 0.2)
   (setq company-minimum-prefix-length 2)
-  ;; (set (make-local-variable 'company-backends)
-  ;;      '((company-go company-dabbrev-code)
-  ;;        company-capf company-files))
-  ;; (flycheck-golangci-lint-setup)
   (define-key go-mode-map (kbd "C-c C-v r") #'lsp-rename)
   )
 
 (add-hook 'go-mode-hook #'init-go-mode)
 (add-hook 'go-mode-hook #'flycheck-mode)
 (add-hook 'go-mode-hook #'lsp)
-;; (add-hook 'go-mode-hook #'go-guru-hl-identifier-mode)
-;; (add-hook 'go-mode-hook #'go-eldoc-setup)
 
 
 (ensure-package 'docker-compose-mode)
@@ -1465,9 +1319,6 @@
 (ensure-package 'x509-mode)
 (require 'x509-mode)
 
-;; (ensure-package 'love-minor-mode)
-;; (require 'love-minor-mode)
-
 (ensure-package 'plantuml-mode)
 (require 'plantuml-mode)
 (ensure-package 'flycheck-plantuml)
@@ -1485,11 +1336,6 @@
 
 (ensure-package 'logview)
 (require 'logview)
-
-
-;; (unless (boundp 'completion-in-region-function)
-;;   (define-key lisp-interaction-mode-map [remap completion-at-point] 'helm-lisp-completion-at-point)
-;;   (define-key emacs-lisp-mode-map       [remap completion-at-point] 'helm-lisp-completion-at-point))
 
 
 (ensure-package 'nginx-mode)
@@ -1516,8 +1362,10 @@
 
 (ensure-package 'iedit)
 (require 'iedit)
+
 (global-set-key (kbd "C-;") 'iedit-mode)
-(setq iedit-toggle-key-default (kbd "C-;"))
+(setq iedit-toggle-key-default (kbd "C-;")
+      compilation-scroll-output t)
 
 (provide 'emacs.common)
 ;;; emacs.common.el ends here
