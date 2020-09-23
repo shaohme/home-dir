@@ -1237,30 +1237,28 @@
 
 ;;; Lua mode
 
-;; (ensure-package 'lua-mode)
-;; (require 'lua-mode)
-;; (ensure-package 'company-lua)
-;; (require 'company-lua)
+(ensure-package 'lua-mode)
+(require 'lua-mode)
+(ensure-package 'company-lua)
+(require 'company-lua)
 
 ;;; combine lua and dabbrev in one completion, so if lua fails dabbrev
 ;;; can provide
 
-;; (add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
-;; (add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
-;; (add-to-list 'auto-mode-alist '("\\.slua" . lua-mode))
+(add-to-list 'auto-mode-alist '("\\.rockspec" . lua-mode))
+(add-to-list 'auto-mode-alist '("\\.busted" . lua-mode))
+(add-to-list 'auto-mode-alist '("\\.slua" . lua-mode))
 
-;; (defun init-lua-mode()
-;;   (require 'lsp-lua-emmy)
-;;   (set (make-local-variable 'company-backends)
-;;        '((company-lua company-keywords company-dabbrev-code
-;;                        company-yasnippet)
-;;          company-capf company-files))
-;;   )
+(defun init-lua-mode()
+  (set (make-local-variable 'company-backends)
+       '((company-lua :with company-dabbrev-code :with
+                       company-yasnippet)
+         company-capf company-files))
+  )
 
-;; (add-hook 'lua-mode-hook #'init-lua-mode)
-;; ;; (add-hook 'lua-mode-hook #'lsp)
-;; (add-hook 'lua-mode-hook #'flycheck-mode)
-;; (add-hook 'lua-mode-hook #'auto-fill-mode)
+(add-hook 'lua-mode-hook #'init-lua-mode)
+(add-hook 'lua-mode-hook #'flycheck-mode)
+(add-hook 'lua-mode-hook #'auto-fill-mode)
 
 
 ;;; Go mode

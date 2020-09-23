@@ -14,6 +14,11 @@
         ("GNU ELPA"     . 5)
         ("MELPA"        . 0)))
 
+(when (boundp 'package-pinned-packages)
+  (setq package-pinned-packages
+                '((lua-mode           . "MELPA")
+)))
+
 (package-initialize)
 
 (load (expand-file-name "emacs.common.el" user-emacs-directory))

@@ -21,8 +21,9 @@ cpu_usage {
 
 lm_sensors {
            cache_timeout = 3
-           chips = [ "amdgpu-pci-4200", "k10temp-pci-00c3" ]
+           chips = [ "amdgpu-pci-*", "k10temp-pci-00c3" ]
            format_chip = '[\?if=name=amdgpu-pci-4200 G {format_sensor}]'
+           format_chip += '[\?if=name=amdgpu-pci-0500 G {format_sensor}]'
            format_chip += '[\?if=name=k10temp-pci-00c3 C {format_sensor}]'
            format_sensor = '\?color=auto.input {input:.0f}°C'
            sensors = [ 'edge', 'tdie' ]
