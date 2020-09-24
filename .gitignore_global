@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/vim,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,intellij,autotools,intellij+all,java,java-web
-# Edit at https://www.toptal.com/developers/gitignore?templates=vim,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,intellij,autotools,intellij+all,java,java-web
+# Created by https://www.toptal.com/developers/gitignore/api/vim,java,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,java-web,intellij,autotools,intellij+all,tags
+# Edit at https://www.toptal.com/developers/gitignore?templates=vim,java,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,java-web,intellij,autotools,intellij+all,tags
 
 ### Autotools ###
 # http://www.gnu.org/software/automake
@@ -446,6 +446,25 @@ build.ninja
 ### Ninja ###
 .ninja_log
 
+### Tags ###
+# Ignore tags created by etags, ctags, gtags (GNU global) and cscope
+TAGS
+.TAGS
+!TAGS/
+tags
+.tags
+!tags/
+gtags.files
+GTAGS
+GRTAGS
+GPATH
+GSYMS
+cscope.files
+cscope.out
+cscope.in.out
+cscope.po.out
+
+
 ### Vim ###
 # Swap
 [._]*.s[a-v][a-z]
@@ -462,7 +481,6 @@ Sessionx.vim
 # Temporary
 .netrwhist
 # Auto-generated tag files
-tags
 # Persistent undo
 [._]*.un~
 
@@ -485,4 +503,4 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
-# End of https://www.toptal.com/developers/gitignore/api/vim,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,intellij,autotools,intellij+all,java,java-web
+# End of https://www.toptal.com/developers/gitignore/api/vim,java,ninja,cmake,emacs,linux,meson,maven,gradle,kotlin,eclipse,java-web,intellij,autotools,intellij+all,tags

@@ -16,8 +16,13 @@
 
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
-                '((lua-mode           . "MELPA")
-)))
+        '(
+          ;; to be compatible with emacs-27
+          (lua-mode           . "MELPA")
+          ;; to be compatible with
+          ;; lsp-mode. flcheck-32 is needed
+          (flycheck           . "MELPA")
+          )))
 
 (package-initialize)
 
